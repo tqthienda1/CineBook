@@ -1,0 +1,34 @@
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    border-radius: 1rem;
+    padding: 3rem;
+    // height: 900px;
+    width: 600px;
+}
+
+.logo {
+    padding: 2rem;
+    width: 20rem;
+}
+
+.welcome,
+.subtitle {
+    margin: 0;
+}
+
+.description {
+    font-size: 1.2rem;
+    margin: 0.5rem 0 2rem 0;
+    white-space: nowrap;
+}
+
+.rememberForgetWrap {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}

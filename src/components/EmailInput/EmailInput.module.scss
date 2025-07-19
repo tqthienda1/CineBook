@@ -1,0 +1,22 @@
+.emailWrap {
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    gap: 0.7rem;
+}
+
+.emailInput {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 1rem;
+    font-size: 1.2rem;
+    line-height: 2.5rem;
+    border-radius: 0.7rem;
+    border: 0;
+}
+
+.emailInput:focus {
+    border: none;
+    outline: none;
+}

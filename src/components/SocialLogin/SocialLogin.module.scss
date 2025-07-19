@@ -1,0 +1,23 @@
+.socialButtonWrap {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.facebookLogo,
+.googleLogo {
+    width: 1.5rem;
+}
+
+.facebookButton,
+.googleButton {
+    display: flex;
+    border: 0;
+    border-radius: 0.7rem;
+    flex: 1;
+    line-height: 2.7rem;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.2rem;
+    font-weight: 300;
+}
