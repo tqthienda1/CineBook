@@ -10,8 +10,8 @@ const PasswordInput = () => {
 
     return (
         <div className={styles.passwordWrap}>
-            <label htmlFor={styles.passwordInput}>Password</label>
-            <div className={styles.passwordInputWrap}>
+            <label htmlFor="password">Password</label>
+            <div id = "password" className={styles.passwordInputWrap}>
                 <input type={hide ? 'text' : 'password'} className={styles.passwordInput} />
                 {hide && <MdOutlineRemoveRedEye onClick={handleClick} className={styles.eye} />}
                 {!hide && <LuEyeOff onClick={handleClick} className={styles.eye} />}
