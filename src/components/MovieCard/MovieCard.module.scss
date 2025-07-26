@@ -8,10 +8,17 @@
 
 .poster {
     width: 100%;
+    cursor: pointer;
 }
 
 .movieName {
     font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.movieName:hover {
+    color: #fb2b2b;
 }
 
 .buttons {
@@ -41,6 +48,13 @@
 .trailer {
     transition: color 0.3s ease;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.playButton {
+    font-size: 1.5rem;
 }
 
 .trailer:hover {
