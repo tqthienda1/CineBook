@@ -1,0 +1,14 @@
+.button {
+    border: 3px solid #fb2b2b;
+    border-radius: 1rem;
+    color: white;
+    padding: 0rem 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.button:hover {
+    background-color: #fb2b2b;
+    color: white;
+}
