@@ -1,0 +1,49 @@
+.footer {
+    background-color: black;
+    width: 100%;
+    padding: 3rem 7rem;
+    color: white;
+}
+
+.footerDetails {
+    display: flex;
+    justify-content: space-between;
+}
+
+.line {
+    color: white;
+}
+
+.branding {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    gap: 10px;
+    align-items: center;
+}
+
+.logo {
+    width: 350px;
+}
+
+.button {
+    border: solid 3px #fb2b2b;
+    border-radius: 1rem;
+    padding: 0rem 1rem;
+}
+
+.brandingButtonWrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.socialMediaWrapper {
+    display: flex;
+    color: white;
+    justify-content: center;
+    font-size: 3.5rem;
+    gap: 1rem;
+    margin: 1rem 0;
+}

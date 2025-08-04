@@ -1,11 +1,16 @@
 import styles from './SeparateLine.module.scss';
+import clsx from 'clsx';
 
-const SeparateLine = ({ text }) => {
+const SeparateLine = ({ text, className }) => {
     return (
-        <div className={styles.divider}>
+        <div className={clsx(styles.divider, className)}>
             <hr />
-            <span>{text}</span>
-            <hr />
+            {text && (
+                <>
+                    <span>{text}</span>
+                    <hr />
+                </>
+            )}
         </div>
     );
 };
