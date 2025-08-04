@@ -9,6 +9,7 @@ import banner1 from '../../assets/jurassic_backdrop.jpg';
 import banner2 from '../../assets/lilostitch.jpg';
 import banner3 from '../../assets/DemonSlayer.jpg';
 import poster1 from '../../assets/f1_poster.jpg';
+import Tab from '../../components/Tab';
 
 const Home = () => {
     const banners = [
@@ -37,6 +38,9 @@ const Home = () => {
                 <ViewAllButton />
             </div>
             <Slider className={styles.movieCardSlider} items={movieCards} numberItemsEachPage={4} />
+            <div className={styles.promotions}>
+                    <Tab>Promotions</Tab>
+            </div>
         </div>
     );
 };
