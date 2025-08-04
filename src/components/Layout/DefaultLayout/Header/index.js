@@ -18,9 +18,9 @@ const Header = () => {
                 <Link to="/login">
                     <LoginButton className={styles.loginButton} />
                 </Link>
-                <div className={styles.userIcon}>
-                    <FaUser />
-                </div>
+                <Link to="/userprofile">
+                    <FaUser className={styles.userIcon}/>
+                </Link>
             </ul>
         </nav>
     );

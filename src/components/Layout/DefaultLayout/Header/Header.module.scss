@@ -38,6 +38,12 @@
     font-size: 1.5rem;
     display: flex;
     justify-content: center;
+    text-decoration: none;
+    color:white
+}
+
+.userIcon:visited {
+    color: white;
 }
 
 .loginButton {
