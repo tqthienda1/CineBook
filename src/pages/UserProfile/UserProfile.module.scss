@@ -1,0 +1,37 @@
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #111111;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.profileInformation {
+  display: flex;
+  align-items: center;
+  padding: 40px;
+  margin-top: 80px;
+  color: #fff;
+  background: #000;
+}
+
+.profileContent {
+    display: flex;
+    gap: 40px;
+    color: #ffffff;
+}
+
+.tabs {
+    gap: 30px;
+    width: 1200px;
+    justify-content: space-between;
+}
