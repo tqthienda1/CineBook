@@ -6,16 +6,16 @@
     gap: 1rem;
 }
 
-.button {
+.active {
+    border-bottom: #fb2b2b solid 3px;
+    margin-bottom: 1rem;
+}
+
+.tab {
     cursor: pointer;
     transition: color 0.3s ease, margin-bottom 0.3s ease, border-bottom 0.3s ease;
 }
 
-.button:not(.active):hover {
+.tab:not(.active):hover {
     color: #fb2b2b;
-}
-
-.active {
-    border-bottom: #fb2b2b solid 3px;
-    margin-bottom: 1rem;
 }
