@@ -7,6 +7,7 @@ import { FaFacebookMessenger } from 'react-icons/fa';
 import { FaInstagram } from 'react-icons/fa';
 import { FaYoutube } from 'react-icons/fa';
 import { FaTiktok } from 'react-icons/fa';
+import Button from '../../../Button';
 
 const accountShelf = {
     header: 'ACCOUNT',
@@ -39,8 +40,8 @@ const Footer = () => {
                     </div>
 
                     <div className={styles.brandingButtonWrapper}>
-                        <div className={styles.button}>book tickets</div>
-                        <div className={styles.button}>food & beverage</div>
+                        <Button>Book tickets</Button>
+                        <Button>food & beverage</Button>
                     </div>
                 </div>
 
