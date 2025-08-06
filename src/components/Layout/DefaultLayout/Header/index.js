@@ -3,6 +3,7 @@ import styles from './Header.module.scss';
 import LoginButton from '../../../LoginButton';
 import { Link } from 'react-router-dom';
 import logo from '../../../../assets/logo.png';
+import RegisterButton from '../../../RegisterButton';
 
 const Header = () => {
     return (
@@ -14,7 +15,9 @@ const Header = () => {
                 <li>Movies</li>
                 <li>Cinemas</li>
                 <li>Promotions</li>
-                <li>Sign In</li>
+                <Link to="/register" className={styles.button}>
+                    <li>Register</li>
+                </Link>
                 <Link to="/login">
                     <LoginButton className={styles.loginButton} />
                 </Link>
