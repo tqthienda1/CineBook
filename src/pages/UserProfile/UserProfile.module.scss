@@ -8,10 +8,6 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
 .profileInformation {
@@ -27,6 +23,7 @@
     display: flex;
     gap: 40px;
     color: #ffffff;
+    margin-bottom: 50px;
 }
 
 .tabs {

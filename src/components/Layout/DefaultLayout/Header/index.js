@@ -12,8 +12,10 @@ const Header = () => {
                 <img className={styles.logo} src={logo} alt="" />
             </Link>
             <ul className={styles.buttons}>
-                <li>Movies</li>
-                <li>Cinemas</li>
+                <li>About Us</li>
+                <Link to="/movies" className={styles.button}>
+                    <li>Movies</li>
+                </Link>
                 <li>Promotions</li>
                 <Link to="/register" className={styles.button}>
                     <li>Register</li>

@@ -9,8 +9,8 @@ const Tabs = () => {
   const [activeTab, setActiveTab] = useState("general");
 
     return (
-    <div className={styles.container}>
-      <div className={styles.tabs}>
+      <div className={styles.container}>
+        <div className={styles.tabs}>
         <h1>Profile</h1>
         <button
           className={clsx(styles.button ,activeTab === "general" ? styles.active : "")}
@@ -26,12 +26,10 @@ const Tabs = () => {
         </button>
       </div>
         
-      <div>
-          <button className={styles.logOutButton}>
-              <RxExit className={styles.logOutIcon} />
-              LOG OUT
-          </button>
-      </div>   
+      <button className={styles.logOutButton}>
+          <RxExit className={styles.logOutIcon} />
+          LOG OUT
+      </button>  
     </div>
   );
 };
