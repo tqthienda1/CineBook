@@ -2,6 +2,7 @@ import styles from './Booking.module.scss';
 import MovieDeTail from '../../components/MovieDetail';
 import thumbnail from '../../assets/f1_thumbnail.jpg';
 import poster from '../../assets/f1_poster_02.jpg';
+import { FaCirclePlay } from 'react-icons/fa6';
 
 const movieInfo = {
     poster: poster,
@@ -21,8 +22,12 @@ const movieInfo = {
 
 const Booking = () => {
     return (
-        <div>
-            <img className={styles.thumbnail} src={thumbnail} alt="" />
+        <div className={styles.container}>
+            <div className={styles.thumbnailWrapper}>
+                <img className={styles.thumbnail} src={thumbnail} alt="" />
+                <FaCirclePlay className={styles.playButton} />
+            </div>
+
             <MovieDeTail {...movieInfo} />
         </div>
     );
