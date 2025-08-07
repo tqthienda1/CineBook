@@ -1,3 +1,27 @@
 .thumbnail {
     width: 100%;
 }
+
+.container {
+    background-color: black;
+    color: white;
+}
+
+
+.thumbnailWrapper {
+    position: relative;
+}
+
+.thumbnail {
+    filter: brightness(70%);
+    cursor: pointer;
+}
+
+.playButton {
+    position: absolute;
+    color: black;
+    left: 50%;
+    top: 40%;
+    font-size: 5rem;
+    cursor: pointer;
+}

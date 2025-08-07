@@ -1,10 +1,22 @@
 .poster {
     max-width: 350px;
+    border-radius: 1rem;
+    box-shadow: 0 0 2rem rgba(255, 255, 255, 0.5);
+}
+
+li {
+    list-style: none;
 }
 
 .movieDetail {
-    display: flex;
     align-items: end;
+    justify-content: space-between;
+    padding: 3rem 7rem;
+    gap: 3rem;
+
+    h1 {
+        font-size: 4rem;
+    }
 }
 
 .col {
@@ -12,15 +24,67 @@
     flex-direction: column;
 }
 
-.col1 {
+.info {
     width: 70%;
+    gap: 1rem;
 }
 
-.col2 {
+.creator {
     width: 30%;
+
+    ul {
+        display: flex;
+        gap: 0.2rem;
+    }
 }
 
 .description {
     white-space: normal;
     overflow-wrap: break-word;
+}
+
+.row {
+    display: flex;
+}
+
+.subinfo1 {
+    > * {
+        background-color: gray;
+        padding: 0.3rem 1rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    gap: 1rem;
+}
+
+.subinfo2 {
+    gap: 1.5rem;
+    align-items: center;
+
+    > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .imdb {
+        color: goldenrod;
+        font-size: 3rem;
+    }
+
+    .dateIcon {
+        font-size: 1.75rem;
+    }
+
+    .ageLimit {
+        background-color: #f25858;
+        color: black;
+        height: 1rem;
+        padding: 0.7rem;
+        border-radius: 1rem;
+        font-weight: 600;
+    }
 }
