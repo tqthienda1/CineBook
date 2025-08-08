@@ -12,17 +12,16 @@
   justify-content: space-between;
   align-items: center;
   display: flex;
-}
+  h3 {
+    margin: 0;
+    font-size: 25px;
+  }
 
-h3 {
-  margin: 0;
-  font-size: 25px;
-}
-
-h4 {
-  margin: 0;
-  font-size: 12px;
-  color: gray
+  h4 {
+    margin: 0;
+    font-size: 12px;
+    color: gray
+  }
 }
 
 .editBTN {
