@@ -9,13 +9,19 @@ import { useState } from 'react';
 
 const RegisterForm = () => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleRegister = async () => {
     try {
-      const res = await fetch('http://localhost:5000/register', {
+      if (password !== confirmPassword) {
+        alert('Password dont match');
+        return;
+      }
+      const res = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
@@ -33,8 +39,8 @@ const RegisterForm = () => {
         <p className={styles.subtitle}>Enter your email and password to create your account.</p>
       </div>
       <EmailInput value={email} onChange={setEmail} />
-      <PasswordInput labelContent={'Password'} />
-      <PasswordInput labelContent={'Re- enter the password'} />
+      <PasswordInput value={password} onChange={setPassword} labelContent={'Password'} />
+      <PasswordInput value={confirmPassword} onChange={setConfirmPassword} labelContent={'Re- enter the password'} />
 
       <RegisterButton onClick={handleRegister} />
       <SeparateLine text="Or Register With" />
