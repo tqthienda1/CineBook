@@ -3,6 +3,7 @@ import Home from '../pages/Home';
 import Booking from '../pages/Booking';
 import Register from '../pages/Register';
 import Movies from '../pages/Movies'
+import AboutUs from '../pages/AboutUs';
 import UserProfile from '../pages/UserProfile';
 import DefaultLayout from '../components/Layout/DefaultLayout';
 import HeaderOnlyLayout from '../components/Layout/HeaderOnlyLayout';
@@ -14,6 +15,7 @@ const publicRoutes = [
     { path: '/userprofile', component: UserProfile, layout: DefaultLayout },
     { path: '/register', component: Register, layout: HeaderOnlyLayout },
     { path: '/movies', component: Movies, layout: DefaultLayout },
+    { path: '/aboutus', component: AboutUs, layout: DefaultLayout },
 ];
 
 const privateRoutes = [];

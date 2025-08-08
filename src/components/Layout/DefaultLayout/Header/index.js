@@ -12,7 +12,9 @@ const Header = () => {
                 <img className={styles.logo} src={logo} alt="" />
             </Link>
             <ul className={styles.buttons}>
-                <li>About Us</li>
+                <Link to="/aboutus" className={styles.button}>
+                    <li>About Us</li>
+                </Link>
                 <Link to="/movies" className={styles.button}>
                     <li>Movies</li>
                 </Link>
