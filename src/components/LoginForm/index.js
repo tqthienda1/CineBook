@@ -17,7 +17,7 @@ const LoginForm = () => {
                 <p className={styles.subtitle}>Enter your email and password to access your account.</p>
             </div>
             <EmailInput />
-            <PasswordInput />
+            <PasswordInput labelContent={'Password'}/>
             <div className={styles.rememberForgetWrap}>
                 <RememberCheckbox />
                 <ForgetPassword />

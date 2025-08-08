@@ -15,8 +15,8 @@ const RegisterForm = () => {
                 <p className={styles.subtitle}>Enter your email and password to create your account.</p>
             </div>
             <EmailInput />
-            <PasswordInput labelContent={'Enter Password'}/>
-            <PasswordInput labelContent={'Enter Password again'}/>
+            <PasswordInput labelContent={'Password'}/>
+            <PasswordInput labelContent={'Re- enter the password'}/>
             
             <RegisterButton />
             <SeparateLine text="Or Register With" />
