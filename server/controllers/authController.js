@@ -1,9 +1,10 @@
 import User from '../models/User.js';
 
 export const registerUser = async (req, res) => {
-  try{  const { username, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
       return res.status(400).json({ message: 'Thiếu username hoặc password' });
     }
 
@@ -14,11 +15,11 @@ export const registerUser = async (req, res) => {
 
     // const newUser = await User.create({ username, password });
 
-    console.log("Email: ", email)
+    console.log('Email: ', email);
 
-    return res.status(201).json({ message: 'Đăng ký thành công', user: email });
+    return res.status(201).json({ message: 'Đăng ký thành công', email: email });
   } catch {
-    console.error("Lỗi khi đăng ký:", err);
+    console.error('Lỗi khi đăng ký:', err);
     res.status(500).json({ message: 'Server error' });
   }
-  };
+};
