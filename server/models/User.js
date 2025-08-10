@@ -1,31 +1,35 @@
 import connection from '../db.js';
 import bcrypt from 'bcryptjs';
 
-// Hàm kiểm tra email tồn tại
-const checkEmailExists = async (email) => {
-  return new Promise((resolve, reject) => {
+
+const User = {
+  // 1. Kiểm tra email đã tồn tại
+  async checkEmailExists(email) {
     const query = 'SELECT * FROM user WHERE username = ?';
-    connection.query(query, [email], (err, results) => {
-      if (err) return reject(err);
-      resolve(results.length > 0);
-    });
-  });
-};
+    const [rows] = await connection.promise().query(query, [email]);
+    return rows.length > 0;
+  },
 
-// Hàm tạo user mới
-const createUser = async (email, password) => {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  return new Promise((resolve, reject) => {
+  // 2. Tạo user mới
+  async createUser(email, password) {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const query = 'INSERT INTO user (username, password) VALUES (?, ?)';
-    connection.query(query, [email, hashedPassword], (err, result) => {
-      if (err) return reject(err);
-      resolve(result.insertId);
-    });
-  });
+    const [result] = await connection.promise().query(query, [email, hashedPassword]);
+    return { id: result.insertId, email };
+  },
+
+  // 3. Lấy user theo email
+  async getUserByEmail(email) {
+    const query = 'SELECT * FROM user WHERE username = ?';
+    const [rows] = await connection.promise().query(query, [email]);
+    return rows[0] || null;
+  },
+
+  // 4. So sánh password
+  async comparePassword(plainPassword, hashedPassword) {
+    return bcrypt.compare(plainPassword, hashedPassword);
+  }
+
 };
 
-// Export default dưới dạng object
-export default {
-  checkEmailExists,
-  createUser
-};
+export default User;
