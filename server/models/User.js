@@ -1,6 +1,7 @@
 import connection from '../db.js';
 import bcrypt from 'bcryptjs';
 
+
 const User = {
   // 1. Kiểm tra email đã tồn tại
   async checkEmailExists(email) {
@@ -28,6 +29,7 @@ const User = {
   async comparePassword(plainPassword, hashedPassword) {
     return bcrypt.compare(plainPassword, hashedPassword);
   }
+
 };
 
 export default User;
