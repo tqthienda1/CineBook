@@ -18,11 +18,6 @@ const RegisterForm = () => {
         alert('Password do not match');
         return;
       }
-
-        alert("Password do not match")
-        return
-      }
-      
       const res = await fetch('http://localhost:5003/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
