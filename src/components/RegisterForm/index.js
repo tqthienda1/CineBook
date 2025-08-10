@@ -17,7 +17,7 @@ const RegisterForm = () => {
       if (password !== confirmPassword) {
         alert("Password do not match")
         return
-        )
+      }
       
       const res = await fetch('http://localhost:5003/auth/register', {
         method: 'POST',
