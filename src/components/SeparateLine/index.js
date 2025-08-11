@@ -1,14 +1,14 @@
 import styles from './SeparateLine.module.scss';
 import clsx from 'clsx';
 
-const SeparateLine = ({ text, className }) => {
+const SeparateLine = ({ text, textColor, lineColor, className }) => {
     return (
         <div className={clsx(styles.divider, className)}>
-            <hr />
+            <hr style={{ color: lineColor }} />
             {text && (
                 <>
-                    <span>{text}</span>
-                    <hr />
+                    <span style={{ color: textColor }}>{text}</span>
+                    <hr style={{ color: lineColor }} />
                 </>
             )}
         </div>
