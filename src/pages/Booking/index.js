@@ -3,6 +3,8 @@ import MovieDeTail from '../../components/MovieDetail';
 import thumbnail from '../../assets/f1_thumbnail.jpg';
 import poster from '../../assets/f1_poster_02.jpg';
 import { FaCirclePlay } from 'react-icons/fa6';
+import SeparateLine from '../../components/SeparateLine';
+import DateSlider from '../../components/DateSlider';
 
 const movieInfo = {
     poster: poster,
@@ -29,6 +31,10 @@ const Booking = () => {
             </div>
 
             <MovieDeTail {...movieInfo} />
+
+            <SeparateLine text="SHOWTIME" lineColor={'#fb2b2b'} className={styles.separateLine} />
+
+            <DateSlider />
         </div>
     );
 };
