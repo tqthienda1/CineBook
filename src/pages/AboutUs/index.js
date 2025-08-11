@@ -33,7 +33,7 @@ const AboutUs = () => {
                     </div>
                     <div className={styles.ourStory}>
                         <h2>
-                            CINEBOX was founded with a simple mission:
+                            CINEBOOK was founded with a simple mission:
                             to create an extraordinary movie-watching experience that goes beyond just entertainment.
                             We believe that cinema is more than just watching a film – it's about creating memories,
                             sharing emotions, and bringing communities together.

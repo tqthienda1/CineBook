@@ -47,8 +47,8 @@
     color: gray;
     font-size: 17px;
     margin-bottom: 20px;
-    width: 600px; // chỉ chiếm tối đa nửa màn hình
-    white-space: normal; // cho phép xuống hàng
+    width: 600px;
+    white-space: normal; 
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
@@ -58,11 +58,11 @@
   padding: 50px;
   display: flex;
   align-items: left;
-  justify-content: left;
+  justify-content: center;
   gap: 70px;
   img {
     height: 350px;
-    width: 500px;
+    width: 550px;
     border-radius: 10%;
   }
   h1 {
