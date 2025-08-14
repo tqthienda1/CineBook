@@ -4,7 +4,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { IoIosArrowDown } from 'react-icons/io';
 import { eachDayOfInterval, format } from 'date-fns';
 import DateBox from '../DateBox';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import VerticalLine from '../VerticalLine';
 import { PiClipboard } from 'react-icons/pi';
 
