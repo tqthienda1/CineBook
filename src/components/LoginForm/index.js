@@ -7,6 +7,7 @@ import SocialLogin from '../SocialLogin';
 import SeparateLine from '../SeparateLine';
 import styles from './LoginForm.module.scss';
 import logo from '../../assets/logo.png';
+import { useState } from 'react';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
