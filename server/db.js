@@ -1,34 +1,29 @@
 import mysql from 'mysql2';
 import 'dotenv/config'; 
+
 const connection = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'containers-us-west-123.railway.app',
+  port: process.env.DB_PORT || 3306,
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || ''
+  password: process.env.DB_PASSWORD || 'abcdef123456',
+  database: process.env.DB_NAME || 'railway'
 });
 
 connection.connect((err) => {
   if (err) throw err;
+  console.log('✅ Đã kết nối MySQL Railway');
 
-  connection.query('CREATE DATABASE IF NOT EXISTS cinebook', (err) => {
+  // Tạo bảng user (nếu chưa có)
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS user (
+      user_id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL
+    )
+  `;
+  connection.query(createTableQuery, (err) => {
     if (err) throw err;
-
-    // Chọn database
-    connection.changeUser({ database: 'cinebook' }, (err) => {
-      if (err) throw err;
-
-      // Tạo bảng user
-      const createTableQuery = `
-        CREATE TABLE IF NOT EXISTS user (
-          user_id INT AUTO_INCREMENT PRIMARY KEY,
-          username VARCHAR(255) NOT NULL UNIQUE,
-          password VARCHAR(255) NOT NULL
-        )
-      `;
-      connection.query(createTableQuery, (err) => {
-        if (err) throw err;
-        console.log('Bảng "user" đã sẵn sàng.');
-      });
-    });
+    console.log('Bảng "user" đã sẵn sàng.');
   });
 });
 
