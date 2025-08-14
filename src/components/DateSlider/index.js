@@ -2,30 +2,57 @@ import styles from './DateSlider.module.scss';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoIosArrowDown } from 'react-icons/io';
-import { eachDayOfInterval, format } from 'date-fns';
+import { eachDayOfInterval, format, isBefore, startOfDay } from 'date-fns';
 import DateBox from '../DateBox';
 import { useState } from 'react';
 import VerticalLine from '../VerticalLine';
 import { PiClipboard } from 'react-icons/pi';
+import clsx from 'clsx';
 
 const DateSlider = () => {
     const today = new Date();
     const end = new Date();
-    end.setDate(today.getDate() + 2);
-    const dates = eachDayOfInterval({ start: today, end });
-    const datesList = dates.map((date) => ({
+    const prevDay = new Date();
+    const pickingDay = new Date();
+    pickingDay.setDate(today.getDate());
+    end.setDate(pickingDay.getDate() + 2);
+    prevDay.setDate(pickingDay.getDate() - 2);
+    let dates = eachDayOfInterval({ start: prevDay, pickingDay, end });
+    let datesList = dates.map((date) => ({
         fullDate: date,
         day: format(date, 'dd'),
         month: format(date, 'MMM'),
         weekday: format(date, 'EEE'),
     }));
 
-    const [pickingDate, setPickingDate] = useState(today);
+    const [curDatesList, setCurDatesList] = useState(datesList);
+
+    const [pickingDate, setPickingDate] = useState(pickingDay);
+
+    const updateDatesList = (curDay) => {
+        pickingDay.setMonth(curDay.getMonth());
+        pickingDay.setDate(curDay.getDate());
+        console.log(pickingDay);
+        end.setMonth(curDay.getMonth());
+        end.setDate(pickingDay.getDate() + 2);
+        prevDay.setMonth(curDay.getMonth());
+        prevDay.setDate(pickingDay.getDate() - 2);
+        dates = eachDayOfInterval({ start: prevDay, pickingDay, end });
+        datesList = dates.map((date) => ({
+            fullDate: date,
+            day: format(date, 'dd'),
+            month: format(date, 'MMM'),
+            weekday: format(date, 'EEE'),
+        }));
+
+        setCurDatesList(datesList);
+    };
 
     const handleNextClick = () => {
         const nextDate = new Date(pickingDate);
         nextDate.setDate(nextDate.getDate() + 1);
         setPickingDate(nextDate);
+        updateDatesList(nextDate);
     };
 
     const handlePrevCLick = () => {
@@ -36,29 +63,52 @@ const DateSlider = () => {
         const prevDate = new Date(pickingDate);
         prevDate.setDate(prevDate.getDate() - 1);
         setPickingDate(prevDate);
+
+        updateDatesList(prevDate);
     };
 
     return (
         <div className={styles.datesSlider}>
             <label>DATE</label>
-            <IoIosArrowBack onClick={handlePrevCLick} />
-            <ul className={styles.datesList}>
-                {datesList.map((date, index) => (
-                    <li
-                        key={index}
-                        className={
-                            date.fullDate.toDateString() === pickingDate.toDateString() ? styles.pickingDate : ''
-                        }
-                    >
-                        <DateBox date={date} />
-                    </li>
-                ))}
-            </ul>
+            <div className={styles.datesList}>
+                <IoIosArrowBack className={styles.arrow} onClick={handlePrevCLick} />
 
-            <IoIosArrowForward onClick={handleNextClick} />
+                <div className={styles.highlightBox}></div>
+                <ul>
+                    {curDatesList.map((date, index) => (
+                        <li
+                            key={index}
+                            className={clsx(
+                                isBefore(startOfDay(date.fullDate), startOfDay(today)) ||
+                                    date.fullDate.toDateString() !== pickingDate.toDateString()
+                                    ? styles.unhighlight
+                                    : '',
+                            )}
+                        >
+                            <DateBox
+                                className={
+                                    date.fullDate.toDateString() === pickingDate.toDateString()
+                                        ? styles.pickingDate
+                                        : ''
+                                }
+                                date={date}
+                            />
+                        </li>
+                    ))}
+                </ul>
+                <IoIosArrowForward className={styles.arrow} onClick={handleNextClick} />
+            </div>
 
-            <VerticalLine />
-            <label>LOCATION</label>
+            <div className={clsx(styles.cityPickingWrapper, styles.row)}>
+                <VerticalLine />
+                <div className={styles.col}>
+                    <label>LOCATION</label>
+                    <div className={clsx(styles.row, styles.cityPickingDropbox)}>
+                        <div>Ho Chi Minh City</div>
+                        <IoIosArrowDown className={styles.arrow} />
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
