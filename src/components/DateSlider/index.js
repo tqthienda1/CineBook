@@ -1,15 +1,16 @@
 import styles from './DateSlider.module.scss';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
-import { IoIosArrowDown } from 'react-icons/io';
 import { eachDayOfInterval, format, isBefore, startOfDay } from 'date-fns';
 import DateBox from '../DateBox';
 import { useState } from 'react';
 import VerticalLine from '../VerticalLine';
-import { PiClipboard } from 'react-icons/pi';
 import clsx from 'clsx';
+import Dropdown from '../Dropdown';
 
 const DateSlider = () => {
+    const citiesList = ['Ho Chi Minh City', 'Ha Noi', 'Da Nang'];
+
     const today = new Date();
     const end = new Date();
     const prevDay = new Date();
@@ -104,8 +105,7 @@ const DateSlider = () => {
                 <div className={styles.col}>
                     <label>LOCATION</label>
                     <div className={clsx(styles.row, styles.cityPickingDropbox)}>
-                        <div>Ho Chi Minh City</div>
-                        <IoIosArrowDown className={styles.arrow} />
+                        <Dropdown defaultValue={'Select City'} content={citiesList} />
                     </div>
                 </div>
             </div>

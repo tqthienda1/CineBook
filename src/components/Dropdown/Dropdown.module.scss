@@ -1,0 +1,30 @@
+.arrow {
+    color: red;
+}
+
+.dropdownButton {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    width: 14rem;
+}
+
+.dropdownContent {
+    position: absolute;
+    background-color: #2c2a2a;
+    border-radius: 1rem;
+    padding: 1rem 0;
+
+    li {
+        cursor: pointer;
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    li:hover {
+        opacity: 0.5;
+    }
+}
