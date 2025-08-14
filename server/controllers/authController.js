@@ -38,7 +38,7 @@ export const loginUser = async (req, res) => {
       return res.status(409).json({ message: 'Email không tồn tại' });
     }
 
-    const hashPassword = User.getUserByEmail(email)
+    const hashPassword = User.getPasswordByEmail(email)
     const isPasswordValid = await User.comparePassword(password, hashPassword);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Sai mật khẩu' });
