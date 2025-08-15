@@ -1,5 +1,5 @@
-  import User from '../models/User.js';
-
+import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 export const registerUser = async (req, res) => {
   try{  
     const { email, password } = req.body;
@@ -38,8 +38,9 @@ export const loginUser = async (req, res) => {
       return res.status(409).json({ message: 'Email không tồn tại' });
     }
 
-    const hashPassword = User.getPasswordByEmail(email)
-    const isPasswordValid = await User.comparePassword(password, hashPassword);
+    const user = await User.getUserByEmail(email)
+    const hashed = user.password
+    const isPasswordValid = await User.comparePassword(password, hashed);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Sai mật khẩu' });
     }
