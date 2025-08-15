@@ -1,24 +1,24 @@
 .container {
-    border-radius: 10px;
-    border: 1px white solid;
-    padding: 30px;
+  border-radius: 10px;
+  border: 1px white solid;
+  padding: 30px;
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    p {
-        margin: 0;
-        color: #aaa;
-        font-size: 0.9rem;
-    }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  p {
+    margin: 0;
+    color: #aaa;
+    font-size: 0.9rem;
+  }
 }
 
 .transactionCount {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    font-size: 30px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 30px;
 }

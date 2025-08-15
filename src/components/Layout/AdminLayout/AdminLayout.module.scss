@@ -1,0 +1,143 @@
+.layoutContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+}
+
+.sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+  border-right: 1px solid #333;
+  padding: 0;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.logo {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid #333;
+  text-align: center;
+}
+
+.logo h2 {
+  color: #ff0000;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.logo span {
+  color: #888;
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.navigation {
+  padding: 1rem 0;
+}
+
+.navItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.navItem:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+.navItem.active {
+  background-color: #ff0000;
+  color: #fff;
+  border-right: 4px solid #ff3333;
+}
+
+.navIcon {
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  width: 24px;
+  text-align: center;
+}
+
+.navLabel {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 280px;
+  background-color: #0a0a0a;
+}
+
+.header {
+  background: linear-gradient(90deg, #1a1a1a 0%, #0f0f0f 100%);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pageTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userInfo span {
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.logoutBtn {
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.logoutBtn:hover {
+  background-color: #cc0000;
+}
+
+.contentArea {
+  padding: 2rem;
+  min-height: calc(100vh - 100px);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+  }
+
+  .mainContent {
+    margin-left: 0;
+  }
+}
