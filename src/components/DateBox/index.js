@@ -1,10 +1,11 @@
 import styles from './DateBox.module.scss';
+import clsx from 'clsx';
 
-const DateBox = ({ date }) => {
+const DateBox = ({ className, date }) => {
     return (
-        <div>
+        <div className={clsx(className, styles.dateBox)}>
             <div>{date.month}</div>
-            <div>{date.day}</div>
+            <div className={styles.day}>{date.day}</div>
             <div>{date.weekday}</div>
         </div>
     );

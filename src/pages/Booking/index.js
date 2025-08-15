@@ -31,10 +31,13 @@ const Booking = () => {
             </div>
 
             <MovieDeTail {...movieInfo} />
-
+            <div className={styles.margin}></div>
             <SeparateLine text="SHOWTIME" lineColor={'#fb2b2b'} className={styles.separateLine} />
-
+            <div className={styles.margin}></div>
             <DateSlider />
+            <div className={styles.margin}></div>
+
+            <SeparateLine text="CINEMA LIST" lineColor={'#fb2b2b'} className={styles.separateLine} />
         </div>
     );
 };
