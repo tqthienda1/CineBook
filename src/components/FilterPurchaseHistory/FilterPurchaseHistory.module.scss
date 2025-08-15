@@ -1,0 +1,27 @@
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.filterContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.filterContainer {
+  border-radius: 10px;
+  border: 1px white solid;
+  padding: 30px;
+  margin-bottom: 50px;
+}
+
+.box {
+  width: 320px;
+  display: flex;
+  margin-top: 10px;
+}
