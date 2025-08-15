@@ -35,7 +35,7 @@ const LoginForm = () => {
                 <p className={styles.subtitle}>Enter your email and password to access your account.</p>
             </div>
             <EmailInput value={email} onChange={setEmail} />
-            <PasswordInput labelContent={'Password'} />
+            <PasswordInput value={password} onChange={setPassword} labelContent={'Password'} />
             <div className={styles.rememberForgetWrap}>
                 <RememberCheckbox />
                 <ForgetPassword />

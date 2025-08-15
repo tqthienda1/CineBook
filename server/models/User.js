@@ -19,7 +19,7 @@ const User = {
   },
 
   // 3. Lấy user theo email
-  async getPasswordByEmail(email) {
+  async getUserByEmail(email) {
     const query = 'SELECT * FROM user WHERE username = ?';
     const [rows] = await connection.promise().query(query, [email]);
     return rows[0] || null;
