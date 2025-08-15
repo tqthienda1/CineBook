@@ -13,19 +13,6 @@
     overflow: hidden;
 }
 
-.overlay {
-    left: -100px;
-    bottom: -100px;
-    background-color: #000000;
-    opacity: 0.9;
-    position: absolute;
-    width: 120%;
-    height: 110%;
-    z-index: 0;
-    filter: blur(15px);
-    bottom: -50px;
-}
-
 .buttons {
     display: flex;
     gap: 1rem;

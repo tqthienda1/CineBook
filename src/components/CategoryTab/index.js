@@ -1,6 +1,5 @@
 import styles from './CategoryTab.module.scss';
 import VerticalLine from '../VerticalLine';
-import clsx from 'clsx';
 import { useState } from 'react';
 import Tab from '../Tab';
 
