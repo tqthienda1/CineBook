@@ -53,7 +53,9 @@ connection.connect(async (err) => {
           duration INT,
           releaseDay DATE,
           description TEXT,
-          ageLimit INT
+          ageLimit INT,
+          poster_url NVARCHAR(250),
+          backdrop_url NVARCHAR(250)
         )
       `
     },
@@ -143,7 +145,7 @@ connection.connect(async (err) => {
     }
   ];
 
-  // Tạo bảng theo thứ tự
+
   const createTablesSequentially = async () => {
     for (const table of tables) {
       await new Promise((resolve) => {
