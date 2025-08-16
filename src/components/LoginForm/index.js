@@ -9,20 +9,39 @@ import styles from './LoginForm.module.scss';
 import logo from '../../assets/logo.png';
 import { useState } from 'react';
 
-const LoginForm = () => {
+const LoginForm = ({ onSubmitResult }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
         try {
+            if (!email || !password) {
+                onSubmitResult('Cannot leave email or password blank');
+                setEmail('');
+                setPassword('');
+                return;
+            }
+
             const res = await fetch('http://localhost:5003/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
 
+            setEmail('');
+            setPassword('');
             const data = await res.json();
-            console.log(data);
+            if (res.status === 409 || res.status === 401) {
+                onSubmitResult('Please check your email or password again');
+                return;
+            } else if (res.status === 500) {
+                onSubmitResult('Server error');
+                return;
+            } else if (res.status === 200) {
+                localStorage.setItem('token', data.token);
+                onSubmitResult('Login successfully');
+                return;
+            }
         } catch (err) {
             console.error(err);
         }
