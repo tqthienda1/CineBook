@@ -1,70 +1,161 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './AdminDashboard.module.scss';
-import Modal from 'react-modal';
 
 const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout }) => {
   const currentSection = activeSectionFromLayout || 'dashboard';
 
   const [formVisible, setFormVisible] = useState(false);
   const [formType, setFormType] = useState(''); // 'add' hoặc 'edit'
-  const [formData, setFormData] = useState({ title: '', genre: '', duration: '' });
+  const [formData, setFormData] = useState({});
+  const [entity, setEntity] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formType === 'add') {
-      // Thực hiện thêm film mới
-    } else {
-      // Thực hiện cập nhật film
+  const [skipResetForm, setSkipResetForm] = useState(false);
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
     }
+
+    // chỉ đóng form khi KHÔNG phải quick action
+    if (!skipResetForm) {
+      setFormVisible(false);
+      setFormType('');
+      setFormData({});
+    }
+  }, [currentSection]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token'); // lấy token đã lưu sau khi login
+
+      if (formType === 'add') {
+        // Gọi API thêm phim
+        const res = await fetch('http://localhost:5003/admin/movies', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // gửi kèm token
+          },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          // cập nhật danh sách
+          setRecentFilms((prev) => [...prev, data.film]);
+        } else {
+          alert('Lỗi: ' + data.message);
+        }
+      } else {
+        // Gọi API cập nhật phim
+        const res = await fetch(`http://localhost:5003/admin/movies/${formData.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // gửi kèm token
+          },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          // cập nhật lại film trong danh sách
+          setRecentFilms((prev) => prev.map((film) => (film.id === formData.id ? data.film : film)));
+        } else {
+          alert('Lỗi: ' + data.message);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Không kết nối được backend');
+    }
+
     closeForm();
   };
 
-  const openForm = (type, data = { title: '', genre: '', duration: '' }) => {
-    setFormType(type);
-    setFormData(data);
-    setFormVisible(true);
+  const formConfigs = {
+    movies: [
+      { name: 'title', label: 'Title', type: 'text' },
+      { name: 'genre', label: 'Genre', type: 'text' },
+      { name: 'duration', label: 'Duration', type: 'text' },
+    ],
+    showtimes: [
+      { name: 'movie', label: 'Movie', type: 'text' },
+      { name: 'theater', label: 'Theater', type: 'text' },
+      { name: 'time', label: 'Time', type: 'time' },
+    ],
+    users: [
+      { name: 'username', label: 'Username', type: 'text' },
+      { name: 'role', label: 'Role', type: 'text' },
+    ],
+    theaters: [
+      { name: 'name', label: 'Theater Name', type: 'text' },
+      { name: 'seats', label: 'Seats', type: 'number' },
+      { name: 'location', label: 'Location', type: 'text' },
+    ],
+    promotions: [
+      { name: 'title', label: 'Title', type: 'text' },
+      { name: 'discount', label: 'Discount', type: 'text' },
+    ],
+  };
+
+  const entityLabels = {
+    movies: 'Movie',
+    showtimes: 'Showtime',
+    users: 'User',
+    theaters: 'Theater',
+    promotions: 'Promotion',
   };
 
   const closeForm = () => {
     setFormVisible(false);
-    setFormData({ title: '', genre: '', duration: '' });
+    setFormData({});
   };
 
-  const statsData = [
-    { icon: '🎬', value: '150+', label: 'Total Films', color: '#ff0000' },
-    { icon: '👥', value: '2.5K+', label: 'Active Users', color: '#ff3333' },
-    { icon: '🎭', value: '8', label: 'Theaters', color: '#ff6666' },
-    { icon: '🎟️', value: '25', label: 'Active Promotions', color: '#ff9999' },
-  ];
+  const openForm = (type, entityName, data = {}) => {
+    setFormType(type); // "add" hoặc "edit"
+    setEntity(entityName); // ví dụ: "movies"
+    setFormData(data); // nếu edit thì truyền data cũ
+    setFormVisible(true);
+  };
 
-  const recentFilms = [
+  const [recentFilms, setRecentFilms] = useState([
     { id: 1, title: 'Avatar: The Way of Water', genre: 'Sci-Fi', duration: '192 min', status: 'Active' },
     { id: 2, title: 'Top Gun: Maverick', genre: 'Action', duration: '130 min', status: 'Active' },
     { id: 3, title: 'Black Panther: Wakanda Forever', genre: 'Action', duration: '161 min', status: 'Inactive' },
     { id: 4, title: 'The Batman', genre: 'Action', duration: '176 min', status: 'Active' },
-  ];
+  ]);
 
-  const showtimesData = [
-    { id: 1, film: 'Avatar: The Way of Water', theater: 'Theater 1', time: '14:00', status: 'Active' },
-    { id: 2, film: 'Top Gun: Maverick', theater: 'Theater 2', time: '16:30', status: 'Active' },
-  ];
+  const [statsData, setStatsData] = useState([
+    { icon: '🎬', value: '150+', label: 'Total Films', color: '#ff0000' },
+    { icon: '👥', value: '2.5K+', label: 'Active Users', color: '#ff3333' },
+    { icon: '🎭', value: '8', label: 'Theaters', color: '#ff6666' },
+    { icon: '🎟️', value: '25', label: 'Active Promotions', color: '#ff9999' },
+  ]);
 
-  const usersData = [
+  const [showtimesData, setShowtimesData] = useState([
+    { id: 1, movie: 'Avatar: The Way of Water', theater: 'Theater 1', time: '14:00', status: 'Active' },
+    { id: 2, movie: 'Top Gun: Maverick', theater: 'Theater 2', time: '16:30', status: 'Active' },
+  ]);
+
+  const [usersData, setUsersData] = useState([
     { id: 1, username: 'admin', role: 'Administrator', status: 'Active' },
     { id: 2, username: 'user123', role: 'User', status: 'Inactive' },
-  ];
+  ]);
 
-  const theatersData = [
+  const [theatersData, setTheatersData] = useState([
     { id: 1, name: 'Theater 1', seats: 100, location: 'Building A' },
     { id: 2, name: 'Theater 2', seats: 80, location: 'Building B' },
-  ];
+  ]);
 
-  const promotionsData = [
+  const [promotionsData, setPromotionsData] = useState([
     { id: 1, title: 'Summer Sale', discount: '20%', status: 'Active' },
     { id: 2, title: 'Black Friday', discount: '50%', status: 'Upcoming' },
-  ];
+  ]);
 
   const renderDashboard = () => (
     <div className={styles.dashboardContent}>
@@ -84,7 +175,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
       <div className={styles.dashboardGrid}>
         <div className={styles.recentFilms}>
-          <h3>Recent Films</h3>
+          <h3>Recent Movies</h3>
           <div className={styles.filmsList}>
             {recentFilms.map((film) => (
               <div key={film.id} className={styles.filmItem}>
@@ -105,19 +196,50 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         <div className={styles.quickActions}>
           <h3>Quick Actions</h3>
           <div className={styles.actionButtons}>
-            <button className={styles.actionBtn} onClick={() => setActiveSectionFromLayout('films')}>
+            <button
+              className={styles.actionBtn}
+              onClick={() => {
+                setSkipResetForm(true);
+                setActiveSectionFromLayout('movies');
+                openForm('add', 'movies');
+                setTimeout(() => setSkipResetForm(false), 0);
+              }}
+            >
               <span>🎬</span>
-              Add New Film
+              Add New Movie
             </button>
-            <button className={styles.actionBtn} onClick={() => setActiveSectionFromLayout('showtimes')}>
+            <button
+              className={styles.actionBtn}
+              onClick={() => {
+                setSkipResetForm(true);
+                setActiveSectionFromLayout('showtimes');
+                openForm('add', 'showtimes');
+                setTimeout(() => setSkipResetForm(false), 0);
+              }}
+            >
               <span>🕐</span>
               Create Showtime
             </button>
-            <button className={styles.actionBtn} onClick={() => setActiveSectionFromLayout('promotions')}>
+            <button
+              className={styles.actionBtn}
+              onClick={() => {
+                setSkipResetForm(true);
+                setActiveSectionFromLayout('promotions');
+                openForm('add', 'promotions');
+                setTimeout(() => setSkipResetForm(false), 0);
+              }}
+            >
               <span>🎟️</span>
               New Promotion
             </button>
-            <button className={styles.actionBtn} onClick={() => setActiveSectionFromLayout('users')}>
+            <button
+              className={styles.actionBtn}
+              onClick={() => {
+                // setSkipResetForm(true);
+                setActiveSectionFromLayout('users');
+                // openForm('add', 'users');
+              }}
+            >
               <span>👥</span>
               Manage Users
             </button>
@@ -127,12 +249,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     </div>
   );
 
-  const renderFilmManagement = () => (
+  const renderMovieManagement = () => (
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
         <h2>Film Management</h2>
-        <button className={styles.primaryBtn} onClick={() => openForm('add')}>
-          Add New Film
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'movies')}>
+          Add New Movie
         </button>
       </div>
       <div className={styles.tableContainer}>
@@ -161,7 +283,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 </td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn} onClick={() => openForm('edit', film)}>
+                    <button className={styles.editBtn} onClick={() => openForm('edit', 'movies', film)}>
                       Edit
                     </button>
                     <button className={styles.deleteBtn}>Delete</button>
@@ -175,24 +297,29 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     </div>
   );
 
-  const renderGenericSection = (title) => (
-    <div className={styles.sectionContent}>
-      <div className={styles.sectionHeader}>
-        <h2>{title}</h2>
-        <button className={styles.primaryBtn}>Add New</button>
+  const renderGenericSection = (title) => {
+    closeForm();
+    return (
+      <div className={styles.sectionContent}>
+        <div className={styles.sectionHeader}>
+          <h2>{title}</h2>
+          <button className={styles.primaryBtn}>Add New</button>
+        </div>
+        <div className={styles.comingSoon}>
+          <h3>Coming Soon</h3>
+          <p>This section is under development</p>
+        </div>
       </div>
-      <div className={styles.comingSoon}>
-        <h3>Coming Soon</h3>
-        <p>This section is under development</p>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderShowtimeManagement = () => (
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
         <h2>Showtime Management</h2>
-        <button className={styles.primaryBtn}>Create Showtime</button>
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'showtimes')}>
+          Create Showtime
+        </button>
       </div>
       <div className={styles.tableContainer}>
         <table className={styles.dataTable}>
@@ -208,7 +335,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <tbody>
             {showtimesData.map((showtime) => (
               <tr key={showtime.id}>
-                <td>{showtime.film}</td>
+                <td>{showtime.movie}</td>
                 <td>{showtime.theater}</td>
                 <td>{showtime.time}</td>
                 <td>
@@ -220,7 +347,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 </td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn}>Edit</button>
+                    <button className={styles.editBtn} onClick={() => openForm('edit', 'showtimes', showtime)}>
+                      Edit
+                    </button>
                     <button className={styles.deleteBtn}>Delete</button>
                   </div>
                 </td>
@@ -236,7 +365,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
         <h2>User Account Management</h2>
-        <button className={styles.primaryBtn}>Add New User</button>
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'users')}>
+          Add New User
+        </button>
       </div>
       <div className={styles.tableContainer}>
         <table className={styles.dataTable}>
@@ -260,7 +391,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 </td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn}>Edit</button>
+                    <button className={styles.editBtn} onClick={() => openForm('edit', 'users', user)}>
+                      Edit
+                    </button>
                     <button className={styles.deleteBtn}>Delete</button>
                   </div>
                 </td>
@@ -276,7 +409,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
         <h2>Theater & Seat Management</h2>
-        <button className={styles.primaryBtn}>Add New Theater</button>
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'theaters')}>
+          Add New Theater
+        </button>
       </div>
       <div className={styles.tableContainer}>
         <table className={styles.dataTable}>
@@ -296,7 +431,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 <td>{theater.location}</td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn}>Edit</button>
+                    <button className={styles.editBtn} onClick={() => openForm('add', 'theaters', theater)}>
+                      Edit
+                    </button>
                     <button className={styles.deleteBtn}>Delete</button>
                   </div>
                 </td>
@@ -309,10 +446,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   );
 
   const renderPromotionManagement = () => (
+    // closeForm();
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
         <h2>Promotion Management</h2>
-        <button className={styles.primaryBtn}>Add New Promotion</button>
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'promotions')}>
+          Add New Promotion
+        </button>
       </div>
       <div className={styles.tableContainer}>
         <table className={styles.dataTable}>
@@ -336,7 +476,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 </td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn}>Edit</button>
+                    <button className={styles.editBtn} onClick={() => openForm('add', 'promotions', promo)}>
+                      Edit
+                    </button>
                     <button className={styles.deleteBtn}>Delete</button>
                   </div>
                 </td>
@@ -352,8 +494,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     switch (currentSection) {
       case 'dashboard':
         return renderDashboard();
-      case 'films':
-        return renderFilmManagement();
+      case 'movies':
+        return renderMovieManagement();
       case 'showtimes':
         return renderShowtimeManagement();
       case 'users':
@@ -368,49 +510,39 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   };
 
   return (
-    <>
-      {renderContent()}
-      {formVisible && (
-        <div className={styles.formBox}>
-          <h3>{formType === 'add' ? 'Add New Film' : 'Edit Film'}</h3>
-          <form onSubmit={handleSubmit}>
-            <label>
-              Title:
-              <input
-                name="title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-              />
-            </label>
-            <label>
-              Genre:
-              <input
-                name="genre"
-                value={formData.genre}
-                onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
-                required
-              />
-            </label>
-            <label>
-              Duration:
-              <input
-                name="duration"
-                value={formData.duration}
-                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                required
-              />
-            </label>
-            <div>
-              <button type="submit">{formType === 'add' ? 'Create' : 'Update'}</button>
-              <button type="button" onClick={closeForm}>
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </>
+    <div>
+      <div>{renderContent()}</div>
+      <div>
+        {formVisible && entity && (
+          <div className={styles.formBox}>
+            <h3>
+              {formType === 'add' ? 'Add New ' : 'Edit '}
+              {entityLabels[entity]}
+            </h3>
+            <form onSubmit={handleSubmit}>
+              {formConfigs[entity]?.map((field) => (
+                <label key={field.name}>
+                  {field.label}:
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={formData[field.name] || ''}
+                    onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                    required
+                  />
+                </label>
+              ))}
+              <div>
+                <button type="submit">{formType === 'add' ? 'Create' : 'Update'}</button>
+                <button type="button" onClick={closeForm}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
