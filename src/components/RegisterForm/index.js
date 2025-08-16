@@ -16,11 +16,17 @@ const RegisterForm = ({ onSubmitResult }) => {
         try {
             if (!email || !password) {
                 onSubmitResult('Cannot leave email or password blank');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
                 return;
             }
 
             if (password !== confirmPassword) {
                 onSubmitResult('Password do not match');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
                 return;
             }
 
@@ -29,6 +35,10 @@ const RegisterForm = ({ onSubmitResult }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
+
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
 
             if (res.status === 409) {
                 onSubmitResult('Email has already registered');
