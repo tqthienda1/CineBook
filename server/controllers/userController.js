@@ -1,4 +1,5 @@
 import User from '../models/User'
+import Movie from '../models/Movie'
 
 export const getProfile = async (req, res) => {
   try {
