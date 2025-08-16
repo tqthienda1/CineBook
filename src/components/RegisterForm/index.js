@@ -30,15 +30,13 @@ const RegisterForm = ({ onSubmitResult }) => {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await res.json();
-
-            if (data.status === 409) {
+            if (res.status === 409) {
                 onSubmitResult('Email has already registered');
                 return;
-            } else if (data.status === 201) {
+            } else if (res.status === 201) {
                 onSubmitResult('Register successfully');
                 return;
-            } else if (data.status === 500) {
+            } else if (res.status === 500) {
                 onSubmitResult('Server error');
                 return;
             }

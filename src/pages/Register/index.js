@@ -15,6 +15,7 @@ const Register = () => {
     };
 
     const handleRegisterResult = (result) => {
+        setShowPopUp(true);
         setPopUpContent(result);
     };
 
