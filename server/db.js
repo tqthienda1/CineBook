@@ -30,16 +30,16 @@ connection.connect(async (err) => {
   // }
   // console.log('🗑️ Đã xóa các bảng cũ');
 
-  // Danh sách bảng cần tạo
   const tables = [
     {
       name: 'user',
       sql: `
         CREATE TABLE IF NOT EXISTS user (
           user_id INT AUTO_INCREMENT PRIMARY KEY,
-          username VARCHAR(255) NOT NULL UNIQUE,
+          email VARCHAR(255) NOT NULL UNIQUE,
           password VARCHAR(255) NOT NULL,
-          birthday DATE
+          birthday DATE,
+          role varchar(10)
         )
       `
     },
