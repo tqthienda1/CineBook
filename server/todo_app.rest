@@ -22,16 +22,16 @@ Content-Type: application/json
 ###
 GET http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTIzMTg5LCJleHAiOjE3NTU1MjY3ODl9.6k0GU76YVXAWjnWWaPKQkEYCiibQ1mbCTALmLo98QvU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTM4NDk4LCJleHAiOjE3NTU1NDIwOTh9.RxROo-fZuzyPDtpNZnaOP0cGMsvAGYJ3v4Rw2jWWJEU
 
 
 ### 
 POST http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTIzMTg5LCJleHAiOjE3NTU1MjY3ODl9.6k0GU76YVXAWjnWWaPKQkEYCiibQ1mbCTALmLo98QvU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTM4NDk4LCJleHAiOjE3NTU1NDIwOTh9.RxROo-fZuzyPDtpNZnaOP0cGMsvAGYJ3v4Rw2jWWJEU
 
 {
-  "name":"Long dep trai",
+  "name":"f1",
   "category":["Tinh cam", "Hanh dong"],
   "language":"Tieng Viet",
   "duration":"120",
