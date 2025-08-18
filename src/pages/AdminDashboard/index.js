@@ -31,18 +31,31 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     try {
       const token = localStorage.getItem('token');
 
+      // ✅ Chuyển các field dạng chuỗi thành mảng trước khi gửi
+      const arrayFields = ['category', 'directors', 'writers', 'actors'];
+      const processedData = { ...formData };
+
+      arrayFields.forEach((field) => {
+        if (processedData[field]) {
+          processedData[field] = processedData[field]
+            .split(',')
+            .map((item) => item.trim())
+            .filter((item) => item);
+        }
+      });
+
       if (formType === 'add') {
-        console.log(JSON.stringify(formData));
+        console.log(JSON.stringify(processedData));
         const res = await fetch('http://localhost:5003/admin/movies', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(processedData), // gửi dữ liệu đã xử lý
         });
         const data = await res.json();
-
+        console.log(data);
         if (res.ok) {
           setRecentFilms((prev) => [...prev, data.film]);
         } else {
@@ -55,7 +68,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(processedData), // gửi dữ liệu đã xử lý
         });
         const data = await res.json();
 
@@ -88,6 +101,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'ageLimit', label: 'Age Limit', type: 'number' },
       { name: 'posterURL', label: 'Poster', type: 'text' },
       { name: 'backdropURL', label: 'Back Drop', type: 'text' },
+      { name: 'status', label: 'Status', type: 'text' },
     ],
     showtimes: [
       { name: 'movie', label: 'Movie', type: 'text' },
@@ -127,6 +141,17 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     setEntity(entityName);
     setFormData(data);
     setFormVisible(true);
+  };
+
+  const handleChange = (field, e) => {
+    let value = e.target.value;
+
+    if (field.type === 'number') {
+      value = Number(value);
+    }
+
+    // Với category, directors, writers, actors: giữ nguyên string để nhập dễ
+    setFormData({ ...formData, [field.name]: value });
   };
 
   const [recentFilms, setRecentFilms] = useState([
@@ -598,8 +623,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                       className={styles.formInput}
                       type={field.type}
                       name={field.name}
-                      value={formData[field.name] || ''}
-                      onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                      value={
+                        Array.isArray(formData[field.name])
+                          ? formData[field.name].join(', ')
+                          : formData[field.name] || ''
+                      }
+                      onChange={(e) => handleChange(field, e)}
                       required
                     />
                   </label>

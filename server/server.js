@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import authRoutes from './routes/auth.routes.js'
-import userRoutes from './routes/user.routes.js'
+import authRoutes from './routes/auth.routes.js';
+import userRoutes from './routes/user.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import { getMovies, addMovie } from './controllers/adminController.js';
 
@@ -17,7 +17,7 @@ app.use(
 );
 app.use(express.json());
 
-// app.use('/admin', adminRoutes)
+app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/auth', authRoutes);
 

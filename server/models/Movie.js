@@ -4,7 +4,7 @@ const Movie = {
   // Lấy tất cả phim
   // async getAllMovies() {
   //   const sql = `
-  //     SELECT 
+  //     SELECT
   //       m.movideID,
   //       m.name,
   //       m.language,
@@ -42,7 +42,7 @@ const Movie = {
   // // Lấy phim theo id
   // async getMovieById(id) {
   //   const sql = `
-  //     SELECT 
+  //     SELECT
   //       m.movideID,
   //       m.name,
   //       m.language,
@@ -78,25 +78,23 @@ const Movie = {
   //   return rows[0] || null;
   // },
 
-  
   async createMovie(movieData) {
-    const { 
+    const {
       name,
-      category, 
-      language, 
-      duration, 
-      releaseDay, 
-      IMDBrating, 
-      description, 
-      directors, 
-      writers, 
-      actors, 
-      ageLimit, 
-      status, 
-      posterURL, 
-      backdropURL 
+      category,
+      language,
+      duration,
+      releaseDay,
+      IMDBrating,
+      description,
+      directors,
+      writers,
+      actors,
+      ageLimit,
+      status,
+      posterURL,
+      backdropURL,
     } = movieData;
-
 
     const sqlAddCategory = `
       INSERT IGNORE INTO category (categoryName) VALUES (?)
@@ -113,20 +111,20 @@ const Movie = {
     const sqlAddActor = `
       INSERT IGNORE INTO actor (actorName) VALUES (?)
     `;
-    
+
     for (const cat of category) {
-      console.log("Adding category:", cat);
+      console.log('Adding category:', cat);
       await connection.promise().execute(sqlAddCategory, [cat]);
     }
-    
+
     for (const dir of directors) {
       await connection.promise().execute(sqlAddDirector, [dir]);
     }
 
     for (const w of writers) {
-      await connection.promise().execute(sqlAddWriter, [w]);  
+      await connection.promise().execute(sqlAddWriter, [w]);
     }
-    
+
     for (const act of actors) {
       await connection.promise().execute(sqlAddActor, [act]);
     }
@@ -137,9 +135,9 @@ const Movie = {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    console.log("Adding movie with data:", {
-      name, 
-      language, 
+    console.log('Adding movie with data:', {
+      name,
+      language,
       duration,
       releaseDay,
       IMDBrating,
@@ -147,21 +145,23 @@ const Movie = {
       ageLimit,
       status,
       posterURL,
-      backdropURL
+      backdropURL,
     });
 
-    const [result] = await connection.promise().execute(sqlAddMovie, [
-      name, 
-      language, 
-      duration, 
-      releaseDay, 
-      IMDBrating, 
-      description, 
-      ageLimit, 
-      status, 
-      posterURL, 
-      backdropURL
-    ]);
+    const [result] = await connection
+      .promise()
+      .execute(sqlAddMovie, [
+        name,
+        language,
+        duration,
+        releaseDay,
+        IMDBrating,
+        description,
+        ageLimit,
+        status,
+        posterURL,
+        backdropURL,
+      ]);
 
     const sqlAddMovieCategory = `
       INSERT INTO movie_category (movieID, categoryID)
@@ -171,7 +171,7 @@ const Movie = {
     `;
 
     await connection.promise().execute(sqlAddMovieCategory, [result.insertId, ...category]);
-    
+
     const sqlAddMovieDirector = `
       INSERT INTO movie_director (movieID, directorID)
       SELECT ?, directorID
@@ -196,9 +196,9 @@ const Movie = {
     `;
     await connection.promise().execute(sqlAddMovieActor, [result.insertId, ...actors]);
 
-    
-  //   return movie;
-   return result.insertId;}
+    //   return movie;
+    return result.insertId;
+  },
 };
 
 export default Movie;
