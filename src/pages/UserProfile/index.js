@@ -51,11 +51,9 @@ const UserProfile = () => {
 
         {activeTab === 'purchase' && (
           <div className={styles.transaction}>
-            {/* PurchaseHistory hiển thị 1 lần */}
             <PurchaseHistory />
             <FilterPurchaseHistory />
 
-            {/* Transaction lặp theo mảng dữ liệu */}
             {purchaseData.map((item) => (
               <Transaction
                 key={item.id}

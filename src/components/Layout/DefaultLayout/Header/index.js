@@ -18,7 +18,9 @@ const Header = () => {
         <Link to="/movies" className={styles.button}>
           <li>Movies</li>
         </Link>
-        <li>Promotions</li>
+        <Link to="/promotions">
+          <li>Promotions</li>
+        </Link>
         <Link to="/register" className={styles.button}>
           <li>Register</li>
         </Link>
@@ -29,7 +31,7 @@ const Header = () => {
           <FaUser className={styles.userIcon} />
         </Link>
         <Link to="/admindashboard">
-          <FaUser className={styles.userIcon} />
+          <li> Admin Dashboard </li>
         </Link>
       </ul>
     </nav>

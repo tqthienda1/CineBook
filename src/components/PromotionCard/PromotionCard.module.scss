@@ -1,0 +1,10 @@
+.promotionCard {
+  width: 400px;
+  height: 250px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* giữ nguyên tỉ lệ, thêm khoảng trống nếu thiếu */
+    background: #000; /* thêm nền nếu muốn */
+  }
+}
