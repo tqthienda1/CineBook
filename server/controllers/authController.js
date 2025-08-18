@@ -39,9 +39,11 @@ export const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Sai mật khẩu' });
     }
-
+    console.log(user.userID)
+    console.log(user.email)
+    console.log(user.role)
     const token = jwt.sign(
-      { id: user.id, email: user.username, role: user.role },
+      { id: user.userID, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );

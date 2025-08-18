@@ -30,12 +30,20 @@ connection.connect(async (err) => {
   // }
   // console.log('🗑️ Đã xóa các bảng cũ');
 
+
+  // const addMovie = async() = {
+  //   await new Promise((resolve) => {
+  //   connection.query(`DROP TABLE IF EXISTS ${table}`, () => resolve());
+  //   });
+  // }
+    
+
   const tables = [
     {
       name: 'user',
       sql: `
         CREATE TABLE IF NOT EXISTS user (
-          user_id INT AUTO_INCREMENT PRIMARY KEY,
+          userID INT AUTO_INCREMENT PRIMARY KEY,
           email VARCHAR(255) NOT NULL UNIQUE,
           password VARCHAR(255) NOT NULL,
           birthday DATE,
@@ -52,6 +60,7 @@ connection.connect(async (err) => {
           language VARCHAR(100),
           duration INT,
           releaseDay DATE,
+          IMDBrating FLOAT,
           description TEXT,
           ageLimit INT,
           poster_url NVARCHAR(250),
