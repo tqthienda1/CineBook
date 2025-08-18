@@ -66,7 +66,9 @@ connection.connect(async (err) => {
           ageLimit INT,
           status VARCHAR(20) DEFAULT 'active',
           posterURL NVARCHAR(250),
-          backdropURL NVARCHAR(250)
+          backdropURL NVARCHAR(250),
+
+          CONSTRAINT uq_movie_name_release UNIQUE (name, releaseDay)
         )
       ` 
     },
