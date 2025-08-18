@@ -50,7 +50,7 @@ const LoginForm = ({ onSubmitResult }) => {
     }
   };
   return (
-    <form className={styles.loginForm}>
+    <div className={styles.loginForm}>
       <img className={styles.logo} src={logo} alt="logo"></img>
       <div className={styles.description}>
         <h1 className={styles.welcome}>Welcome back</h1>
@@ -66,7 +66,7 @@ const LoginForm = ({ onSubmitResult }) => {
       <SeparateLine text="Or Login With" />
 
       <SocialLogin />
-    </form>
+    </div>
   );
 };
 

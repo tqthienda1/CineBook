@@ -2,14 +2,22 @@ import LoginForm from '../../components/LoginForm';
 import styles from './Login.module.scss';
 import logoBackground from '../../assets/login_background.jpg';
 import PopUp from '../../components/PopUp';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/');
+    }
+  }, []);
+
   const [showPopUp, setShowPopUp] = useState(false);
   const [popUpContent, setPopUpContent] = useState('');
-  const navigate = useNavigate();
 
   const handleOKClick = () => {
     if (showPopUp) {
@@ -18,9 +26,8 @@ const Login = () => {
         const tokenDecoded = jwtDecode(localStorage.getItem('token'));
         if (tokenDecoded.role === 'user') {
           navigate('/');
-        }
-        else if (tokenDecoded.role === 'admin') {
-            navigate('/admindashboard')
+        } else if (tokenDecoded.role === 'admin') {
+          navigate('/admindashboard');
         }
       }
     }
