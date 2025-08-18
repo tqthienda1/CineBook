@@ -2,174 +2,232 @@ import connection from '../db.js';
 
 const Movie = {
   // Lấy tất cả phim
-  async getAllMovies() {
-    const sql = `
-      SELECT 
-        m.movideID,
-        m.name,
-        m.language,
-        m.duration,
-        m.releaseDay,
-        m.IMDBrating,
-        m.description,
-        m.poster_url,
-        m.backdrop_url,
+  // async getAllMovies() {
+  //   const sql = `
+  //     SELECT 
+  //       m.movideID,
+  //       m.name,
+  //       m.language,
+  //       m.duration,
+  //       m.releaseDay,
+  //       m.IMDBrating,
+  //       m.description,
+  //       m.posterURL,
+  //       m.backdropURL,
 
-        GROUP_CONCAT(DISTINCT c.name ORDER BY c.name SEPARATOR ', ') AS category,
-        GROUP_CONCAT(DISTINCT d.name ORDER BY d.name SEPARATOR ', ') AS directors,
-        GROUP_CONCAT(DISTINCT w.name ORDER BY w.name SEPARATOR ', ') AS writers,
-        GROUP_CONCAT(DISTINCT a.name ORDER BY a.name SEPARATOR ', ') AS actors
+  //       GROUP_CONCAT(DISTINCT c.name ORDER BY c.name SEPARATOR ', ') AS category,
+  //       GROUP_CONCAT(DISTINCT d.name ORDER BY d.name SEPARATOR ', ') AS directors,
+  //       GROUP_CONCAT(DISTINCT w.name ORDER BY w.name SEPARATOR ', ') AS writers,
+  //       GROUP_CONCAT(DISTINCT a.name ORDER BY a.name SEPARATOR ', ') AS actors
 
-      FROM movie m
-      LEFT JOIN movie_director md ON m.movideID = md.movideID
-      LEFT JOIN director d ON md.directorID = d.directorID
+  //     FROM movie m
+  //     LEFT JOIN movie_director md ON m.movideID = md.movideID
+  //     LEFT JOIN director d ON md.directorID = d.directorID
 
-      LEFT JOIN movie_writer mw ON m.movideID = mw.movideID
-      LEFT JOIN writer w ON mw.writerID = w.writerID
+  //     LEFT JOIN movie_writer mw ON m.movideID = mw.movideID
+  //     LEFT JOIN writer w ON mw.writerID = w.writerID
 
-      LEFT JOIN movie_actor ma ON m.movideID = ma.movideID
-      LEFT JOIN actor a ON ma.actorID = a.actorID
+  //     LEFT JOIN movie_actor ma ON m.movideID = ma.movideID
+  //     LEFT JOIN actor a ON ma.actorID = a.actorID
 
-      LEFT JOIN movie_category mc ON m.movideID = mc.movideID
-      LEFT JOIN category c ON mc.categoryID = c.categoryID
+  //     LEFT JOIN movie_category mc ON m.movideID = mc.movideID
+  //     LEFT JOIN category c ON mc.categoryID = c.categoryID
 
-      GROUP BY m.movideID
-    `;
-    const [rows] = await connection.promise().execute(sql);
-    return rows;
-  },
-
-  // Lấy phim theo id
-  async getMovieById(id) {
-    const sql = `
-      SELECT 
-        m.movideID,
-        m.name,
-        m.language,
-        m.duration,
-        m.releaseDay,
-        m.IMDBrating,
-        m.description,
-        m.poster_url,
-        m.backdrop_url,
-
-        GROUP_CONCAT(DISTINCT c.name ORDER BY c.name SEPARATOR ', ') AS category,
-        GROUP_CONCAT(DISTINCT d.name ORDER BY d.name SEPARATOR ', ') AS directors,
-        GROUP_CONCAT(DISTINCT w.name ORDER BY w.name SEPARATOR ', ') AS writers,
-        GROUP_CONCAT(DISTINCT a.name ORDER BY a.name SEPARATOR ', ') AS actors
-
-      FROM movie m
-      LEFT JOIN movie_director md ON m.movideID = md.movideID
-      LEFT JOIN director d ON md.directorID = d.directorID
-
-      LEFT JOIN movie_writer mw ON m.movideID = mw.movideID
-      LEFT JOIN writer w ON mw.writerID = w.writerID
-
-      LEFT JOIN movie_actor ma ON m.movideID = ma.movideID
-      LEFT JOIN actor a ON ma.actorID = a.actorID
-
-      LEFT JOIN movie_category mc ON m.movideID = mc.movideID
-      LEFT JOIN category c ON mc.categoryID = c.categoryID
-
-      WHERE m.movideID = ?
-      GROUP BY m.movideID
-    `;
-    const [rows] = await connection.promise().execute(sql, [id]);
-    return rows[0] || null;
-  },
-
-  // Thêm phim mới
-  // async createMovie(movieData) {
-  //   const { name, category, language, duration, releaseDay, IMDBrating, description, directors, writers, actors } = movieData;
-
-  //   // Insert movie chính
-  //   const queryMovie = `
-  //     INSERT INTO movie (name, category, language, duration, releaseDay, IMDBrating, description)
-  //     VALUES (?, ?, ?, ?, ?, ?, ?)
+  //     GROUP BY m.movideID
   //   `;
-  //   const [result] = await connection.promise().execute(queryMovie, [
-  //     name,
-  //     category,
-  //     language,
-  //     duration,
-  //     releaseDay,
-  //     IMDBrating,
-  //     description,
-  //   ]);
-
-  //   const movieId = result.insertId;
-
-  //   // Hàm phụ: insert hoặc lấy id của director/writer/actor
-  //   async function getOrCreate(table, column, name) {
-  //     const [rows] = await connection.promise().execute(
-  //       `SELECT id FROM ${table} WHERE ${column} = ?`,
-  //       [name]
-  //     );
-  //     if (rows.length > 0) return rows[0].id;
-
-  //     const [insertResult] = await connection.promise().execute(
-  //       `INSERT INTO ${table} (${column}) VALUES (?)`,
-  //       [name]
-  //     );
-  //     return insertResult.insertId;
-  //   }
-
-  //   // Hàm phụ: insert vào bảng trung gian
-  //   async function link(table, column, ids) {
-  //     if (ids.length > 0) {
-  //       const query = `INSERT INTO ${table} (movideID, ${column}) VALUES ?`;
-  //       const values = ids.map((id) => [movieId, id]);
-  //       await connection.promise().query(query, [values]);
-  //     }
-  //   }
-
-  //   // 2. Xử lý directors
-  //   const directorIds = [];
-  //   for (const d of directors || []) {
-  //     const id = await getOrCreate("director", "name", d);
-  //     directorIds.push(id);
-  //   }
-  //   await link("movie_director", "directorID", directorIds);
-
-  //   // 3. Xử lý writers
-  //   const writerIds = [];
-  //   for (const w of writers || []) {
-  //     const id = await getOrCreate("writer", "name", w);
-  //     writerIds.push(id);
-  //   }
-  //   await link("movie_writer", "writerID", writerIds);
-
-  //   // 4. Xử lý actors
-  //   const actorIds = [];
-  //   for (const a of actors || []) {
-  //     const id = await getOrCreate("actor", "name", a);
-  //     actorIds.push(id);
-  //   }
-  //   await link("movie_actor", "actorID", actorIds);
-
-  //   return { id: movieId, name, category, language, duration, releaseDay, description };
+  //   const [rows] = await connection.promise().execute(sql);
+  //   return rows;
   // },
 
-  async createMovie(movieData) {
-    const { name, language, duration, releaseDay, IMDBrating, description, poster_url, backdrop_url } = movieData;
+  // // Lấy phim theo id
+  // async getMovieById(id) {
+  //   const sql = `
+  //     SELECT 
+  //       m.movideID,
+  //       m.name,
+  //       m.language,
+  //       m.duration,
+  //       m.releaseDay,
+  //       m.IMDBrating,
+  //       m.description,
+  //       m.posterURL,
+  //       m.backdropURL,
 
-    const sql = `
-      INSERT INTO movie (name, language, duration, releaseDay, IMDBrating description, poster_url, backdrop_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    const [result] = await connection.promise().execute(sql, [
+  //       GROUP_CONCAT(DISTINCT c.name ORDER BY c.name SEPARATOR ', ') AS category,
+  //       GROUP_CONCAT(DISTINCT d.name ORDER BY d.name SEPARATOR ', ') AS directors,
+  //       GROUP_CONCAT(DISTINCT w.name ORDER BY w.name SEPARATOR ', ') AS writers,
+  //       GROUP_CONCAT(DISTINCT a.name ORDER BY a.name SEPARATOR ', ') AS actors
+
+  //     FROM movie m
+  //     LEFT JOIN movie_director md ON m.movideID = md.movideID
+  //     LEFT JOIN director d ON md.directorID = d.directorID
+
+  //     LEFT JOIN movie_writer mw ON m.movideID = mw.movideID
+  //     LEFT JOIN writer w ON mw.writerID = w.writerID
+
+  //     LEFT JOIN movie_actor ma ON m.movideID = ma.movideID
+  //     LEFT JOIN actor a ON ma.actorID = a.actorID
+
+  //     LEFT JOIN movie_category mc ON m.movideID = mc.movideID
+  //     LEFT JOIN category c ON mc.categoryID = c.categoryID
+
+  //     WHERE m.movideID = ?
+  //     GROUP BY m.movideID
+  //   `;
+  //   const [rows] = await connection.promise().execute(sql, [id]);
+  //   return rows[0] || null;
+  // },
+
+  
+  async createMovie(movieData) {
+    const { 
       name,
-      language,
+      category, 
+      language, 
+      duration, 
+      releaseDay, 
+      IMDBrating, 
+      description, 
+      directors, 
+      writers, 
+      actors, 
+      ageLimit, 
+      status, 
+      posterURL, 
+      backdropURL 
+    } = movieData;
+
+
+    const sqlAddCategory = `
+      INSERT IGNORE INTO category (categoryName) VALUES (?)
+    `;
+
+    const sqlAddDirector = `
+      INSERT IGNORE INTO director (directorName) VALUES (?)
+    `;
+
+    const sqlAddWriter = `
+      INSERT IGNORE INTO writer (writerName) VALUES (?)
+    `;
+
+    const sqlAddActor = `
+      INSERT IGNORE INTO actor (actorName) VALUES (?)
+    `;
+    
+    for (const cat of category) {
+      console.log("Adding category:", cat);
+      await connection.promise().execute(sqlAddCategory, [cat]);
+    }
+    
+    for (const dir of directors) {
+      await connection.promise().execute(sqlAddDirector, [dir]);
+    }
+
+    for (const w of writers) {
+      await connection.promise().execute(sqlAddWriter, [w]);  
+    }
+    
+    for (const act of actors) {
+      await connection.promise().execute(sqlAddActor, [act]);
+    }
+
+    // Insert movie chính
+    const sqlAddMovie = `
+      INSERT INTO movie (name, language, duration, releaseDay, IMDBrating, description, ageLimit, status, posterURL, backdropURL)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    console.log("Adding movie with data:", {
+      name, 
+      language, 
       duration,
       releaseDay,
       IMDBrating,
       description,
-      poster_url,
-      backdrop_url
+      ageLimit,
+      status,
+      posterURL,
+      backdropURL
+    });
+
+    const [result] = await connection.promise().execute(sqlAddMovie, [
+      name, 
+      language, 
+      duration, 
+      releaseDay, 
+      IMDBrating, 
+      description, 
+      ageLimit, 
+      status, 
+      posterURL, 
+      backdropURL
     ]);
 
-    return { id: result.insertId, ...movieData };
-  }
+    const sqlAddMovieCategory = `
+      INSERT INTO movie_category (movieID, categoryID)
+      SELECT ?, categoryID 
+      FROM category 
+      WHERE categoryName IN (${category.map(() => '?').join(',')})
+    `;
+
+    await connection.promise().execute(sqlAddMovieCategory, [result.insertId, ...category]);
+    
+    const sqlAddMovieDirector = `
+      INSERT INTO movie_director (movieID, directorID)
+      SELECT ?, directorID
+      FROM director 
+      WHERE directorName IN (${directors.map(() => '?').join(',')}) 
+    `;
+    await connection.promise().execute(sqlAddMovieDirector, [result.insertId, ...directors]);
+
+    const sqlAddMovieWriter = `
+      INSERT INTO movie_writer (movieID, writerID)
+      SELECT ?, writerID
+      FROM writer
+      WHERE writerName IN (${writers.map(() => '?').join(',')})
+    `;
+    await connection.promise().execute(sqlAddMovieWriter, [result.insertId, ...writers]);
+
+    const sqlAddMovieActor = `
+      INSERT INTO movie_actor (movieID, actorID)
+      SELECT ?, actorID
+      FROM actor 
+      WHERE actorName IN (${actors.map(() => '?').join(',')}) 
+    `;
+    await connection.promise().execute(sqlAddMovieActor, [result.insertId, ...actors]);
+
+    
+    // const sqlAddMovieDirector = `
+    //   INSERT INTO movie_director (movieID, directorID)
+    //   SELECT ?, directorID
+    //   FROM director 
+    //   WHERE directorName IN (?) 
+    // `;
+    // await connection.promise().execute(sqlAddMovieDirector, [result.insertId, directors.join(',')]);
+
+    // const sqlAddMovieWriter = `
+    //   INSERT INTO movie_writer (movieID, writerID)    
+    //   SELECT ?, writerID
+    //   FROM writer 
+    //   WHERE writerName IN (?)
+    // `;
+    // await connection.promise().execute(sqlAddMovieWriter, [result.insertId, writers.join(',')]);
+
+    // const sqlAddMovieActor = `
+    //   INSERT INTO movie_actor (movieID, actorID)
+    //   SELECT ?, actorID
+    //   FROM actor 
+    //   WHERE actorName IN (?)  
+    // `;
+    // await connection.promise().execute(sqlAddMovieActor, [result.insertId, actors.join(',')]);
+
+  //   // Trả về thông tin của movie mới tạo
+  //   const movie = await this.getMovieById(result.insertId);
+  //   if (!movie) {
+  //     throw new Error('Movie not found after creation');
+  //   }
+  //   return movie;
+   return result.insertId;}
 };
 
 export default Movie;
