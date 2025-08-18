@@ -196,9 +196,28 @@ const Movie = {
     `;
     await connection.promise().execute(sqlAddMovieActor, [result.insertId, ...actors]);
 
+  return {
+    movieID: result.insertId,
+    name,
+    category,
+    language,
+    duration,
+    releaseDay,
+    IMDBrating,
+    description,
+    directors,
+    writers,
+    actors,
+    ageLimit,
+    status,
+    posterURL,
+    backdropURL
+  };
+  }
+
     //   return movie;
-    return result.insertId;
-  },
-};
+//     return result.insertId;
+//   },
+// };
 
 export default Movie;
