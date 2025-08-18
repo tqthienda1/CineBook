@@ -59,7 +59,10 @@ export const addMovie = async (req, res) => {
     // If successful, return the added movie
     res.status(201).json({ message: 'Movie added successfully' });
     // res.status(201).json(addedMovie);
-  } catch (error) {
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ message: 'Phim đã tồn tại' });
+    }
     res.status(500).json({ message: 'Lỗi server', error });
   }
 }

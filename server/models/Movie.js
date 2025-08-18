@@ -197,35 +197,6 @@ const Movie = {
     await connection.promise().execute(sqlAddMovieActor, [result.insertId, ...actors]);
 
     
-    // const sqlAddMovieDirector = `
-    //   INSERT INTO movie_director (movieID, directorID)
-    //   SELECT ?, directorID
-    //   FROM director 
-    //   WHERE directorName IN (?) 
-    // `;
-    // await connection.promise().execute(sqlAddMovieDirector, [result.insertId, directors.join(',')]);
-
-    // const sqlAddMovieWriter = `
-    //   INSERT INTO movie_writer (movieID, writerID)    
-    //   SELECT ?, writerID
-    //   FROM writer 
-    //   WHERE writerName IN (?)
-    // `;
-    // await connection.promise().execute(sqlAddMovieWriter, [result.insertId, writers.join(',')]);
-
-    // const sqlAddMovieActor = `
-    //   INSERT INTO movie_actor (movieID, actorID)
-    //   SELECT ?, actorID
-    //   FROM actor 
-    //   WHERE actorName IN (?)  
-    // `;
-    // await connection.promise().execute(sqlAddMovieActor, [result.insertId, actors.join(',')]);
-
-  //   // Trả về thông tin của movie mới tạo
-  //   const movie = await this.getMovieById(result.insertId);
-  //   if (!movie) {
-  //     throw new Error('Movie not found after creation');
-  //   }
   //   return movie;
    return result.insertId;}
 };
