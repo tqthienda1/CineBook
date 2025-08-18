@@ -1,36 +1,36 @@
 .registerForm {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.8);
-    align-items: center;
-    border-radius: 1rem;
-    padding: 2rem 3rem 3rem 3rem;
-    width: 600px;
-    margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  border-radius: 1rem;
+  padding: 2rem 3rem 3rem 3rem;
+  width: 600px;
+  margin-top: 12.5rem;
 }
 
 .logo {
-    padding: 2rem;
-    width: 20rem;
+  padding: 1rem;
+  width: 20rem;
 }
 
 .welcome,
 .subtitle {
-    margin: 0;
+  margin: 0;
 }
 
 .description {
-    font-size: 1.2rem;
-    margin: 0.5rem 0 2rem 0;
-    white-space: nowrap;
+  font-size: 1.2rem;
+  margin: 0.5rem 0 2rem 0;
+  white-space: nowrap;
 }
 
 .backArrow {
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-size: 3rem;
-    margin: 1.5rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 3rem;
+  margin: 1.5rem;
 }

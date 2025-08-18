@@ -26,6 +26,7 @@ const Register = () => {
             {showPopUp && <PopUp onClick={handleOKClick} content={popUpContent} />}
         </div>
     );
+
 };
 
 export default Register;
