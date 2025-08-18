@@ -26,7 +26,7 @@ const User = {
 
   // Lấy user theo id
   async getUserById(id) {
-    const sql = 'SELECT * FROM user WHERE user_id = ?';
+    const sql = 'SELECT * FROM user WHERE userID = ?';
     const [rows] = await connection.promise().execute(sql, [id]);
     return rows[0] || null;
   },
