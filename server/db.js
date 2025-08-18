@@ -17,25 +17,26 @@ connection.connect(async (err) => {
   console.log('✅ Đã kết nối MySQL Railway');
 
   // const dropTables = [
-  //   'movie_category',
-  //   'category',
   //   'movie',
-  //   'user'
+  //   'user',
+  //   'category',
+  //   'director',
+  //   'writer',
+  //   'actor',
+  //   'movie_director',
+  //   'movie_actor', 
+  //   'movie_writer',
+  //   'movie_category' 
   // ];
 
   // for (const table of dropTables) {
   //   await new Promise((resolve) => {
   //     connection.query(`DROP TABLE IF EXISTS ${table}`, () => resolve());
   //   });
+  //   console.log(`✅ Đã xóa bảng ${table}`);
   // }
   // console.log('🗑️ Đã xóa các bảng cũ');
 
-
-  // const addMovie = async() = {
-  //   await new Promise((resolve) => {
-  //   connection.query(`DROP TABLE IF EXISTS ${table}`, () => resolve());
-  //   });
-  // }
     
 
   const tables = [
@@ -63,10 +64,13 @@ connection.connect(async (err) => {
           IMDBrating FLOAT,
           description TEXT,
           ageLimit INT,
-          poster_url NVARCHAR(250),
-          backdrop_url NVARCHAR(250)
+          status VARCHAR(20) DEFAULT 'active',
+          posterURL NVARCHAR(250),
+          backdropURL NVARCHAR(250),
+
+          CONSTRAINT uq_movie_name_release UNIQUE (name, releaseDay)
         )
-      `
+      ` 
     },
     {
       name: 'category',
@@ -82,7 +86,7 @@ connection.connect(async (err) => {
       sql: `
         CREATE TABLE IF NOT EXISTS director (
           directorID INT AUTO_INCREMENT PRIMARY KEY,
-          directorName VARCHAR(255) NOT NULL
+          directorName VARCHAR(255) NOT NULL UNIQUE
         )
       `
     },
@@ -91,7 +95,7 @@ connection.connect(async (err) => {
       sql: `
         CREATE TABLE IF NOT EXISTS writer (
           writerID INT AUTO_INCREMENT PRIMARY KEY,
-          writerName VARCHAR(255) NOT NULL
+          writerName VARCHAR(255) NOT NULL UNIQUE
         )
       `
     },
@@ -100,7 +104,7 @@ connection.connect(async (err) => {
       sql: `
         CREATE TABLE IF NOT EXISTS actor (
           actorID INT AUTO_INCREMENT PRIMARY KEY,
-          actorName VARCHAR(255) NOT NULL
+          actorName VARCHAR(255) NOT NULL UNIQUE
         )
       `
     },
@@ -140,16 +144,15 @@ connection.connect(async (err) => {
       `
     },
     {
-      name: 'director_category',
+      name: 'movie_writer',
       sql: `
-        CREATE TABLE IF NOT EXISTS movie_director (
-          movieID INT NOT NULL,
-          directorID INT NOT NULL,
+        CREATE TABLE IF NOT EXISTS movie_writer (
+          movieID INT NOT NULL, 
+          writerID INT NOT NULL,
 
-          PRIMARY KEY (movieID, directorID),
-          FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
-          FOREIGN KEY (directorID) REFERENCES director(directorID) ON DELETE CASCADE
-        )
+          PRIMARY KEY (movieID, writerID),
+          FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE
+        ) 
       `
     }
   ];

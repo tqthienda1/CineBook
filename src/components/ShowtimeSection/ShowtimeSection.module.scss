@@ -1,0 +1,50 @@
+.showtimesList {
+  display: flex;
+  gap: 1rem;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+}
+
+.favoriteButton {
+  border: 2px white solid;
+  border-radius: 1rem;
+  padding: 1rem;
+  height: 100%;
+  width: calc(var(--height));
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: background-color ease 0.3s, color ease 0.3s;
+}
+
+.favoriteButton:hover {
+  color: #fb2b2b;
+}
+
+.showtimeSection {
+  justify-content: center;
+  height: 15rem;
+  gap: 2rem;
+}
+
+.locationIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.selected {
+  background-color: gray;
+  color: #fb2b2b;
+}
+
+.selectedShowtime {
+  background-color: gray;
+}

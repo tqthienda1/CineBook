@@ -1,11 +1,17 @@
 'use client';
 import styles from './AdminLayout.module.scss';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import React from 'react';
 import logo from '../../../assets/logo.png';
+import { AuthContext } from '../../../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AdminLayout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const { user, setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
@@ -21,11 +27,22 @@ const AdminLayout = ({ children }) => {
     setActiveSectionFromLayout: setActiveSection,
   });
 
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    navigate('/');
+  };
+
+
   return (
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-          <img src={logo} alt="logo"></img>
+
+          <Link to="/">
+            <img src={logo} alt="logo"></img>
+          </Link>
           <span>Admin Panel</span>
         </div>
         <nav className={styles.navigation}>
@@ -49,7 +66,11 @@ const AdminLayout = ({ children }) => {
           </h1>
           <div className={styles.userInfo}>
             <span>Admin User</span>
-            <button className={styles.logoutBtn}>Log out</button>
+
+            <button onClick={handleLogout} className={styles.logoutBtn}>
+              Logout
+            </button>
+
           </div>
         </header>
 

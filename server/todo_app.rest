@@ -22,4 +22,27 @@ Content-Type: application/json
 ###
 GET http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NTUzNjMwNDcsImV4cCI6MTc1NTM2NjY0N30.v0fttOivXVeK6Z4E3M4eECXqDiI9ni4rpA0KDmmpfbc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTIzMTg5LCJleHAiOjE3NTU1MjY3ODl9.6k0GU76YVXAWjnWWaPKQkEYCiibQ1mbCTALmLo98QvU
+
+
+### 
+POST http://localhost:5003/admin/movies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTIzMTg5LCJleHAiOjE3NTU1MjY3ODl9.6k0GU76YVXAWjnWWaPKQkEYCiibQ1mbCTALmLo98QvU
+
+{
+  "name":"Long dep trai",
+  "category":["Tinh cam", "Hanh dong"],
+  "language":"Tieng Viet",
+  "duration":"120",
+  "releaseDay":"2025-08-18",
+  "IMDBrating":"9.1",
+  "description":"Ke ve cuoc doi cua Ngo Long",
+  "directors":["Trần Quốc Thiện"],
+  "writers":["Trần Quốc Thiện"],
+  "actors":["Ngô Bảo Long"],
+  "ageLimit":"18",
+  "status":"active",
+  "posterURL":"posterURL",
+  "backdropURL":"posterURL"
+}

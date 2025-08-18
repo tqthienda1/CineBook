@@ -1,0 +1,28 @@
+.showtime {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  border: 2px solid white;
+  border-radius: 1rem;
+  width: 10rem;
+  text-transform: uppercase;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.time {
+  font-size: 3rem;
+  line-height: 3rem;
+}
+
+.type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fdad19;
+  border: 3px solid #fdad19;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  width: 3rem;
+}

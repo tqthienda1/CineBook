@@ -4,8 +4,12 @@ import LoginButton from '../../../LoginButton';
 import { Link } from 'react-router-dom';
 import logo from '../../../../assets/logo.png';
 import RegisterButton from '../../../RegisterButton';
+import { useContext } from 'react';
+import { AuthContext } from '../../../../auth/AuthContext';
 
 const Header = () => {
+  const { user, setUser } = useContext(AuthContext);
+
   return (
     <nav className={styles.header}>
       <Link style={{ display: 'flex' }} to="/">
@@ -18,21 +22,28 @@ const Header = () => {
         <Link to="/movies" className={styles.button}>
           <li>Movies</li>
         </Link>
-        <Link to="/promotions">
-          <li>Promotions</li>
-        </Link>
-        <Link to="/register" className={styles.button}>
-          <li>Register</li>
-        </Link>
-        <Link to="/login">
-          <LoginButton className={styles.loginButton} />
-        </Link>
-        <Link to="/userprofile">
-          <FaUser className={styles.userIcon} />
-        </Link>
-        <Link to="/admindashboard">
-          <li> Admin Dashboard </li>
-        </Link>
+
+        <li>Promotions</li>
+        {console.log(user)}
+        {!user ? (
+          <>
+            <Link to="/register" className={styles.button}>
+              <li>Register</li>
+            </Link>
+            <Link to="/login">
+              <LoginButton className={styles.loginButton} />
+            </Link>
+          </>
+        ) : user.role === 'user' ? (
+          <Link to="/userprofile">
+            <FaUser className={styles.userIcon} />
+          </Link>
+        ) : user.role === 'admin' ? (
+          <Link to="/admindashboard">
+            <FaUser className={styles.userIcon} />
+          </Link>
+        ) : null}
+
       </ul>
     </nav>
   );

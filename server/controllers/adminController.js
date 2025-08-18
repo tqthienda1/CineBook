@@ -12,19 +12,57 @@ export const getMovies = async (req, res) => {
 export const addMovie = async (req, res) => {
   try {
     // Logic to add a movie
-    const { name, language, duration, releaseDay, description, poster_url, backdrop_url } = req.body;
+    const { 
+      name,
+      category, 
+      language, 
+      duration, 
+      releaseDay, 
+      IMDBrating, 
+      description, 
+      directors, 
+      writers, 
+      actors, 
+      ageLimit, 
+      status, 
+      posterURL, 
+      backdropURL 
+    } = req.body;
+
+    // Validate required fields
+    if (!name || !category || !language || !duration || !releaseDay || !IMDBrating || !description || !directors || !writers || !actors || !ageLimit) {
+      return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+    }
+
     const newMovie = {
       name,
-      language,
-      duration,
-      releaseDay,
-      description,
-      poster_url,
-      backdrop_url
+      category, 
+      language, 
+      duration, 
+      releaseDay, 
+      IMDBrating, 
+      description, 
+      directors, 
+      writers, 
+      actors, 
+      ageLimit, 
+      status, 
+      posterURL, 
+      backdropURL 
     };
-    
+
+    // Call the model method to add the movie
+    const addedMovie = await Movie.createMovie(newMovie);
+    if (!addedMovie) {
+      return res.status(500).json({ message: 'Không thể thêm phim' });
+    }
+    // If successful, return the added movie
     res.status(201).json({ message: 'Movie added successfully' });
-  } catch (error) {
+    // res.status(201).json(addedMovie);
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ message: 'Phim đã tồn tại' });
+    }
     res.status(500).json({ message: 'Lỗi server', error });
   }
 }
