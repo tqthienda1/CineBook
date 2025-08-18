@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 const RegisterButton = ({ className, onClick }) => {
   return (
-    <button onClick={onClick} className={clsx(styles.registerButton, className)}>
+    <button type="submit" onClick={onClick} className={clsx(styles.registerButton, className)}>
       Register
     </button>
   );

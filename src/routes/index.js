@@ -11,16 +11,16 @@ import HeaderOnlyLayout from '../components/Layout/HeaderOnlyLayout';
 import AdminLayout from '../components/Layout/AdminLayout';
 
 const publicRoutes = [
-  { path: '/', component: Home, layout: DefaultLayout },
-  { path: '/login', component: Login, layout: HeaderOnlyLayout },
-  { path: '/booking', component: Booking, layout: DefaultLayout },
-  { path: '/userprofile', component: UserProfile, layout: DefaultLayout },
-  { path: '/register', component: Register, layout: HeaderOnlyLayout },
-  { path: '/movies', component: Movies, layout: DefaultLayout },
-  { path: '/aboutus', component: AboutUs, layout: DefaultLayout },
-  { path: '/admindashboard', component: AdminDashboard, layout: AdminLayout },
+    { path: '/', component: Home, layout: DefaultLayout },
+    { path: '/login', component: Login, layout: HeaderOnlyLayout },
+    { path: '/booking', component: Booking, layout: DefaultLayout },
+    { path: '/register', component: Register, layout: HeaderOnlyLayout },
+    { path: '/movies', component: Movies, layout: DefaultLayout },
+    { path: '/aboutus', component: AboutUs, layout: DefaultLayout },
 ];
 
-const privateRoutes = [];
+const userRoutes = [{ path: '/userprofile', component: UserProfile, layout: DefaultLayout }];
 
-export { publicRoutes, privateRoutes };
+const adminRoutes = [{ path: '/admindashboard', component: AdminDashboard, layout: AdminLayout }];
+
+export { publicRoutes, userRoutes, adminRoutes };
