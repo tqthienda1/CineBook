@@ -1,5 +1,5 @@
-import User from '../models/User'
-import Movie from '../models/Movie'
+import User from '../models/User.js'
+// import Movie from '../models/Movie'
 
 export const getProfile = async (req, res) => {
   try {
@@ -7,6 +7,7 @@ export const getProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Không tìm thấy user' });
     }
+    console.log('lấy profile thành công');
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });

@@ -1,0 +1,25 @@
+### GET / 
+GET http://localhost:5003
+
+### Register a user POST / AUTH / REGISTER
+POST http://localhost:5003/auth/register  
+Content-Type: application/json
+
+{
+  "email": "longngo",
+  "password": "123123"
+}
+
+### Login a user POST / AUTH / LOGIN
+POST http://localhost:5003/auth/login 
+Content-Type: application/json
+
+{
+  "email": "longngo",
+  "password": "123123"
+}
+
+###
+GET http://localhost:5003/user/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NTUzNjMwNDcsImV4cCI6MTc1NTM2NjY0N30.v0fttOivXVeK6Z4E3M4eECXqDiI9ni4rpA0KDmmpfbc
