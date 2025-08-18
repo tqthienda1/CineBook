@@ -1,42 +1,43 @@
 .sliderWrapper {
-    position: relative;
+  position: relative;
+  width: 100%;
 }
 
 .slider {
-    overflow: hidden;
-    position: relative;
+  overflow: hidden;
+  position: relative;
 }
 
 .listItems {
-    display: flex;
-    list-style: none;
+  display: flex;
+  list-style: none;
 }
 
 .item {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .prevArrow,
 .nextArrow {
-    background-color: white;
-    font-size: 2.5rem;
-    color: black;
-    z-index: 2;
-    top: 43%;
-    margin: 0 1rem;
-    transition: transform 0.3s ease;
-    border-radius: 0.7rem;
-    position: absolute;
+  background-color: white;
+  font-size: 2.5rem;
+  color: black;
+  z-index: 2;
+  top: 43%;
+  margin: 0 1rem;
+  transition: transform 0.3s ease;
+  border-radius: 0.7rem;
+  position: absolute;
 }
 
 .prevArrow:hover,
 .nextArrow:hover {
-    transform: scale(1.1);
-    cursor: pointer;
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 .nextArrow {
-    right: 0;
+  right: 0;
 }

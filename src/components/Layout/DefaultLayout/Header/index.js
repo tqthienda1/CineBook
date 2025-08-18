@@ -22,6 +22,7 @@ const Header = () => {
         <Link to="/movies" className={styles.button}>
           <li>Movies</li>
         </Link>
+
         <li>Promotions</li>
         {console.log(user)}
         {!user ? (
@@ -42,6 +43,7 @@ const Header = () => {
             <FaUser className={styles.userIcon} />
           </Link>
         ) : null}
+
       </ul>
     </nav>
   );

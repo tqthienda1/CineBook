@@ -12,6 +12,7 @@ const AdminLayout = ({ children }) => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'movies', label: 'Movies', icon: '🎬' },
@@ -26,16 +27,19 @@ const AdminLayout = ({ children }) => {
     setActiveSectionFromLayout: setActiveSection,
   });
 
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUser(null);
     navigate('/');
   };
 
+
   return (
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
+
           <Link to="/">
             <img src={logo} alt="logo"></img>
           </Link>
@@ -62,9 +66,11 @@ const AdminLayout = ({ children }) => {
           </h1>
           <div className={styles.userInfo}>
             <span>Admin User</span>
+
             <button onClick={handleLogout} className={styles.logoutBtn}>
               Logout
             </button>
+
           </div>
         </header>
 

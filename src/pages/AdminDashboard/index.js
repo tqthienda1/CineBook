@@ -19,7 +19,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       return;
     }
 
-    // chỉ đóng form khi KHÔNG phải quick action
     if (!skipResetForm) {
       setFormVisible(false);
       setFormType('');
@@ -30,40 +29,37 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token'); // lấy token đã lưu sau khi login
+      const token = localStorage.getItem('token');
 
       if (formType === 'add') {
-        // Gọi API thêm phim
+        console.log(JSON.stringify(formData));
         const res = await fetch('http://localhost:5003/admin/movies', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // gửi kèm token
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         });
         const data = await res.json();
 
         if (res.ok) {
-          // cập nhật danh sách
           setRecentFilms((prev) => [...prev, data.film]);
         } else {
           alert('Lỗi: ' + data.message);
         }
       } else {
-        // Gọi API cập nhật phim
         const res = await fetch(`http://localhost:5003/admin/movies/${formData.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // gửi kèm token
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         });
         const data = await res.json();
 
         if (res.ok) {
-          // cập nhật lại film trong danh sách
           setRecentFilms((prev) => prev.map((film) => (film.id === formData.id ? data.film : film)));
         } else {
           alert('Lỗi: ' + data.message);
@@ -79,9 +75,19 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const formConfigs = {
     movies: [
-      { name: 'title', label: 'Title', type: 'text' },
-      { name: 'genre', label: 'Genre', type: 'text' },
+      { name: 'name', label: 'Title', type: 'text' },
+      { name: 'category', label: 'Category', type: 'text' },
+      { name: 'language', label: 'Language', type: 'text' },
       { name: 'duration', label: 'Duration', type: 'text' },
+      { name: 'releaseDay', label: 'Release Day', type: 'date' },
+      { name: 'IMDBrating', label: ' IMDB Rating', type: 'number' },
+      { name: 'description', label: 'Description', type: 'text' },
+      { name: 'directors', label: 'Directors', type: 'text' },
+      { name: 'writers', label: 'Writers', type: 'text' },
+      { name: 'actors', label: 'Actors', type: 'text' },
+      { name: 'ageLimit', label: 'Age Limit', type: 'number' },
+      { name: 'posterURL', label: 'Poster', type: 'text' },
+      { name: 'backdropURL', label: 'Back Drop', type: 'text' },
     ],
     showtimes: [
       { name: 'movie', label: 'Movie', type: 'text' },
@@ -117,17 +123,81 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   };
 
   const openForm = (type, entityName, data = {}) => {
-    setFormType(type); // "add" hoặc "edit"
-    setEntity(entityName); // ví dụ: "movies"
-    setFormData(data); // nếu edit thì truyền data cũ
+    setFormType(type);
+    setEntity(entityName);
+    setFormData(data);
     setFormVisible(true);
   };
 
   const [recentFilms, setRecentFilms] = useState([
-    { id: 1, title: 'Avatar: The Way of Water', genre: 'Sci-Fi', duration: '192 min', status: 'Active' },
-    { id: 2, title: 'Top Gun: Maverick', genre: 'Action', duration: '130 min', status: 'Active' },
-    { id: 3, title: 'Black Panther: Wakanda Forever', genre: 'Action', duration: '161 min', status: 'Inactive' },
-    { id: 4, title: 'The Batman', genre: 'Action', duration: '176 min', status: 'Active' },
+    {
+      id: 1,
+      name: 'Avatar: The Way of Water',
+      category: 'Sci-Fi',
+      language: 'asdsadsad',
+      duration: '192 min',
+      releaseDay: '10/10/2020',
+      IMDBrating: '8.9',
+      description: 'Phim hay nhất mọi thời đại',
+      directors: 'Trần Quốc Thiện',
+      writers: 'Ngô Bảo Long',
+      actors: 'Nguyễn Đặng Đức Thịnh',
+      ageLimit: '18',
+      posterURL: 'posterURL',
+      backdropURL: 'backdropURL',
+      status: 'Active',
+    },
+    {
+      id: 2,
+      name: 'Top Gun: Maverick',
+      category: 'Action',
+      language: 'asdsadsad',
+      duration: '130 min',
+      releaseDay: '10/10/2020',
+      IMDBrating: '8.9',
+      description: 'Phim hay nhất mọi thời đại',
+      directors: 'Trần Quốc Thiện',
+      writers: 'Ngô Bảo Long',
+      actors: 'Nguyễn Đặng Đức Thịnh',
+      ageLimit: '18',
+      posterURL: 'posterURL',
+      backdropURL: 'backdropURL',
+      status: 'Active',
+    },
+    {
+      id: 3,
+      name: 'Black Panther: Wakanda Forever',
+      category: 'Action',
+      language: 'asdsadsad',
+      duration: '161 min',
+      releaseDay: '10/10/2020',
+      IMDBrating: '8.9',
+      description: 'Phim hay nhất mọi thời đại',
+      directors: 'Trần Quốc Thiện',
+      writers: 'Ngô Bảo Long',
+      actors: 'Nguyễn Đặng Đức Thịnh',
+      ageLimit: '18',
+      posterURL: 'posterURL',
+      backdropURL: 'backdropURL',
+      status: 'Inactive',
+    },
+    {
+      id: 4,
+      name: 'The Batman',
+      category: 'Action',
+      language: 'asdsadsad',
+      duration: '176 min',
+      releaseDay: '10/10/2020',
+      IMDBrating: '8.9',
+      description: 'Phim hay nhất mọi thời đại',
+      directors: 'Trần Quốc Thiện',
+      writers: 'Ngô Bảo Long',
+      actors: 'Nguyễn Đặng Đức Thịnh',
+      ageLimit: '18',
+      posterURL: 'posterURL',
+      backdropURL: 'backdropURL',
+      status: 'Inactive',
+    },
   ]);
 
   const [statsData, setStatsData] = useState([
@@ -180,7 +250,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             {recentFilms.map((film) => (
               <div key={film.id} className={styles.filmItem}>
                 <div className={styles.filmInfo}>
-                  <h4>{film.title}</h4>
+                  <h4>{film.name}</h4>
                   <p>
                     {film.genre} • {film.duration}
                   </p>
@@ -272,7 +342,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <tbody>
             {recentFilms.map((film) => (
               <tr key={film.id}>
-                <td>{film.title}</td>
+                <td>{film.name}</td>
                 <td>{film.genre}</td>
                 <td>{film.duration}</td>
                 <td>2023-12-15</td>
@@ -514,31 +584,36 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       <div>{renderContent()}</div>
       <div>
         {formVisible && entity && (
-          <div className={styles.formBox}>
-            <h3>
-              {formType === 'add' ? 'Add New ' : 'Edit '}
-              {entityLabels[entity]}
-            </h3>
-            <form onSubmit={handleSubmit}>
-              {formConfigs[entity]?.map((field) => (
-                <label key={field.name}>
-                  {field.label}:
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    value={formData[field.name] || ''}
-                    onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
-                    required
-                  />
-                </label>
-              ))}
-              <div>
-                <button type="submit">{formType === 'add' ? 'Create' : 'Update'}</button>
-                <button type="button" onClick={closeForm}>
-                  Cancel
-                </button>
-              </div>
-            </form>
+          <div className={styles.overlay}>
+            <div className={styles.formBox}>
+              <h3 className={styles.formTitle}>
+                {formType === 'add' ? 'Add New ' : 'Edit '}
+                {entityLabels[entity]}
+              </h3>
+              <form className={styles.form} onSubmit={handleSubmit}>
+                {formConfigs[entity]?.map((field) => (
+                  <label key={field.name} className={styles.formGroup}>
+                    <span className={styles.formLabel}>{field.label}:</span>
+                    <input
+                      className={styles.formInput}
+                      type={field.type}
+                      name={field.name}
+                      value={formData[field.name] || ''}
+                      onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                      required
+                    />
+                  </label>
+                ))}
+                <div className={styles.formActions}>
+                  <button className={styles.submitBtn} type="submit">
+                    {formType === 'add' ? 'Create' : 'Update'}
+                  </button>
+                  <button className={styles.cancelBtn} type="button" onClick={closeForm}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
       </div>
