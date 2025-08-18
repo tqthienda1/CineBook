@@ -2,12 +2,26 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes, userRoutes, adminRoutes } from './routes';
 import { Fragment } from 'react/jsx-runtime';
 import { AuthContext } from './auth/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminRoute from './routes/AdminRoute';
 import UserRoute from './routes/UserRoute';
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUser(decodedToken);
+      } catch (err) {
+        console.error('Invalid token', err);
+        localStorage.removeItem('token');
+      }
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

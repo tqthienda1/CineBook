@@ -23,6 +23,7 @@ const Header = () => {
           <li>Movies</li>
         </Link>
         <li>Promotions</li>
+        {console.log(user)}
         {!user ? (
           <>
             <Link to="/register" className={styles.button}>
@@ -32,11 +33,15 @@ const Header = () => {
               <LoginButton className={styles.loginButton} />
             </Link>
           </>
-        ) : (
+        ) : user.role === 'user' ? (
           <Link to="/userprofile">
             <FaUser className={styles.userIcon} />
           </Link>
-        )}
+        ) : user.role === 'admin' ? (
+          <Link to="/admindashboard">
+            <FaUser className={styles.userIcon} />
+          </Link>
+        ) : null}
       </ul>
     </nav>
   );

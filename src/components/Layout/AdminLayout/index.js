@@ -5,6 +5,7 @@ import React from 'react';
 import logo from '../../../assets/logo.png';
 import { AuthContext } from '../../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AdminLayout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -35,7 +36,9 @@ const AdminLayout = ({ children }) => {
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-          <img src={logo} alt="logo"></img>
+          <Link to="/">
+            <img src={logo} alt="logo"></img>
+          </Link>
           <span>Admin Panel</span>
         </div>
         <nav className={styles.navigation}>
