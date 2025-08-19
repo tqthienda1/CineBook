@@ -1,49 +1,50 @@
 .searchBarWrapper {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 3rem 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 3rem 0;
 }
 
 .searchLabel {
-    background-color: #fb2b2b;
-    position: absolute;
-    z-index: 1;
-    left: -2rem;
-    bottom: 0.5rem;
-    transform: rotate(-15deg);
-    font-size: 1.5rem;
-    border-radius: 0.7rem;
-    padding: 0.5rem 0.7rem;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
+  background-color: #fb2b2b;
+  position: absolute;
+  z-index: 1;
+  left: -2rem;
+  bottom: 0.5rem;
+  transform: rotate(-15deg);
+  font-size: 1.5rem;
+  border-radius: 0.7rem;
+  padding: 0.5rem 0.7rem;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .searchInput {
-    border: 0;
-    width: 700px;
-    font-size: 1.5rem;
-    padding: 0.5rem 3rem 0.5rem 7rem;
-    border-radius: 0.7rem;
+  border: 0;
+  width: 700px;
+  font-size: 1.5rem;
+  padding: 0.5rem 3rem 0.5rem 7rem;
+  border-radius: 0.7rem;
+  caret-color: black;
 }
 
 .searchInput:focus {
-    outline: none;
-    border: 0;
+  outline: none;
+  border: 0;
 }
 
 .searchInputWrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .magnifyingGlass {
-    position: absolute;
-    color: black;
-    right: 0;
-    padding-right: 1rem;
-    font-size: 2.5rem;
-    cursor: pointer;
+  position: absolute;
+  color: black;
+  right: 0;
+  padding-right: 1rem;
+  font-size: 2.5rem;
+  cursor: pointer;
 }

@@ -1,5 +1,5 @@
 import MovieCard from '../../components/MovieCard';
-import poster1 from '../../assets/f1_poster.jpg';
+import poster1 from '../../assets/f1_poster_02.jpg';
 import styles from './Movies.module.scss';
 import { useState, useEffect } from 'react';
 
@@ -8,7 +8,7 @@ const Movies = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const res = await fetch('http://localhost:5003/movies', {
+        const res = await fetch('http://localhost:5003/user/movies', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -35,7 +35,10 @@ const Movies = () => {
       <h1>NOW SHOWING</h1>
       <div className={styles.movieContainer}>
         {movies.map((movie) => (
-          <MovieCard movieName={movie.name} imgSource={movie.posterURL} />
+          <>
+            <MovieCard movieName={movie.name} imgSource={`/assets/${movie.posterURL}`} />
+            {console.log(movie.posterURL)}
+          </>
         ))}
       </div>
     </div>
