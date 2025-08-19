@@ -8,16 +8,19 @@
     width: 600px;
     height: 450px;
     object-fit: contain;
+    user-select: none;
   }
   h2 {
     color: #888;
     font-size: 15px;
     display: block;
+    user-select: none;
   }
   h1 {
     color: red;
     font-size: 25px;
     display: block;
+    user-select: none;
   }
   span {
     color: white;
@@ -25,6 +28,7 @@
     display: block;
     margin-top: 10px;
     white-space: pre-line;
+    user-select: none;
   }
   button {
     width: 200px;

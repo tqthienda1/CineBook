@@ -9,7 +9,7 @@ import PromotionCard from '../../components/PromotionCard';
 import banner1 from '../../assets/jurassic_backdrop.jpg';
 import banner2 from '../../assets/lilostitch.jpg';
 import banner3 from '../../assets/DemonSlayer.jpg';
-import poster1 from '../../assets/f1_poster.jpg';
+import poster1 from '../../assets/f1_poster_02.jpg';
 import promotion1 from '../../assets/banner 1.png';
 import promotion2 from '../../assets/banner 2.jpg';
 import discount1 from '../../assets/happy day.png';
@@ -17,6 +17,7 @@ import discount2 from '../../assets/HAPPY HOUR.png';
 import discount3 from '../../assets/u22_2.png';
 import Tab from '../../components/Tab';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Home = () => {
   const banners = [
@@ -25,16 +26,42 @@ const Home = () => {
     <Banner movieName="Demon Slayer: Infinity Castle" imgSource={banner3} />,
   ];
 
-  const movieCards = [
-    <MovieCard movieName={'F1 The Movie'} imgSource={poster1} />,
-    <MovieCard movieName={'F2 The Movie'} imgSource={poster1} />,
-    <MovieCard movieName={'F3 The Movie'} imgSource={poster1} />,
-    <MovieCard movieName={'F4 The Movie'} imgSource={poster1} />,
-    <MovieCard movieName={'F5 The Movie'} imgSource={poster1} />,
-    <MovieCard movieName={'F6 The Movie'} imgSource={poster1} />,
-    <MovieCard movieName={'F7 The Movie'} imgSource={poster1} />,
-    <MovieCard movieName={'F8 The Movie'} imgSource={poster1} />,
-  ];
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const res = await fetch('http://localhost:5003/user/movies', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy danh sách phim');
+        }
+        console.log(res);
+
+        const data = await res.json();
+        console.log(data);
+        setMovies(data);
+      } catch (err) {
+        console.error('Fetch movies error:', err);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+  const today = new Date();
+  const filmsWithRelease = movies.filter((film) => film.releaseDay && new Date(film.releaseDay) < today);
+  const sortedFilms = filmsWithRelease.sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
+  const latest4Films = sortedFilms.slice(0, 4);
+  console.log(latest4Films);
+
+  const movieCards = latest4Films.map((film) => (
+    <MovieCard key={film.movieID} movieName={film.name} imgSource={`/assets/${film.posterURL}`} />
+  ));
 
   const promotionCards = [
     <PromotionCard imgSource={discount1} />,
