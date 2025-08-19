@@ -15,7 +15,7 @@ const AboutUs = () => {
         <div className={styles.overlayText}>
           <div style={{ display: 'flex', gap: '10px' }}>
             <h1>ABOUT</h1>
-            <h1 style={{ color: 'red' }}>CINEBOOK</h1>
+            <h1 style={{ color: 'firebrick' }}>CINEBOOK</h1>
           </div>
           <div>
             <h2>Bringing you the ultimate cinematic experience.</h2>

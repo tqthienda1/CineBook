@@ -53,15 +53,18 @@ const Home = () => {
 
     fetchMovies();
   }, []);
-  const today = new Date();
-  const filmsWithRelease = movies.filter((film) => film.releaseDay && new Date(film.releaseDay) < today);
-  const sortedFilms = filmsWithRelease.sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
-  const latest4Films = sortedFilms.slice(0, 4);
-  console.log(latest4Films);
 
-  const movieCards = latest4Films.map((film) => (
-    <MovieCard key={film.movieID} movieName={film.name} imgSource={`/assets/${film.posterURL}`} />
-  ));
+  const today = new Date();
+  const [activeTab, setActiveTab] = useState('showing');
+
+  const showingMovies = movies
+    .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
+    .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay))
+    .map((film) => <MovieCard key={film.movieID} movieName={film.name} imgSource={`/assets/${film.posterURL}`} />);
+  const comingMovies = movies
+    .filter((film) => film.releaseDay && new Date(film.releaseDay) >= today)
+    .sort((a, b) => new Date(a.releaseDay) - new Date(b.releaseDay)) // sớm nhất → muộn nhất
+    .map((film) => <MovieCard key={film.movieID} movieName={film.name} imgSource={`/assets/${film.posterURL}`} />);
 
   const promotionCards = [
     <PromotionCard imgSource={discount1} />,
@@ -77,12 +80,18 @@ const Home = () => {
       <Slider items={banners} numberItemsEachPage={1} floatArrow={true} />
       <SearchBar />
       <div className={styles.tabWrapper}>
-        <CategoryTab />
+        <CategoryTab active={activeTab} onChange={setActiveTab} />
         <Link to={'/movies'}>
           <ViewAllButton />
         </Link>
       </div>
-      <Slider className={styles.movieCardSlider} items={movieCards} numberItemsEachPage={4} />
+      {activeTab === 'showing' && (
+        <Slider className={styles.movieCardSlider} items={showingMovies} numberItemsEachPage={4} />
+      )}
+
+      {activeTab === 'coming' && (
+        <Slider className={styles.movieCardSlider} items={comingMovies} numberItemsEachPage={4} />
+      )}
       <div className={styles.promotions}>
         <Tab>Promotions</Tab>
         <Link to={'/promotions'}>
