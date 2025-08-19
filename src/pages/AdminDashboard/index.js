@@ -31,7 +31,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     try {
       const token = localStorage.getItem('token');
 
-      // ✅ Chuyển các field dạng chuỗi thành mảng trước khi gửi
       const arrayFields = ['category', 'directors', 'writers', 'actors'];
       const processedData = { ...formData };
 
@@ -52,15 +51,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(processedData), // gửi dữ liệu đã xử lý
+          body: JSON.stringify(processedData),
         });
-        const data = await res.json();
-        console.log(data);
-        if (res.ok) {
-          setRecentFilms((prev) => [...prev, data.film]);
-        } else {
-          alert('Lỗi: ' + data.message);
-        }
+        const newMovie = await res.json();
+        console.log(newMovie);
+
+        setRecentFilms((prev) => [...prev, newMovie]);
       } else {
         const res = await fetch(`http://localhost:5003/admin/movies/${formData.id}`, {
           method: 'PUT',
@@ -68,7 +64,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(processedData), // gửi dữ liệu đã xử lý
+          body: JSON.stringify(processedData),
         });
         const data = await res.json();
 
@@ -156,11 +152,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const [recentFilms, setRecentFilms] = useState([
     {
-      id: 1,
+      movieID: 1,
       name: 'Avatar: The Way of Water',
       category: 'Sci-Fi',
       language: 'asdsadsad',
-      duration: '192 min',
+      duration: '192',
       releaseDay: '10/10/2020',
       IMDBrating: '8.9',
       description: 'Phim hay nhất mọi thời đại',
@@ -173,11 +169,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       status: 'Active',
     },
     {
-      id: 2,
+      movieID: 2,
       name: 'Top Gun: Maverick',
       category: 'Action',
       language: 'asdsadsad',
-      duration: '130 min',
+      duration: '130',
       releaseDay: '10/10/2020',
       IMDBrating: '8.9',
       description: 'Phim hay nhất mọi thời đại',
@@ -190,11 +186,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       status: 'Active',
     },
     {
-      id: 3,
+      movieID: 3,
       name: 'Black Panther: Wakanda Forever',
       category: 'Action',
       language: 'asdsadsad',
-      duration: '161 min',
+      duration: '161',
       releaseDay: '10/10/2020',
       IMDBrating: '8.9',
       description: 'Phim hay nhất mọi thời đại',
@@ -207,11 +203,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       status: 'Inactive',
     },
     {
-      id: 4,
+      movieID: 4,
       name: 'The Batman',
       category: 'Action',
       language: 'asdsadsad',
-      duration: '176 min',
+      duration: '176',
       releaseDay: '10/10/2020',
       IMDBrating: '8.9',
       description: 'Phim hay nhất mọi thời đại',
@@ -224,6 +220,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       status: 'Inactive',
     },
   ]);
+
+  const filmsWithRelease = recentFilms.filter((film) => film.releaseDay);
+  const sortedFilms = filmsWithRelease.sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
+  const latest4Films = sortedFilms.slice(0, 4);
 
   const [statsData, setStatsData] = useState([
     { icon: '🎬', value: '150+', label: 'Total Films', color: '#ff0000' },
@@ -272,12 +272,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         <div className={styles.recentFilms}>
           <h3>Recent Movies</h3>
           <div className={styles.filmsList}>
-            {recentFilms.map((film) => (
-              <div key={film.id} className={styles.filmItem}>
+            {latest4Films.map((film) => (
+              <div key={film.movieID} className={styles.filmItem}>
                 <div className={styles.filmInfo}>
                   <h4>{film.name}</h4>
                   <p>
-                    {film.genre} • {film.duration}
+                    {film.category} • {film.duration}
                   </p>
                 </div>
                 <span className={`${styles.status} ${film.status === 'Active' ? styles.active : styles.inactive}`}>
@@ -297,7 +297,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 setSkipResetForm(true);
                 setActiveSectionFromLayout('movies');
                 openForm('add', 'movies');
-                setTimeout(() => setSkipResetForm(false), 0);
               }}
             >
               <span>🎬</span>
@@ -309,7 +308,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 setSkipResetForm(true);
                 setActiveSectionFromLayout('showtimes');
                 openForm('add', 'showtimes');
-                setTimeout(() => setSkipResetForm(false), 0);
               }}
             >
               <span>🕐</span>
@@ -321,7 +319,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 setSkipResetForm(true);
                 setActiveSectionFromLayout('promotions');
                 openForm('add', 'promotions');
-                setTimeout(() => setSkipResetForm(false), 0);
               }}
             >
               <span>🎟️</span>
@@ -330,9 +327,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             <button
               className={styles.actionBtn}
               onClick={() => {
-                // setSkipResetForm(true);
                 setActiveSectionFromLayout('users');
-                // openForm('add', 'users');
               }}
             >
               <span>👥</span>
@@ -347,7 +342,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const renderMovieManagement = () => (
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
-        <h2>Film Management</h2>
+        <h2>Movie Management</h2>
         <button className={styles.primaryBtn} onClick={() => openForm('add', 'movies')}>
           Add New Movie
         </button>
@@ -357,7 +352,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <thead>
             <tr>
               <th>Title</th>
-              <th>Genre</th>
+              <th>Category</th>
               <th>Duration</th>
               <th>Release Date</th>
               <th>Status</th>
@@ -366,11 +361,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           </thead>
           <tbody>
             {recentFilms.map((film) => (
-              <tr key={film.id}>
+              <tr key={film.movieID}>
                 <td>{film.name}</td>
-                <td>{film.genre}</td>
-                <td>{film.duration}</td>
-                <td>2023-12-15</td>
+                <td>{Array.isArray(film.category) ? film.category.join(', ') : film.category ?? ''}</td>
+                <td>{film.duration} min</td>
+                <td>{film.releaseDay}</td>
                 <td>
                   <span className={`${styles.status} ${film.status === 'Active' ? styles.active : styles.inactive}`}>
                     {film.status}
