@@ -74,9 +74,14 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           body: JSON.stringify(processedData),
         });
 
+        console.log(processedData);
+
         if (res.ok) {
           const editedMovie = await res.json();
-          setRecentFilms((prev) => prev.map((movie) => (movie.movieID === editedMovie.movieID ? editedMovie : movie)));
+          console.log(editedMovie);
+          setRecentFilms((prev) =>
+            prev.map((movie) => (String(movie.movieID) === String(editedMovie.movieID) ? editedMovie : movie)),
+          );
         }
       }
     } catch (err) {
@@ -170,7 +175,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         if (!res.ok) {
           throw new Error('Lỗi khi lấy danh sách phim');
         }
-        console.log(res);
+        // console.log(res);
 
         const data = await res.json();
         setRecentFilms(data);
