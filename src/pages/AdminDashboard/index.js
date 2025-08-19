@@ -36,10 +36,14 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
       arrayFields.forEach((field) => {
         if (processedData[field]) {
-          processedData[field] = processedData[field]
-            .split(',')
-            .map((item) => item.trim())
-            .filter((item) => item);
+          if (typeof processedData[field] === 'string') {
+            processedData[field] = processedData[field]
+              .split(',')
+              .map((item) => item.trim())
+              .filter((item) => item);
+          } else if (Array.isArray(processedData[field])) {
+            processedData[field] = processedData[field].map((item) => item.trim());
+          }
         }
       });
 
@@ -53,10 +57,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           },
           body: JSON.stringify(processedData),
         });
-        const newMovie = await res.json();
-        console.log(newMovie);
 
-        setRecentFilms((prev) => [...prev, newMovie]);
+        if (res.ok) {
+          const newMovie = await res.json();
+          console.log(newMovie);
+
+          setRecentFilms((prev) => [...prev, newMovie]);
+        }
       } else {
         const res = await fetch(`http://localhost:5003/admin/movies/${formData.id}`, {
           method: 'PUT',
@@ -66,12 +73,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           },
           body: JSON.stringify(processedData),
         });
-        const data = await res.json();
 
         if (res.ok) {
-          setRecentFilms((prev) => prev.map((film) => (film.id === formData.id ? data.film : film)));
-        } else {
-          alert('Lỗi: ' + data.message);
+          const editedMovie = await res.json();
+          console.log(editedMovie);
+
+          setRecentFilms((prev) => prev.map((movie) => (movie.movieID === editedMovie.movieID ? editedMovie : movie)));
         }
       }
     } catch (err) {
@@ -152,7 +159,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const [recentFilms, setRecentFilms] = useState([
     {
-      movieID: 1,
+      movieID: 999,
       name: 'Avatar: The Way of Water',
       category: 'Sci-Fi',
       language: 'asdsadsad',
@@ -169,7 +176,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       status: 'Active',
     },
     {
-      movieID: 2,
+      movieID: 99999,
       name: 'Top Gun: Maverick',
       category: 'Action',
       language: 'asdsadsad',
@@ -186,7 +193,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       status: 'Active',
     },
     {
-      movieID: 3,
+      movieID: 888888,
       name: 'Black Panther: Wakanda Forever',
       category: 'Action',
       language: 'asdsadsad',
@@ -203,7 +210,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       status: 'Inactive',
     },
     {
-      movieID: 4,
+      movieID: 777777,
       name: 'The Batman',
       category: 'Action',
       language: 'asdsadsad',
