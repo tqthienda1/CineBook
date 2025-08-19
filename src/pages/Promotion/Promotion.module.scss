@@ -2,7 +2,7 @@
   background-color: black;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: left;
 }
 
 .backgroundContainer {
@@ -16,5 +16,6 @@
   h1 {
     color: white;
     font-size: 60px;
+    user-select: none;
   }
 }

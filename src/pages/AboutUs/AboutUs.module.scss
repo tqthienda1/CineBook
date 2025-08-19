@@ -1,7 +1,7 @@
 .background {
   width: 100vw;
   background-color: black;
-  // overflow-x: hidden;
+  caret-color: transparent;
 }
 
 .headerContainer {
@@ -14,6 +14,7 @@
     height: 450px;
     object-fit: cover;
     filter: brightness(50%);
+    user-select: none;
   }
 
   .overlayText {
@@ -31,10 +32,12 @@
     h1 {
       font-size: 70px;
       color: white;
+      user-select: none;
     }
     h2 {
       font-size: 25px;
       color: gray;
+      user-select: none;
     }
   }
 }
@@ -52,6 +55,7 @@
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    user-select: none;
   }
 }
 
@@ -65,9 +69,11 @@
     height: 350px;
     width: 550px;
     border-radius: 10%;
+    user-select: none;
   }
   h1 {
     font-size: 40px;
+    user-select: none;
   }
 }
 
@@ -110,10 +116,12 @@
   h1 {
     color: red;
     font-size: 35px;
+    user-select: none;
   }
   h2 {
     color: white;
     font-size: 20px;
+    user-select: none;
   }
 }
 
@@ -125,12 +133,14 @@
     color: red;
     font-size: 30px;
     width: 600px;
+    user-select: none;
   }
 
   h2 {
     color: white;
     font-size: 17px;
     width: 600px;
+    user-select: none;
   }
 
   padding: 30px;
@@ -164,6 +174,7 @@
   h1 {
     font-size: 40px;
     color: white;
+    user-select: none;
   }
 }
 
@@ -178,12 +189,14 @@
     color: white;
     font-size: 25px;
     text-align: center;
+    user-select: none;
   }
   h2 {
     color: gray;
     font-size: 15px;
     width: 400px;
     text-align: center;
+    user-select: none;
   }
 }
 
@@ -214,15 +227,18 @@
   h1 {
     color: white;
     font-size: 40px;
+    user-select: none;
   }
   h2 {
     color: white;
     font-size: 20px;
+    user-select: none;
   }
   h3 {
     color: gray;
     font-size: 20px;
     width: 400px;
+    user-select: none;
   }
 }
 
