@@ -24,7 +24,6 @@ const Header = () => {
         </Link>
 
         <li>Promotions</li>
-        {console.log(user)}
         {!user ? (
           <>
             <Link to="/register" className={styles.button}>
