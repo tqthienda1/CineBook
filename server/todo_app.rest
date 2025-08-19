@@ -68,7 +68,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   "status":"active",
   "posterURL":"posterURL",
   "backdropURL":"posterURL"
-
+}
 ###
 GET http://localhost:5003/admin/movies
 Content-Type: application/json
