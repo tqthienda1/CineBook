@@ -23,7 +23,6 @@ const Header = () => {
           <li>Movies</li>
         </Link>
         <li>Promotions</li>
-        {console.log(user)}
         {!user ? (
           <>
             <Link to="/register" className={styles.button}>
