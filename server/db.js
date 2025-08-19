@@ -17,16 +17,16 @@ connection.connect(async (err) => {
   console.log('✅ Đã kết nối MySQL Railway');
 
   // const dropTables = [
+  //   'movie_director',
+  //   'movie_actor', 
+  //   'movie_writer',
+  //   'movie_category',
   //   'movie',
   //   'user',
   //   'category',
   //   'director',
   //   'writer',
-  //   'actor',
-  //   'movie_director',
-  //   'movie_actor', 
-  //   'movie_writer',
-  //   'movie_category' 
+  //   'actor'
   // ];
 
   // for (const table of dropTables) {
@@ -48,7 +48,7 @@ connection.connect(async (err) => {
           email VARCHAR(255) NOT NULL UNIQUE,
           password VARCHAR(255) NOT NULL,
           birthday DATE,
-          role varchar(10)
+          role VARCHAR(10)
         )
       `
     },
