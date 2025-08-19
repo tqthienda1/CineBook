@@ -8,7 +8,6 @@ function AdminRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
   const decodedToken = jwtDecode(token);
-  console.log(decodedToken);
   if (decodedToken.role !== 'admin') {
     return <Navigate to="/login" replace />;
   }

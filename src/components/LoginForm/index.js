@@ -9,6 +9,7 @@ import styles from './LoginForm.module.scss';
 import logo from '../../assets/logo.png';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../auth/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
 const LoginForm = ({ onSubmitResult }) => {
   const [email, setEmail] = useState('');
@@ -40,7 +41,7 @@ const LoginForm = ({ onSubmitResult }) => {
         onSubmitResult('Server error');
         return;
       } else if (res.status === 200) {
-        setUser(data.token);
+        setUser(jwtDecode(data.token));
         localStorage.setItem('token', data.token);
         onSubmitResult('Login successfully');
         return;

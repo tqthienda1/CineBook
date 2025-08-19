@@ -6,6 +6,7 @@ import logo from '../../../../assets/logo.png';
 import RegisterButton from '../../../RegisterButton';
 import { useContext } from 'react';
 import { AuthContext } from '../../../../auth/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -23,7 +24,9 @@ const Header = () => {
           <li>Movies</li>
         </Link>
 
-        <li>Promotions</li>
+        <Link to="/promotions">
+          <li>Promotions</li>
+        </Link>
         {!user ? (
           <>
             <Link to="/register" className={styles.button}>
@@ -42,7 +45,6 @@ const Header = () => {
             <FaUser className={styles.userIcon} />
           </Link>
         ) : null}
-
       </ul>
     </nav>
   );
