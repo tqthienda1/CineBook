@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = jwtDecode(localStorage.getItem('token'));
     if (token) {
-      setUser(token.role);
+      setUser(token);
     }
   }, []);
 
