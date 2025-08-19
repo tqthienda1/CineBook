@@ -152,3 +152,20 @@ export const editMovie = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error: err });
   }
 };
+
+export const deleteMovie = async (req, res) => {
+  try {
+    const { movieID } = req.params; // Lấy movieID từ URL (vd: /movies/:movieID)
+
+    // Gọi model delete
+    const result = await Movie.deleteMovie(movieID);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy phim để xóa' });
+    }
+
+    res.status(200).json({ message: 'Xóa phim thành công' });
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err });
+  }
+}

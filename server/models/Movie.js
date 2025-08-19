@@ -348,6 +348,24 @@ const Movie = {
       backdropURL,
     };
   },
+
+  // Xóa phim
+  async deleteMovie (movieID) {
+    const sqlDeleteMovie = `DELETE FROM movie WHERE movieID = ?`;
+    const [result] = await connection.promise().execute(sqlDeleteMovie, [movieID]);
+
+    if (result.affectedRows === 0) {
+      return null; // Không tìm thấy phim để xóa
+    }
+
+    // Xóa các liên kết với category, director, writer, actor
+    await connection.promise().execute(`DELETE FROM movie_category WHERE movieID=?`, [movieID]);
+    await connection.promise().execute(`DELETE FROM movie_director WHERE movieID=?`, [movieID]);
+    await connection.promise().execute(`DELETE FROM movie_writer WHERE movieID=?`, [movieID]);
+    await connection.promise().execute(`DELETE FROM movie_actor WHERE movieID=?`, [movieID]);
+
+    return { message: 'Phim đã được xóa thành công' };
+  }
 };
 
 //   return movie;
