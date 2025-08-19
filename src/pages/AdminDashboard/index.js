@@ -27,6 +27,29 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     }
   }, [currentSection]);
 
+  const handleDelete = async (movieID) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`http://localhost:5003/admin/movies/${movieID}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        // cập nhật lại state FE
+        setRecentFilms((prev) => prev.filter((m) => m.movieID !== movieID));
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Xóa phim thất bại');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Không kết nối được backend');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -78,7 +101,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
         if (res.ok) {
           const editedMovie = await res.json();
-          console.log(editedMovie);
+          console.log(formData.movieID);
+          console.log(res);
           setRecentFilms((prev) =>
             prev.map((movie) => (String(movie.movieID) === String(editedMovie.movieID) ? editedMovie : movie)),
           );
@@ -344,7 +368,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'movies', film)}>
                       Edit
                     </button>
-                    <button className={styles.deleteBtn}>Delete</button>
+                    <button className={styles.deleteBtn} onClick={() => handleDelete(film.movieID)}>
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
