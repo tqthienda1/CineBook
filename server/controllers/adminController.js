@@ -2,8 +2,10 @@ import Movie from '../models/Movie.js';
 
 export const getMovies = async (req, res) => {
   try {
+    console.log(1)
     const movies = await Movie.getAllMovies();
     res.json(movies);
+    console.log('Lấy tất cả phim thành công:', movies);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
