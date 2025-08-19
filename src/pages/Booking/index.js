@@ -25,6 +25,7 @@ const movieInfo = {
 
 const cinemaInfo = [
   { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
+  { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
 ];
 
 const Booking = () => {
@@ -37,6 +38,7 @@ const Booking = () => {
 
       <MovieDeTail {...movieInfo} />
       <div className={styles.margin}></div>
+
       <SeparateLine text="SHOWTIME" lineColor={'#fb2b2b'} className={styles.separateLine} />
       <div className={styles.margin}></div>
       <DateSlider />
@@ -44,6 +46,8 @@ const Booking = () => {
 
       <SeparateLine text="CINEMA LIST" lineColor={'#fb2b2b'} className={styles.separateLine} />
       <Cinema cinemaList={cinemaInfo} />
+
+      <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine} />
     </div>
   );
 };

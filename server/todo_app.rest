@@ -6,8 +6,8 @@ POST http://localhost:5003/auth/register
 Content-Type: application/json
 
 {
-  "email": "longngo",
-  "password": "123123"
+  "email": "admin@gmail.com",
+  "password": "1"
 }
 
 ### Login a user POST / AUTH / LOGIN
@@ -15,20 +15,20 @@ POST http://localhost:5003/auth/login
 Content-Type: application/json
 
 {
-  "email": "longngo",
-  "password": "123123"
+  "email": "admin@gmail.com",
+  "password": "1"
 }
 
 ###
 GET http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTM4NDk4LCJleHAiOjE3NTU1NDIwOTh9.RxROo-fZuzyPDtpNZnaOP0cGMsvAGYJ3v4Rw2jWWJEU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU1ODcxNjksImV4cCI6MTc1NTU5MDc2OX0.8wZ4ze4YUumiSEdOQ999mojMrRx2YV0pEgcXP42J-B0
 
 
 ### 
 POST http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTM4NDk4LCJleHAiOjE3NTU1NDIwOTh9.RxROo-fZuzyPDtpNZnaOP0cGMsvAGYJ3v4Rw2jWWJEU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU1ODcxNjksImV4cCI6MTc1NTU5MDc2OX0.8wZ4ze4YUumiSEdOQ999mojMrRx2YV0pEgcXP42J-B0
 
 {
   "name":"f1",
@@ -46,6 +46,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   "posterURL":"posterURL",
   "backdropURL":"posterURL"
 }
+
 
 ### 
 PUT http://localhost:5003/admin/movies/movieID
@@ -67,4 +68,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   "status":"active",
   "posterURL":"posterURL",
   "backdropURL":"posterURL"
+
+###
+GET http://localhost:5003/admin/movies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU1ODcxNjksImV4cCI6MTc1NTU5MDc2OX0.8wZ4ze4YUumiSEdOQ999mojMrRx2YV0pEgcXP42J-B0
+
+{
+
 }

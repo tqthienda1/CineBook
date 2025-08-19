@@ -5,26 +5,27 @@ import Showtime from '../Showtime';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-const ShowtimeSection = ({ cinemaName, address, showtimesList }) => {
-  const [selectFavorite, setSelectFavorite] = useState(false);
-  const [selectShowtime, setSelectShowtime] = useState();
-
-  const handleSelectFavorite = () => {
-    setSelectFavorite(!selectFavorite);
-  };
-
-  const handleSelectShowtime = (index) => {
-    setSelectShowtime(index);
-  };
-
+const ShowtimeSection = ({
+  cinemaName,
+  address,
+  showtimesList,
+  selectShowtime,
+  handleSelectFavorite,
+  handleSelectShowtime,
+  sectionFavoriteIndex,
+  selectSectionFavorite,
+  sectionShowtimeIndex,
+  selectSectionShowtime,
+}) => {
+  console.log(sectionFavoriteIndex, sectionShowtimeIndex);
   return (
     <div className={clsx(styles.col, styles.showtimeSection)}>
-      <div className={styles.row}>
+      <div className={clsx(styles.row, styles.labelWrapper)}>
         <FaHeartCirclePlus
-          onClick={handleSelectFavorite}
-          className={clsx(styles.favoriteButton, selectFavorite ? styles.selected : '')}
+          onClick={() => handleSelectFavorite(sectionFavoriteIndex)}
+          className={clsx(styles.favoriteButton, sectionFavoriteIndex === selectSectionFavorite ? styles.selected : '')}
         />
-        <div className={styles.col}>
+        <div className={clsx(styles.col)}>
           <h1>{cinemaName}</h1>
           <div className={styles.row}>
             <CiLocationOn className={styles.locationIcon} />
@@ -36,12 +37,15 @@ const ShowtimeSection = ({ cinemaName, address, showtimesList }) => {
         {showtimesList.map((item, index) => (
           <li key={index}>
             <Showtime
-              className={index === selectShowtime ? styles.selectedShowtime : ''}
-              onClick={() => handleSelectShowtime(index)}
+              className={
+                index === selectShowtime && sectionShowtimeIndex === selectSectionShowtime
+                  ? styles.selectedShowtime
+                  : ''
+              }
+              onClick={() => handleSelectShowtime(index, sectionShowtimeIndex)}
               time={item.time}
               type={item.type}
             />
-            {console.log(selectShowtime, index)}
           </li>
         ))}
       </ul>
