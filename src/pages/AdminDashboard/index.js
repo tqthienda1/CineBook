@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import styles from './AdminDashboard.module.scss';
+import { jwtDecode } from 'jwt-decode';
 
 const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout }) => {
   const currentSection = activeSectionFromLayout || 'dashboard';
@@ -60,12 +61,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
         if (res.ok) {
           const newMovie = await res.json();
-          console.log(newMovie);
 
           setRecentFilms((prev) => [...prev, newMovie]);
         }
       } else {
-        const res = await fetch(`http://localhost:5003/admin/movies/${formData.id}`, {
+        const res = await fetch(`http://localhost:5003/admin/movies/${formData.movieID}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -76,8 +76,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
         if (res.ok) {
           const editedMovie = await res.json();
-          console.log(editedMovie);
-
           setRecentFilms((prev) => prev.map((movie) => (movie.movieID === editedMovie.movieID ? editedMovie : movie)));
         }
       }
@@ -153,80 +151,38 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       value = Number(value);
     }
 
-    // Với category, directors, writers, actors: giữ nguyên string để nhập dễ
     setFormData({ ...formData, [field.name]: value });
   };
 
-  const [recentFilms, setRecentFilms] = useState([
-    {
-      movieID: 999,
-      name: 'Avatar: The Way of Water',
-      category: 'Sci-Fi',
-      language: 'asdsadsad',
-      duration: '192',
-      releaseDay: '10/10/2020',
-      IMDBrating: '8.9',
-      description: 'Phim hay nhất mọi thời đại',
-      directors: 'Trần Quốc Thiện',
-      writers: 'Ngô Bảo Long',
-      actors: 'Nguyễn Đặng Đức Thịnh',
-      ageLimit: '18',
-      posterURL: 'posterURL',
-      backdropURL: 'backdropURL',
-      status: 'Active',
-    },
-    {
-      movieID: 99999,
-      name: 'Top Gun: Maverick',
-      category: 'Action',
-      language: 'asdsadsad',
-      duration: '130',
-      releaseDay: '10/10/2020',
-      IMDBrating: '8.9',
-      description: 'Phim hay nhất mọi thời đại',
-      directors: 'Trần Quốc Thiện',
-      writers: 'Ngô Bảo Long',
-      actors: 'Nguyễn Đặng Đức Thịnh',
-      ageLimit: '18',
-      posterURL: 'posterURL',
-      backdropURL: 'backdropURL',
-      status: 'Active',
-    },
-    {
-      movieID: 888888,
-      name: 'Black Panther: Wakanda Forever',
-      category: 'Action',
-      language: 'asdsadsad',
-      duration: '161',
-      releaseDay: '10/10/2020',
-      IMDBrating: '8.9',
-      description: 'Phim hay nhất mọi thời đại',
-      directors: 'Trần Quốc Thiện',
-      writers: 'Ngô Bảo Long',
-      actors: 'Nguyễn Đặng Đức Thịnh',
-      ageLimit: '18',
-      posterURL: 'posterURL',
-      backdropURL: 'backdropURL',
-      status: 'Inactive',
-    },
-    {
-      movieID: 777777,
-      name: 'The Batman',
-      category: 'Action',
-      language: 'asdsadsad',
-      duration: '176',
-      releaseDay: '10/10/2020',
-      IMDBrating: '8.9',
-      description: 'Phim hay nhất mọi thời đại',
-      directors: 'Trần Quốc Thiện',
-      writers: 'Ngô Bảo Long',
-      actors: 'Nguyễn Đặng Đức Thịnh',
-      ageLimit: '18',
-      posterURL: 'posterURL',
-      backdropURL: 'backdropURL',
-      status: 'Inactive',
-    },
-  ]);
+  const [recentFilms, setRecentFilms] = useState([]);
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:5003/admin/movies', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy danh sách phim');
+        }
+        console.log(res);
+
+        const data = await res.json();
+        setRecentFilms(data);
+      } catch (err) {
+        console.error('Fetch movies error:', err);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
+  console.log(recentFilms);
 
   const filmsWithRelease = recentFilms.filter((film) => film.releaseDay);
   const sortedFilms = filmsWithRelease.sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));

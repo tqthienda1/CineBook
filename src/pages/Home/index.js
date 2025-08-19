@@ -16,6 +16,7 @@ import discount1 from '../../assets/happy day.png';
 import discount2 from '../../assets/HAPPY HOUR.png';
 import discount3 from '../../assets/u22_2.png';
 import Tab from '../../components/Tab';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const banners = [
@@ -50,12 +51,22 @@ const Home = () => {
       <SearchBar />
       <div className={styles.tabWrapper}>
         <CategoryTab />
-        <ViewAllButton />
+        <Link to={'/movies'}>
+          <ViewAllButton />
+        </Link>
       </div>
       <Slider className={styles.movieCardSlider} items={movieCards} numberItemsEachPage={4} />
       <div className={styles.promotions}>
         <Tab>Promotions</Tab>
-        <button>All promotions and discounts</button>
+        <Link to={'/promotions'}>
+          <button
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+          >
+            All promotions and discounts
+          </button>
+        </Link>
       </div>
       <Slider className={styles.movieCardSlider} items={promotionCards} numberItemsEachPage={3} />
     </div>
