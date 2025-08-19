@@ -22,13 +22,13 @@ Content-Type: application/json
 ###
 GET http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MTA4NDMsImV4cCI6MTc1NTYxNDQ0M30.okiLq5chvyoTqnJY-bgEn0GaSK0PHkDa9jCV2N2l_vE
 
 
 ### 
 POST http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MTA4NDMsImV4cCI6MTc1NTYxNDQ0M30.okiLq5chvyoTqnJY-bgEn0GaSK0PHkDa9jCV2N2l_vE
 
 {
   "name":"f1",
@@ -51,7 +51,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ### 
 PUT http://localhost:5003/admin/movies/6
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MTA4NDMsImV4cCI6MTc1NTYxNDQ0M30.okiLq5chvyoTqnJY-bgEn0GaSK0PHkDa9jCV2N2l_vE
 
 {
   "name":"f1",
@@ -72,9 +72,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ###
 GET http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MTA4NDMsImV4cCI6MTc1NTYxNDQ0M30.okiLq5chvyoTqnJY-bgEn0GaSK0PHkDa9jCV2N2l_vE
 
 
-{
-
-}
+###
+DELETE http://localhost:5003/admin/movies/6
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MTA4NDMsImV4cCI6MTc1NTYxNDQ0M30.okiLq5chvyoTqnJY-bgEn0GaSK0PHkDa9jCV2N2l_vE
