@@ -2,7 +2,6 @@ import Movie from '../models/Movie.js';
 
 export const getMovies = async (req, res) => {
   try {
-    console.log(1)
     const movies = await Movie.getAllMovies();
     const formattedMovies = movies.map(movie => ({
       ...movie,
