@@ -89,7 +89,6 @@ export const addMovie = async (req, res) => {
 export const editMovie = async (req, res) => {
   try {
     const { movieID } = req.params; // Lấy movieID từ URL (vd: /movies/:movieID)
-
     const {
       name,
       category,
