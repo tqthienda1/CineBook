@@ -22,13 +22,13 @@ Content-Type: application/json
 ###
 GET http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU1ODcxNjksImV4cCI6MTc1NTU5MDc2OX0.8wZ4ze4YUumiSEdOQ999mojMrRx2YV0pEgcXP42J-B0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
 
 
 ### 
 POST http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU1ODcxNjksImV4cCI6MTc1NTU5MDc2OX0.8wZ4ze4YUumiSEdOQ999mojMrRx2YV0pEgcXP42J-B0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
 
 {
   "name":"f1",
@@ -49,13 +49,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 
 ### 
-PUT http://localhost:5003/admin/movies/movieID
+PUT http://localhost:5003/admin/movies/6
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJsb25nbmdvIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU1NTM4NDk4LCJleHAiOjE3NTU1NDIwOTh9.RxROo-fZuzyPDtpNZnaOP0cGMsvAGYJ3v4Rw2jWWJEU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
 
 {
   "name":"f1",
-  "category":["Tinh cam", "Hanh dong"],
+  "category":["Tinh cam", "Kinh di"],
   "language":"Tieng Viet",
   "duration":"120",
   "releaseDay":"2025-08-18",
@@ -68,11 +68,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   "status":"active",
   "posterURL":"posterURL",
   "backdropURL":"posterURL"
-
+}
 ###
 GET http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU1ODcxNjksImV4cCI6MTc1NTU5MDc2OX0.8wZ4ze4YUumiSEdOQ999mojMrRx2YV0pEgcXP42J-B0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2MDY4NzIsImV4cCI6MTc1NTYxMDQ3Mn0.aAowKyLFqMQy1S0-xcUyxIWlIvHJT8Sw6jJnGWJh7rs
+
 
 {
 

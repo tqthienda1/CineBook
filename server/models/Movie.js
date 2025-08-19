@@ -217,6 +217,9 @@ const Movie = {
     };
   },
 
+
+
+  // Cập nhật thông tin phim
   async editMovie(movieID, movieData) {
     const {
       name,
@@ -257,11 +260,21 @@ const Movie = {
     // Update movie chính
     const sqlUpdateMovie = `
     UPDATE movie
-    SET name=?, language=?, duration=?, releaseDay=?, IMDBrating=?, description=?, 
-        ageLimit=?, status=?, posterURL=?, backdropURL=?
+    SET 
+      name=?,
+      language=?,
+      duration=?,   
+      releaseDay=?, 
+      IMDBrating=?, 
+      description=?, 
+      ageLimit=?, 
+      status=?, 
+      posterURL=?, 
+      backdropURL=?
     WHERE movieID=?
-  `;
+    `;
 
+      
     await connection
       .promise()
       .execute(sqlUpdateMovie, [

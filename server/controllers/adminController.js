@@ -4,8 +4,13 @@ export const getMovies = async (req, res) => {
   try {
     console.log(1)
     const movies = await Movie.getAllMovies();
-    res.json(movies);
-    console.log('Lấy tất cả phim thành công:', movies);
+    const formattedMovies = movies.map(movie => ({
+      ...movie,
+      releaseDay: new Date(movie.releaseDay).toISOString().split('T')[0]
+    }));
+
+    res.json(formattedMovies);
+    console.log('Lấy tất cả phim thành công:', formattedMovies);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
@@ -84,7 +89,6 @@ export const addMovie = async (req, res) => {
 export const editMovie = async (req, res) => {
   try {
     const { movieID } = req.params; // Lấy movieID từ URL (vd: /movies/:movieID)
-
     const {
       name,
       category,
