@@ -4,14 +4,14 @@ import { useState } from 'react';
 
 const showtimeInfo = [
   { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
-  { time: '11:45', type: '2d' },
+  { time: '12:45', type: '2d' },
+  { time: '13:45', type: '2d' },
+  { time: '14:45', type: '2d' },
+  { time: '15:45', type: '2d' },
+  { time: '16:45', type: '2d' },
+  { time: '17:45', type: '2d' },
+  { time: '18:45', type: '2d' },
+  { time: '19:45', type: '2d' },
   { time: '11:45', type: '2d' },
   { time: '11:45', type: '2d' },
   { time: '11:45', type: '2d' },
@@ -21,10 +21,8 @@ const showtimeInfo = [
   { time: '11:45', type: '2d' },
 ];
 
-const Cinema = ({ cinemaList }) => {
+const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionShowtime }) => {
   const [selectSectionFavorite, setSelectSectionFavorite] = useState();
-  const [selectSectionShowtime, setSelectSectionShowtime] = useState();
-  const [selectShowtime, setSelectShowtime] = useState();
 
   const handleSelectFavorite = (sectionIndex) => {
     if (selectSectionFavorite === sectionIndex) {
@@ -34,10 +32,6 @@ const Cinema = ({ cinemaList }) => {
     }
   };
 
-  const handleSelectShowtime = (showtimeIndex, sectionIndex) => {
-    setSelectShowtime(showtimeIndex);
-    setSelectSectionShowtime(sectionIndex);
-  };
   return (
     <ul className={styles.cinemaList}>
       {cinemaList.map((item, index) => (
@@ -50,7 +44,7 @@ const Cinema = ({ cinemaList }) => {
             selectSectionFavorite={selectSectionFavorite}
             selectSectionShowtime={selectSectionShowtime}
             handleSelectFavorite={handleSelectFavorite}
-            handleSelectShowtime={handleSelectShowtime}
+            handleSelectShowtime={onSelectShowtime}
             sectionFavoriteIndex={index}
             sectionShowtimeIndex={index}
           />
