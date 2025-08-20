@@ -43,6 +43,8 @@ const PriceBox = ({ selectedSeats }) => {
         <div>TOTAL PRICE</div>
         <div>{`$${totalSeatsCost}`}</div>
       </div>
+
+      <div className={styles.buyButton}>BUY</div>
     </div>
   );
 };
