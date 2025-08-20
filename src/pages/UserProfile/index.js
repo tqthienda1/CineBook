@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AvatarCard from '../../components/AvatarCard';
 import GeneralInformationForm from '../../components/GeneralInformationForm';
 import PurchaseHistory from '../../components/PurchaseHistory';
@@ -10,8 +10,30 @@ import FilterPurchaseHistory from '../../components/FilterPurchaseHistory';
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState('general');
+  const [userData, setUserData] = useState(null);
 
-  // Dữ liệu giả lập từ DB
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('http://localhost:5003/user/profile', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (!res.ok) throw new Error('Failed to fetch user');
+        const data = await res.json();
+        console.log(data);
+        setUserData(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const purchaseData = [
     {
       id: '23127219',
@@ -38,14 +60,17 @@ const UserProfile = () => {
 
         {activeTab === 'general' && (
           <div className={styles.profileContent}>
-            <AvatarCard name="Long Ngo" avatarUrl={avatar} />
-            <GeneralInformationForm
-              fullName="Ngo Bao Long"
-              email="nblong23@clc.fitus.edu.vn"
-              birthday="2005-01-04"
-              phone="0913288527"
-              gender="Male"
-            />
+            <AvatarCard name={userData.fullname} avatarUrl={avatar} />
+            {userData ? (
+              <GeneralInformationForm
+                fullName={userData.fullname || ''}
+                email={userData.email || ''}
+                birthday={userData.birthday || ''}
+                phone={userData.phone || ''}
+              />
+            ) : (
+              <p>Loading...</p>
+            )}
           </div>
         )}
 
