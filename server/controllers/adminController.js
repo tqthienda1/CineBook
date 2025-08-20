@@ -181,3 +181,41 @@ export const getAllUsers = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error });
   }
 } 
+
+export const updateUser = async (req, res) => {
+  try {
+    const { userID } = req.params; // Lấy userID từ URL (vd: /users/:userID)
+    const { role } = req.body;
+
+    // Validate bắt buộc (tùy bạn muốn strict hay không)  
+    if (!role) {
+      return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+    }
+
+    // Gọi model update
+    const updateUser = await User.updateUser(userID, role);
+    if (!updateUser) {
+      return res.status(404).json({ message: 'Không tìm thấy người dùng để cập nhật' });
+    }
+    res.status(200).json(updateUser);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err });
+  }
+}
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { userID } = req.params; // Lấy userID từ URL (vd: /users/:userID)
+
+    // Gọi model delete
+    const result = await User.deleteUser(userID);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy người dùng để xóa' });
+    }
+
+    res.status(200).json({ message: 'Xóa người dùng thành công' });
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err });
+  }
+}
