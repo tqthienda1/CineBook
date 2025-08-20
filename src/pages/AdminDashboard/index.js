@@ -14,6 +14,55 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const [skipResetForm, setSkipResetForm] = useState(false);
   const firstRender = useRef(true);
+  const [recentFilms, setRecentFilms] = useState([]);
+  const [usersData, setUsersData] = useState([]);
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:5003/admin/movies', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy danh sách phim');
+        }
+
+        const movies = await res.json();
+        setRecentFilms(movies);
+      } catch (err) {
+        console.error('Fetch movies error:', err);
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:5003/admin/users', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy danh sách users');
+        }
+        const users = await res.json();
+        setUsersData(users);
+      } catch (err) {
+        console.error('Fetch movies error:', err);
+      }
+    };
+
+    fetchMovies();
+    fetchUsers();
+  }, []);
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
@@ -30,24 +79,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(entityLabels[entity]);
-
     if (entityLabels[entity] === 'Movie') {
       handleSubmitMovie(e);
     } else if (entityLabels[entity] === 'User') {
       handleSubmitUser(e);
-    } else {
-      console.log('Chưa có handler cho:', entityLabels[entity]);
-    }
-  };
-
-  const handleDelete = (e) => {
-    e.preventDefault();
-
-    if (entityLabels[entity] === 'Movie') {
-      handleDeleteMovie();
-    } else if (entityLabels[entity] === 'User') {
-      handleDeleteUser();
     } else {
       console.log('Chưa có handler cho:', entityLabels[entity]);
     }
@@ -85,6 +120,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         },
       });
 
+      console.log(userID);
+
       if (res.ok) {
         setUsersData((prev) => prev.filter((m) => m.userID !== userID));
       } else {
@@ -118,8 +155,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         }
       });
 
-      console.log(processedData);
-
       if (formType === 'add') {
         const res = await fetch('http://localhost:5003/admin/movies', {
           method: 'POST',
@@ -147,7 +182,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         console.log(res);
         if (res.ok) {
           const editedMovie = await res.json();
-          console.log(editedMovie);
           setRecentFilms((prev) =>
             prev.map((movie) => (String(movie.movieID) === String(editedMovie.movieID) ? editedMovie : movie)),
           );
@@ -166,8 +200,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     try {
       const token = localStorage.getItem('token');
 
-      if (formType === 'addusers') {
-        console.log(JSON.stringify(formData));
+      if (formType === 'add') {
         const res = await fetch('http://localhost:5003/admin/users', {
           method: 'POST',
           headers: {
@@ -179,12 +212,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
         if (res.ok) {
           const newUser = await res.json();
-
           setUsersData((prev) => [...prev, newUser]);
         }
-      } else {
-        console.log(formData);
 
+        console.log(usersData);
+      } else {
         const res = await fetch(`http://localhost:5003/admin/users/${formData.userID}`, {
           method: 'PUT',
           headers: {
@@ -193,12 +225,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           },
           body: JSON.stringify({ role: formData.role }),
         });
-        console.log(res);
-
-        const editedUser = await res.json();
-        console.log(editedUser);
 
         if (res.ok) {
+          const editedUser = await res.json();
           setUsersData((prev) =>
             prev.map((user) => (String(user.userID) === String(editedUser.userID) ? editedUser : user)),
           );
@@ -282,55 +311,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     setFormData({ ...formData, [field.name]: value });
   };
 
-  const [recentFilms, setRecentFilms] = useState([]);
-  const [usersData, setUsersData] = useState([]);
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5003/admin/movies', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error('Lỗi khi lấy danh sách phim');
-        }
-
-        const movies = await res.json();
-        setRecentFilms(movies);
-      } catch (err) {
-        console.error('Fetch movies error:', err);
-      }
-    };
-
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5003/admin/users', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error('Lỗi khi lấy danh sách users');
-        }
-        const users = await res.json();
-        setUsersData(users);
-      } catch (err) {
-        console.error('Fetch movies error:', err);
-      }
-    };
-
-    fetchMovies();
-    fetchUsers();
-  }, []);
   const today = new Date();
   const showingMovies = recentFilms
     .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
@@ -485,7 +465,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'movies', film)}>
                       Edit
                     </button>
-                    <button className={styles.deleteBtn} onClick={() => handleDelete(film.movieID)}>
+                    <button className={styles.deleteBtn} onClick={() => handleDeleteMovie(film.movieID)}>
                       Delete
                     </button>
                   </div>
@@ -591,7 +571,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'editusers', user)}>
                       Edit
                     </button>
-                    <button className={styles.deleteBtn}>Delete</button>
+                    <button className={styles.deleteBtn} onClick={() => handleDeleteUser(user.userID)}>
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
