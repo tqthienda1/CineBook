@@ -2,7 +2,7 @@ import styles from './Dropdown.module.scss';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useState } from 'react';
 
-const Dropdown = ({ defaultValue, content }) => {
+const Dropdown = ({ defaultValue, content, returnValue }) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(defaultValue);
 
@@ -17,6 +17,7 @@ const Dropdown = ({ defaultValue, content }) => {
     const handleChoose = (item) => {
         setValue(item);
         setOpen(false);
+        returnValue(item)
     };
 
     return (
