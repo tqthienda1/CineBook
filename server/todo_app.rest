@@ -126,19 +126,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 ### 
 GET http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1Njc1MjQwLCJleHAiOjE3NTU2Nzg4NDB9.YixWgWeZwOc3-MaBRfKyglZOb9fyNivUGa5h0fN0lCw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1NjgwNjcyLCJleHAiOjE3NTU2ODQyNzJ9.6Dwv4fUxXCzZ1lzZ7ZeJUArR7CHwf4CuK2EsTE_ejzE
 
 ### 
 PUT http://localhost:5003/user/profile
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1NjgwNjcyLCJleHAiOjE3NTU2ODQyNzJ9.6Dwv4fUxXCzZ1lzZ7ZeJUArR7CHwf4CuK2EsTE_ejzE
 
- {
-    "userID": 17,
-    "email": "thinh@gmail.com",
-    "password": "$2b$10$qL4OGMXtTPR57oWiRY5FkufTBZhAveJ3cSecoHSMif6bubOYuih0u",
-    "fullname": "Thinh Ngu Nhu Cho",
-    "phone": "0913288527",
-    "birthday": "2000-01-01",
-    "role": "user"
-  }
+{
+  "email": "thinh@gmail.com",
+  "fullname": "Thinh Ngu Nhu Cho",
+  "phone": "0913288527",
+  "birthday": "2000-01-01"
+}
