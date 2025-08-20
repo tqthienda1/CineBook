@@ -40,6 +40,25 @@ const User = {
     const sql = 'SELECT * FROM user';
     const [rows] = await connection.promise().execute(sql);
     return rows;
+  },
+
+  async updateUser(userID, role) {
+    const sql = ` UPDATE user 
+                  SET role = ? 
+                  WHERE userID = ?
+                `;
+
+    const [result] = await connection.promise().execute(sql, [role, userID]);
+    if (result.affectedRows === 0) {
+      return null; // Không tìm thấy người dùng để cập nhật
+    }
+    return { userID, role };
+  },
+
+  async deleteUser(userID) {
+    const sql = 'DELETE FROM user WHERE userID = ?';
+    const [result] = await connection.promise().execute(sql, [userID]);
+    return result; // Trả về kết quả xóa
   }
 };
 
