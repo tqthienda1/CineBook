@@ -13,7 +13,9 @@ const PromotionPoster = ({ imgSource, title, short, condition, note }) => {
           <span>{condition}</span>
           <span>Notes:</span>
           <span>{note}</span>
-          <button>BUY TICKET NOW</button>
+          <Link to={'/booking'}>
+            <button>BUY TICKET NOW</button>
+          </Link>
         </div>
       </div>
     </div>
