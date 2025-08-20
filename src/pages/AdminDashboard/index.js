@@ -27,7 +27,33 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     }
   }, [currentSection]);
 
-  const handleDelete = async (movieID) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log(entityLabels[entity]);
+
+    if (entityLabels[entity] === 'Movie') {
+      handleSubmitMovie(e);
+    } else if (entityLabels[entity] === 'User') {
+      handleSubmitUser(e);
+    } else {
+      console.log('Chưa có handler cho:', entityLabels[entity]);
+    }
+  };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+
+    if (entityLabels[entity] === 'Movie') {
+      handleDeleteMovie();
+    } else if (entityLabels[entity] === 'User') {
+      handleDeleteUser();
+    } else {
+      console.log('Chưa có handler cho:', entityLabels[entity]);
+    }
+  };
+
+  const handleDeleteMovie = async (movieID) => {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(`http://localhost:5003/admin/movies/${movieID}`, {
@@ -38,7 +64,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       });
 
       if (res.ok) {
-        // cập nhật lại state FE
         setRecentFilms((prev) => prev.filter((m) => m.movieID !== movieID));
       } else {
         const err = await res.json();
@@ -50,7 +75,29 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleDeleteUser = async (userID) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`http://localhost:5003/admin/users/${userID}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setUsersData((prev) => prev.filter((m) => m.userID !== userID));
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Xóa user thất bại');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Không kết nối được backend');
+    }
+  };
+
+  const handleSubmitMovie = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
@@ -71,8 +118,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         }
       });
 
+      console.log(processedData);
+
       if (formType === 'add') {
-        console.log(JSON.stringify(processedData));
         const res = await fetch('http://localhost:5003/admin/movies', {
           method: 'POST',
           headers: {
@@ -96,15 +144,63 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           },
           body: JSON.stringify(processedData),
         });
-
-        console.log(processedData);
-
+        console.log(res);
         if (res.ok) {
           const editedMovie = await res.json();
-          console.log(formData.movieID);
-          console.log(res);
+          console.log(editedMovie);
           setRecentFilms((prev) =>
             prev.map((movie) => (String(movie.movieID) === String(editedMovie.movieID) ? editedMovie : movie)),
+          );
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Không kết nối được backend');
+    }
+
+    closeForm();
+  };
+
+  const handleSubmitUser = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+
+      if (formType === 'addusers') {
+        console.log(JSON.stringify(formData));
+        const res = await fetch('http://localhost:5003/admin/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (res.ok) {
+          const newUser = await res.json();
+
+          setUsersData((prev) => [...prev, newUser]);
+        }
+      } else {
+        console.log(formData);
+
+        const res = await fetch(`http://localhost:5003/admin/users/${formData.userID}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ role: formData.role }),
+        });
+        console.log(res);
+
+        const editedUser = await res.json();
+        console.log(editedUser);
+
+        if (res.ok) {
+          setUsersData((prev) =>
+            prev.map((user) => (String(user.userID) === String(editedUser.userID) ? editedUser : user)),
           );
         }
       }
@@ -138,10 +234,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'theater', label: 'Theater', type: 'text' },
       { name: 'time', label: 'Time', type: 'time' },
     ],
-    users: [
-      { name: 'username', label: 'Username', type: 'text' },
+    addusers: [
+      { name: 'email', label: 'Email', type: 'text' },
+      { name: 'password', label: 'Password', type: 'text' },
       { name: 'role', label: 'Role', type: 'text' },
     ],
+    editusers: [{ name: 'role', label: 'Role', type: 'text' }],
     theaters: [
       { name: 'name', label: 'Theater Name', type: 'text' },
       { name: 'seats', label: 'Seats', type: 'number' },
@@ -156,7 +254,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const entityLabels = {
     movies: 'Movie',
     showtimes: 'Showtime',
-    users: 'User',
+    addusers: 'User',
+    editusers: 'User',
     theaters: 'Theater',
     promotions: 'Promotion',
   };
@@ -467,7 +566,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
         <h2>User Account Management</h2>
-        <button className={styles.primaryBtn} onClick={() => openForm('add', 'users')}>
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'addusers')}>
           Add New User
         </button>
       </div>
@@ -489,7 +588,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 <td>{user.phone}</td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn} onClick={() => openForm('edit', 'users', user)}>
+                    <button className={styles.editBtn} onClick={() => openForm('edit', 'editusers', user)}>
                       Edit
                     </button>
                     <button className={styles.deleteBtn}>Delete</button>
@@ -615,8 +714,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <div className={styles.overlay}>
             <div className={styles.formBox}>
               <h3 className={styles.formTitle}>
-                {formType === 'add' ? 'Add New ' : 'Edit '}
-                {entityLabels[entity]}
+                {formType.startsWith('add') ? 'Add New ' : 'Edit '} {entityLabels[entity]}
               </h3>
               <form className={styles.form} onSubmit={handleSubmit}>
                 {formConfigs[entity]?.map((field) => (
