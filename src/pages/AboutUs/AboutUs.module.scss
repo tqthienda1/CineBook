@@ -1,7 +1,6 @@
 .background {
-  width: 100vw;
-  background-color: black;
-  caret-color: transparent;
+  width: 100%;
+  background-color: #0a0a0a;
 }
 
 .headerContainer {
@@ -25,13 +24,13 @@
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: #fff5ee;
     font-weight: bold;
     text-shadow: 1px 1px 2px black;
     pointer-events: none;
     h1 {
       font-size: 70px;
-      color: white;
+      color: #fff5ee;
       user-select: none;
     }
     h2 {
@@ -81,8 +80,8 @@
   margin-top: 10px;
   width: 150px;
   height: 40px;
-  background-color: red;
-  color: white;
+  background-color: #b22222;
+  color: #fffafa;
   border-radius: 10px;
   cursor: pointer;
   font-size: 18px;
@@ -90,8 +89,8 @@
 }
 
 .icon {
-  background-color: red;
-  color: white;
+  background-color: #dc143c;
+  color: #fff5ee;
   font-size: 70px;
   border-radius: 50%;
   padding: 10px;
@@ -114,12 +113,12 @@
   justify-content: center;
   gap: 5px;
   h1 {
-    color: red;
+    color: #dc143c;
     font-size: 35px;
     user-select: none;
   }
   h2 {
-    color: white;
+    color: #fff5ee;
     font-size: 20px;
     user-select: none;
   }
@@ -130,14 +129,14 @@
   align-items: center;
   justify-content: space-between;
   h1 {
-    color: red;
+    color: #b22222;
     font-size: 30px;
     width: 600px;
     user-select: none;
   }
 
   h2 {
-    color: white;
+    color: #fff5ee;
     font-size: 17px;
     width: 600px;
     user-select: none;
@@ -150,7 +149,7 @@
 
 .MVBox {
   border-radius: 20px;
-  border: 1px white solid;
+  border: 1px #fff5ee solid;
   padding: 40px;
   margin-bottom: 20px;
 }
@@ -173,7 +172,7 @@
   margin-bottom: 30px;
   h1 {
     font-size: 40px;
-    color: white;
+    color: #fff5ee;
     user-select: none;
   }
 }
@@ -181,12 +180,12 @@
 .whyBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 40px;
-  gap: 40px;
+  gap: 200px;
   width: 100%;
   h1 {
-    color: white;
+    color: #fff5ee;
     font-size: 25px;
     text-align: center;
     user-select: none;
@@ -194,7 +193,7 @@
   h2 {
     color: gray;
     font-size: 15px;
-    width: 400px;
+    width: 300px;
     text-align: center;
     user-select: none;
   }
@@ -219,18 +218,19 @@
   flex-direction: column;
   align-items: center;
   border-radius: 30px;
-  border: 1px white solid;
+  border: 1px #fff5ee solid;
   padding: 30px;
   gap: 30px;
   margin-top: 30px;
   margin-bottom: 30px;
+  justify-content: center;
   h1 {
-    color: white;
+    color: #fff5ee;
     font-size: 40px;
     user-select: none;
   }
   h2 {
-    color: white;
+    color: #fff5ee;
     font-size: 20px;
     user-select: none;
   }
@@ -245,16 +245,28 @@
 .getInTouchBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: center;
   padding: 30px;
-  padding-left: 200px;
-  padding-right: 200px;
+  gap: 20px;
+  width: 100%;
 }
 
 .getInTouchItem {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
+  text-align: center;
+  h2 {
+    color: #fff5ee;
+    font-size: 20px;
+    user-select: none;
+  }
+  h3 {
+    color: gray;
+    font-size: 20px;
+    width: 400px;
+    user-select: none;
+  }
 }

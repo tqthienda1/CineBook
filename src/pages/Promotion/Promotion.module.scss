@@ -1,12 +1,12 @@
 .background {
-  background-color: black;
+  background-color: #222;
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
 .backgroundContainer {
-  background-color: #200000;
+  background-color: #100000;
   display: flex;
   flex-direction: column;
   gap: 100px;
@@ -14,7 +14,7 @@
   align-items: center;
   padding: 100px;
   h1 {
-    color: white;
+    color: #fff5ee;
     font-size: 60px;
     user-select: none;
   }
