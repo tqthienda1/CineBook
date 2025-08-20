@@ -182,6 +182,28 @@ export const getAllUsers = async (req, res) => {
   }
 } 
 
+export const createUser = async (req, res) => {
+  try {
+    const { email, password, role } = req.body;
+    // Validate required fields
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+    }
+    // Gọi model để tạo người dùng mới
+    const newUser = await User.createUser( email, password, role );
+    if (!newUser) {
+      return res.status(500).json({ message: 'Không thể tạo người dùng mới'
+      });
+    }
+    res.status(201).json(newUser);
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ message: 'Người dùng đã tồn tại' });
+    }
+    res.status(500).json({ message: 'Lỗi server', error: err });
+  }
+}
+
 export const updateUser = async (req, res) => {
   try {
     const { userID } = req.params; // Lấy userID từ URL (vd: /users/:userID)
@@ -193,7 +215,7 @@ export const updateUser = async (req, res) => {
     }
 
     // Gọi model update
-    const updateUser = await User.updateUser(userID, role);
+    const updateUser = await User.adminUpdateUser(userID, role);
     if (!updateUser) {
       return res.status(404).json({ message: 'Không tìm thấy người dùng để cập nhật' });
     }

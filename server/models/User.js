@@ -42,7 +42,7 @@ const User = {
     return rows;
   },
 
-  async updateUser(userID, role) {
+  async adminUpdateUser(userID, role) {
     const sql = ` UPDATE user 
                   SET role = ? 
                   WHERE userID = ?
