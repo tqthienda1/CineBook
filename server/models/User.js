@@ -58,6 +58,23 @@ const User = {
     return rows[0] || null;
   },
 
+  // Cập nhật thông tin người dùng
+  async userUpdateUser(userID, fullname, phone, birthday) {
+    const sql = ` UPDATE user
+                  SET fullname = ?, phone = ?, birthday = ?
+                  WHERE userID = ?
+                `;
+    const [result] = await connection.promise().execute(sql, [fullname, phone, birthday, userID]);
+    if (result.affectedRows === 0) {
+      return null; // Không tìm thấy người dùng để cập nhật
+    }
+
+    // Truy vấn lại user sau khi cập nhật
+    const sqlSelect = 'SELECT * FROM user WHERE userID = ?';
+    const [rows] = await connection.promise().execute(sqlSelect, [userID]);
+    return rows[0] || null;
+  },
+
   async deleteUser(userID) {
     const sql = 'DELETE FROM user WHERE userID = ?';
     const [result] = await connection.promise().execute(sql, [userID]);

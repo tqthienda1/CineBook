@@ -90,8 +90,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ### 
 GET http://localhost:5003/admin/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2ODA0NzcsImV4cCI6MTc1NTY4NDA3N30.oKP-CzGsRUCm5AJIKJFVM6KkVh2S2eW8f2xI5gfXLcU
 
 ###
 POST http://localhost:5003/admin/users
@@ -128,3 +127,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 GET http://localhost:5003/user/profile
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1Njc1MjQwLCJleHAiOjE3NTU2Nzg4NDB9.YixWgWeZwOc3-MaBRfKyglZOb9fyNivUGa5h0fN0lCw
+
+### 
+PUT http://localhost:5003/user/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1NjgwNjcyLCJleHAiOjE3NTU2ODQyNzJ9.6Dwv4fUxXCzZ1lzZ7ZeJUArR7CHwf4CuK2EsTE_ejzE
+
+ {
+    "userID": 17,
+    "email": "thinh@gmail.com",
+    "password": "$2b$10$qL4OGMXtTPR57oWiRY5FkufTBZhAveJ3cSecoHSMif6bubOYuih0u",
+    "fullname": "Thinh Ngu Nhu Cho",
+    "phone": "0913288527",
+    "birthday": "2000-01-01",
+    "role": "user"
+  }
