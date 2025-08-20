@@ -34,6 +34,12 @@ const User = {
   // So sánh password
   async comparePassword(plainPassword, hashedPassword) {
     return bcrypt.compare(plainPassword, hashedPassword);
+  },
+
+  async getAllUsers() {
+    const sql = 'SELECT * FROM user';
+    const [rows] = await connection.promise().execute(sql);
+    return rows;
   }
 };
 

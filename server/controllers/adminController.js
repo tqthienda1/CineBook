@@ -1,4 +1,5 @@
 import Movie from '../models/Movie.js';
+import User from '../models/User.js';
 
 export const getMovies = async (req, res) => {
   try {
@@ -168,3 +169,15 @@ export const deleteMovie = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error: err });
   }
 }
+
+
+// Các hàm quản lý account người dùng
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.getAllUsers();
+    res.json(users);
+    console.log('Lấy tất cả người dùng thành công:', users);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server', error });
+  }
+} 
