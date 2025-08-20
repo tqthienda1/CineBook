@@ -1,0 +1,37 @@
+.row {
+  display: flex;
+}
+
+.seatInfo {
+  width: 25rem;
+}
+
+.seat {
+  display: flex;
+  background-color: #fb2b2b;
+  border-radius: 1rem;
+  width: 3rem;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.selectedSeats {
+  gap: 0.5rem;
+  margin-left: 1rem;
+  flex-wrap: wrap;
+}
+
+.movieTicketLabel {
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.ticketIcon {
+  color: #fdad19;
+  font-size: 1.5rem;
+}
+
+.space {
+  justify-content: space-between;
+}

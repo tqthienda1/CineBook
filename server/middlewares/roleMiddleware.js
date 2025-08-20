@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 
 export function checkAdminRole (req, res, next) {
   // Kiểm tra xem người dùng đã đăng nhập chưa
-  console.log(req.user.role);
   if (!req.user || !req.user.role) {
     return res.status(403).json({ message: 'Access denied. No user role found.' });
   }

@@ -19,17 +19,26 @@ Content-Type: application/json
   "password": "1"
 }
 
+### Login a user POST / AUTH / LOGIN
+POST http://localhost:5003/auth/login 
+Content-Type: application/json
+
+{
+  "email": "user@gmail.com",
+  "password": "1"
+}
+
+
 ###
 GET http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjcyMDIsImV4cCI6MTc1NTY3MDgwMn0.pu0xTcyFE890B75k5sOkMlrxPXQDvs7Ek-kKfjbBhe4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
 
 
 ### 
 POST http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjcyMDIsImV4cCI6MTc1NTY3MDgwMn0.pu0xTcyFE890B75k5sOkMlrxPXQDvs7Ek-kKfjbBhe4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
 {
   "name":"f1",
   "category":["Tinh cam", "Hanh dong"],
@@ -51,8 +60,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ### 
 PUT http://localhost:5003/admin/movies/6
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjcyMDIsImV4cCI6MTc1NTY3MDgwMn0.pu0xTcyFE890B75k5sOkMlrxPXQDvs7Ek-kKfjbBhe4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
 {
   "name":"f1",
   "category":["Tinh cam", "Kinh di"],
@@ -72,21 +80,45 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ###
 GET http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjcyMDIsImV4cCI6MTc1NTY3MDgwMn0.pu0xTcyFE890B75k5sOkMlrxPXQDvs7Ek-kKfjbBhe4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
 
 ###
 DELETE http://localhost:5003/admin/movies/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjcyMDIsImV4cCI6MTc1NTY3MDgwMn0.pu0xTcyFE890B75k5sOkMlrxPXQDvs7Ek-kKfjbBhe4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
 
 ### 
 GET http://localhost:5003/admin/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjcyMDIsImV4cCI6MTc1NTY3MDgwMn0.pu0xTcyFE890B75k5sOkMlrxPXQDvs7Ek-kKfjbBhe4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
+
+
+###
+POST http://localhost:5003/admin/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
+
+{
+  "email": "long@gmail.com",
+  "password": "123456"
+}
+
+
+###
+PUT http://localhost:5003/admin/users/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NzMzNDAsImV4cCI6MTc1NTY3Njk0MH0.8Dfs_RmGNimo5mX0hOgiQsg8yryN8g7nUnFD7GmglLE
+
+{
+  "role": "admin"
+}
+
+### 
+DELETE http://localhost:5003/admin/users/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NzMzNDAsImV4cCI6MTc1NTY3Njk0MH0.8Dfs_RmGNimo5mX0hOgiQsg8yryN8g7nUnFD7GmglLE
 
 ###
 GET http://localhost:5003/user/movies
-Content-Type: application/json 
+Content-Type: application/json eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
 

@@ -17,7 +17,6 @@ const ShowtimeSection = ({
   sectionShowtimeIndex,
   selectSectionShowtime,
 }) => {
-  console.log(sectionFavoriteIndex, sectionShowtimeIndex);
   return (
     <div className={clsx(styles.col, styles.showtimeSection)}>
       <div className={clsx(styles.row, styles.labelWrapper)}>
@@ -42,7 +41,7 @@ const ShowtimeSection = ({
                   ? styles.selectedShowtime
                   : ''
               }
-              onClick={() => handleSelectShowtime(index, sectionShowtimeIndex)}
+              onClick={() => handleSelectShowtime(index, sectionShowtimeIndex, item.time)}
               time={item.time}
               type={item.type}
             />

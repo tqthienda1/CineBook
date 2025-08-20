@@ -6,6 +6,8 @@ import { FaCirclePlay } from 'react-icons/fa6';
 import SeparateLine from '../../components/SeparateLine';
 import DateSlider from '../../components/DateSlider';
 import Cinema from '../../components/Cinema';
+import Seat from '../../components/Seat';
+import { useState } from 'react';
 
 const movieInfo = {
   poster: poster,
@@ -28,7 +30,36 @@ const cinemaInfo = [
   { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
 ];
 
+const selectedSeats = [
+  { row: 'D', col: '6', price: 16, type: 'REGULAR' },
+  { row: 'E', col: '10', price: 13, type: 'REGULAR' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
+];
+
 const Booking = () => {
+  const pickingDay = new Date();
+  const [pickingDate, setPickingDate] = useState(pickingDay);
+  const [selectSectionShowtime, setSelectSectionShowtime] = useState();
+  const [selectShowtime, setSelectShowtime] = useState();
+  const [selectTime, setSelectTime] = useState();
+
+  const handleSelectShowtime = (showtimeIndex, sectionIndex, time) => {
+    setSelectShowtime(showtimeIndex);
+    setSelectSectionShowtime(sectionIndex);
+    setSelectTime(time);
+  };
+
+  const handleSetDate = (date) => {
+    setPickingDate(date);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.thumbnailWrapper}>
@@ -41,13 +72,25 @@ const Booking = () => {
 
       <SeparateLine text="SHOWTIME" lineColor={'#fb2b2b'} className={styles.separateLine} />
       <div className={styles.margin}></div>
-      <DateSlider />
+      <DateSlider pickingDate={pickingDate} onSetDate={handleSetDate} pickingDay={pickingDay} />
       <div className={styles.margin}></div>
 
       <SeparateLine text="CINEMA LIST" lineColor={'#fb2b2b'} className={styles.separateLine} />
-      <Cinema cinemaList={cinemaInfo} />
+      <Cinema
+        cinemaList={cinemaInfo}
+        onSelectShowtime={handleSelectShowtime}
+        selectSectionShowtime={selectSectionShowtime}
+        selectShowtime={selectShowtime}
+      />
 
-      <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine} />
+      <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine}/>
+      <Seat
+        selectedSeats={selectedSeats}
+        movieName={'F1 The Movie'}
+        date={pickingDate.toLocaleDateString('vi-VN')}
+        cinemaName={'CineBook Quốc Thanh'}
+        time={selectTime}
+      />
     </div>
   );
 };
