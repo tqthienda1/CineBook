@@ -52,7 +52,10 @@ const User = {
     if (result.affectedRows === 0) {
       return null; // Không tìm thấy người dùng để cập nhật
     }
-    return { userID, role };
+    // Truy vấn lại user sau khi cập nhật
+    const sqlSelect = 'SELECT * FROM user WHERE userID = ?';
+    const [rows] = await connection.promise().execute(sqlSelect, [userID]);
+    return rows[0] || null;
   },
 
   async deleteUser(userID) {
@@ -60,6 +63,7 @@ const User = {
     const [result] = await connection.promise().execute(sql, [userID]);
     return result; // Trả về kết quả xóa
   }
+
 };
 
 export default User;

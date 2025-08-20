@@ -217,7 +217,7 @@ export const updateUser = async (req, res) => {
     // Gọi model update
     const updateUser = await User.adminUpdateUser(userID, role);
     if (!updateUser) {
-      return res.status(404).json({ message: 'Không tìm thấy người dùng để cập nhật' });
+      return res.status(404).json({ message: 'Không tìm thấy người dùng để cập nhật hoặc dữ liệu không có thay đổi' });
     }
     res.status(200).json(updateUser);
   } catch (err) {
