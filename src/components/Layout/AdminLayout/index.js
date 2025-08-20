@@ -5,13 +5,13 @@ import React from 'react';
 import logo from '../../../assets/logo.png';
 import { AuthContext } from '../../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { RxExit } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 
 const AdminLayout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
@@ -27,19 +27,16 @@ const AdminLayout = ({ children }) => {
     setActiveSectionFromLayout: setActiveSection,
   });
 
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUser(null);
     navigate('/');
   };
 
-
   return (
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-
           <Link to="/">
             <img src={logo} alt="logo"></img>
           </Link>
@@ -68,9 +65,9 @@ const AdminLayout = ({ children }) => {
             <span>Admin User</span>
 
             <button onClick={handleLogout} className={styles.logoutBtn}>
-              Logout
+              <RxExit className={styles.logOutIcon} />
+              LOG OUT
             </button>
-
           </div>
         </header>
 

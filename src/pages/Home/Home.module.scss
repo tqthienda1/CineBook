@@ -23,10 +23,15 @@
     height: 40px;
     padding: 5px 20px;
     font-size: 18px;
-    border: 2px red solid;
+    border: 2px #cd5c5c solid;
     background-color: black;
-    color: red;
+    color: #cd5c5c;
     font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    color: #fb2b2b;
+    border: 3px solid #fb2b2b;
     cursor: pointer;
   }
 }

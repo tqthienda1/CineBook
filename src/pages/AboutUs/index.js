@@ -27,7 +27,7 @@ const AboutUs = () => {
         <div>
           <div style={{ color: 'white', display: 'flex', gap: '10px' }}>
             <h1>Our</h1>
-            <h1 style={{ color: 'red' }}>Story</h1>
+            <h1 style={{ color: '#B22222' }}>Story</h1>
           </div>
           <div className={styles.ourStory}>
             <h2>
@@ -124,21 +124,21 @@ const AboutUs = () => {
         <div className={styles.getInTouchBar}>
           <div className={styles.getInTouchItem}>
             <IoLocationOutline className={styles.icon} />
-            <div>
+            <div className={styles.whyItem}>
               <h2>Address</h2>
               <h3>123 Cinema Street, Movie District</h3>
             </div>
           </div>
           <div className={styles.getInTouchItem}>
             <FiPhone className={styles.icon} />
-            <div>
+            <div className={styles.whyItem}>
               <h2>Phone</h2>
               <h3>+1(555) 123-4567</h3>
             </div>
           </div>
           <div className={styles.getInTouchItem}>
             <MdOutlineMailOutline className={styles.icon} />
-            <div>
+            <div className={styles.whyItem}>
               <h2>Email</h2>
               <h3>info@cinebox.com</h3>
             </div>

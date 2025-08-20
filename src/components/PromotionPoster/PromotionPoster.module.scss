@@ -17,13 +17,13 @@
     user-select: none;
   }
   h1 {
-    color: red;
+    color: #b22222;
     font-size: 25px;
     display: block;
     user-select: none;
   }
   span {
-    color: white;
+    color: #fff5ee;
     font-size: 15px;
     display: block;
     margin-top: 10px;
@@ -34,12 +34,16 @@
     width: 200px;
     height: 40px;
     padding: 10px 20px;
-    border: 2px red solid;
+    border: 2px #b22222 solid;
     border-radius: 1rem;
     margin-top: 20px;
     background-color: black;
-    color: red;
+    color: #b22222;
     font-weight: bold;
+  }
+  button:hover {
+    color: #fb2b2b;
+    border: 3px solid #fb2b2b;
     cursor: pointer;
   }
 }
@@ -48,7 +52,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 1rem;
-  border: 2px white solid;
+  border: 2px #fff5ee solid;
   padding: 20px;
 }
 

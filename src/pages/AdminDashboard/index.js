@@ -184,6 +184,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   };
 
   const [recentFilms, setRecentFilms] = useState([]);
+  const [usersData, setUsersData] = useState([]);
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -199,23 +200,43 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         if (!res.ok) {
           throw new Error('Lỗi khi lấy danh sách phim');
         }
-        // console.log(res);
 
-        const data = await res.json();
-        setRecentFilms(data);
+        const movies = await res.json();
+        setRecentFilms(movies);
+      } catch (err) {
+        console.error('Fetch movies error:', err);
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:5003/admin/users', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy danh sách users');
+        }
+        const users = await res.json();
+        setUsersData(users);
       } catch (err) {
         console.error('Fetch movies error:', err);
       }
     };
 
     fetchMovies();
+    fetchUsers();
   }, []);
-
-  console.log(recentFilms);
-
-  const filmsWithRelease = recentFilms.filter((film) => film.releaseDay);
-  const sortedFilms = filmsWithRelease.sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
-  const latest4Films = sortedFilms.slice(0, 4);
+  const today = new Date();
+  const showingMovies = recentFilms
+    .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
+    .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
+  const latest4Films = showingMovies.slice(0, 4);
 
   const [statsData, setStatsData] = useState([
     { icon: '🎬', value: '150+', label: 'Total Films', color: '#ff0000' },
@@ -227,11 +248,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [showtimesData, setShowtimesData] = useState([
     { id: 1, movie: 'Avatar: The Way of Water', theater: 'Theater 1', time: '14:00', status: 'Active' },
     { id: 2, movie: 'Top Gun: Maverick', theater: 'Theater 2', time: '16:30', status: 'Active' },
-  ]);
-
-  const [usersData, setUsersData] = useState([
-    { id: 1, username: 'admin', role: 'Administrator', status: 'Active' },
-    { id: 2, username: 'user123', role: 'User', status: 'Inactive' },
   ]);
 
   const [theatersData, setTheatersData] = useState([
@@ -269,10 +285,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 <div className={styles.filmInfo}>
                   <h4>{film.name}</h4>
                   <p>
-                    {film.category} • {film.duration}
+                    {film.category.join(', ')} • {film.duration} mins
                   </p>
                 </div>
-                <span className={`${styles.status} ${film.status === 'Active' ? styles.active : styles.inactive}`}>
+                <span className={`${styles.status} ${film.status === 'Showing' ? styles.active : styles.inactive}`}>
                   {film.status}
                 </span>
               </div>
@@ -354,12 +370,14 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <tbody>
             {recentFilms.map((film) => (
               <tr key={film.movieID}>
-                <td>{film.name}</td>
-                <td>{Array.isArray(film.category) ? film.category.join(', ') : film.category ?? ''}</td>
-                <td>{film.duration} min</td>
-                <td>{film.releaseDay}</td>
-                <td>
-                  <span className={`${styles.status} ${film.status === 'Active' ? styles.active : styles.inactive}`}>
+                <td style={{ width: '40%' }}>{film.name}</td>
+                <td style={{ width: '15%' }}>
+                  {Array.isArray(film.category) ? film.category.join(', ') : film.category ?? ''}
+                </td>
+                <td style={{ width: '10%' }}>{film.duration} mins</td>
+                <td style={{ width: '10%' }}>{film.releaseDay}</td>
+                <td style={{ width: '10%' }}>
+                  <span className={`${styles.status} ${film.status === 'Showing' ? styles.active : styles.inactive}`}>
                     {film.status}
                   </span>
                 </td>
@@ -457,22 +475,18 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         <table className={styles.dataTable}>
           <thead>
             <tr>
-              <th>Username</th>
+              <th>Email</th>
               <th>Role</th>
-              <th>Status</th>
+              <th>Phone Number</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {usersData.map((user) => (
-              <tr key={user.id}>
-                <td>{user.username}</td>
+              <tr key={user.userID}>
+                <td>{user.email}</td>
                 <td>{user.role}</td>
-                <td>
-                  <span className={`${styles.status} ${user.status === 'Active' ? styles.active : styles.inactive}`}>
-                    {user.status}
-                  </span>
-                </td>
+                <td>{user.phone}</td>
                 <td>
                   <div className={styles.actionBtns}>
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'users', user)}>
