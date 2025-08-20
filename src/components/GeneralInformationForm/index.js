@@ -1,14 +1,8 @@
-import React from "react";
-import styles from "./GeneralInformationForm.module.scss";
-import { FaUserEdit } from "react-icons/fa";
+import React from 'react';
+import styles from './GeneralInformationForm.module.scss';
+import { FaUserEdit } from 'react-icons/fa';
 
-const GeneralInformationForm = ({
-  fullName,
-  email,
-  birthday,
-  phone,
-  gender,
-}) => {
+const GeneralInformationForm = ({ fullName, email, birthday, phone, gender }) => {
   return (
     <div className={styles.generalInfo}>
       <div className={styles.header}>
@@ -31,7 +25,7 @@ const GeneralInformationForm = ({
         </div>
         <div className={styles.formGroup}>
           <label>Birthday</label>
-          <input type="date" value={birthday} readOnly />
+          <input type="text" value={birthday} readOnly />
         </div>
         <div className={styles.formGroup}>
           <label>Phone Number</label>
