@@ -47,7 +47,7 @@ connection.connect(async (err) => {
           userID INT AUTO_INCREMENT PRIMARY KEY,
           email VARCHAR(255) NOT NULL UNIQUE,
           password VARCHAR(255) NOT NULL,
-          fullname VARCHAR(255) NOT NULL,
+          fullname VARCHAR(255),
           phone VARCHAR(20),
           birthday DATE,
           role VARCHAR(10)
