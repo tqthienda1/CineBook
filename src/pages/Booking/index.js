@@ -30,25 +30,13 @@ const cinemaInfo = [
   { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
 ];
 
-const selectedSeats = [
-  { row: 'D', col: '6', price: 16, type: 'REGULAR' },
-  { row: 'E', col: '10', price: 13, type: 'REGULAR' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-  { row: 'H', col: '3', price: 30, type: 'COUPLE' },
-];
-
 const Booking = () => {
   const pickingDay = new Date();
   const [pickingDate, setPickingDate] = useState(pickingDay);
   const [selectSectionShowtime, setSelectSectionShowtime] = useState();
   const [selectShowtime, setSelectShowtime] = useState();
   const [selectTime, setSelectTime] = useState();
+  const [selectCity, setSelectCity] = useState();
 
   const handleSelectShowtime = (showtimeIndex, sectionIndex, time) => {
     setSelectShowtime(showtimeIndex);
@@ -60,37 +48,52 @@ const Booking = () => {
     setPickingDate(date);
   };
 
+  const handleSelectCity = (city) => {
+    setSelectCity(city);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.thumbnailWrapper}>
         <img className={styles.thumbnail} src={thumbnail} alt="" />
         <FaCirclePlay className={styles.playButton} />
       </div>
-
       <MovieDeTail {...movieInfo} />
-      <div className={styles.margin}></div>
 
+      <div className={styles.margin}></div>
       <SeparateLine text="SHOWTIME" lineColor={'#fb2b2b'} className={styles.separateLine} />
       <div className={styles.margin}></div>
-      <DateSlider pickingDate={pickingDate} onSetDate={handleSetDate} pickingDay={pickingDay} />
+      <DateSlider
+        pickingDate={pickingDate}
+        onSetDate={handleSetDate}
+        pickingDay={pickingDay}
+        onSelectCity={handleSelectCity}
+      />
       <div className={styles.margin}></div>
 
-      <SeparateLine text="CINEMA LIST" lineColor={'#fb2b2b'} className={styles.separateLine} />
-      <Cinema
-        cinemaList={cinemaInfo}
-        onSelectShowtime={handleSelectShowtime}
-        selectSectionShowtime={selectSectionShowtime}
-        selectShowtime={selectShowtime}
-      />
+      {selectCity && (
+        <>
+          <SeparateLine text="CINEMA LIST" lineColor={'#fb2b2b'} className={styles.separateLine} />
+          <Cinema
+            cinemaList={cinemaInfo}
+            onSelectShowtime={handleSelectShowtime}
+            selectSectionShowtime={selectSectionShowtime}
+            selectShowtime={selectShowtime}
+          />
+        </>
+      )}
 
-      <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine}/>
-      <Seat
-        selectedSeats={selectedSeats}
-        movieName={'F1 The Movie'}
-        date={pickingDate.toLocaleDateString('vi-VN')}
-        cinemaName={'CineBook Quốc Thanh'}
-        time={selectTime}
-      />
+      {selectShowtime && (
+        <>
+          <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine} />
+          <Seat
+            movieName={'F1 The Movie'}
+            date={pickingDate.toLocaleDateString('vi-VN')}
+            cinemaName={'CineBook Quốc Thanh'}
+            time={selectTime}
+          />
+        </>
+      )}
     </div>
   );
 };

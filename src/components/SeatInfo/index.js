@@ -2,6 +2,35 @@ import styles from './SeatInfo.module.scss';
 import { IoTicketSharp } from 'react-icons/io5';
 import clsx from 'clsx';
 
+const alphabet = [
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'W',
+  'X',
+  'Y',
+  'Z',
+];
+
 const SeatInfo = ({ selectedSeats, movieName, date, time, cinemaName }) => {
   return (
     <div className={styles.seatInfo}>
@@ -12,7 +41,7 @@ const SeatInfo = ({ selectedSeats, movieName, date, time, cinemaName }) => {
         <ul className={clsx(styles.row, styles.selectedSeats)}>
           {selectedSeats.map((item, index) => (
             <li className={styles.seat} key={index}>
-              {item.row + item.col}
+              {alphabet[item.row] + `${item.col + 1}`}
             </li>
           ))}
         </ul>

@@ -8,8 +8,9 @@ import VerticalLine from '../VerticalLine';
 import clsx from 'clsx';
 import Dropdown from '../Dropdown';
 
-const DateSlider = ({ pickingDate, onSetDate, pickingDay }) => {
-  const citiesList = ['Ho Chi Minh City', 'Ha Noi', 'Da Nang'];
+const citiesList = ['Ho Chi Minh City', 'Ha Noi', 'Da Nang'];
+
+const DateSlider = ({ pickingDate, onSetDate, pickingDay, onSelectCity }) => {
   const today = new Date();
   const end = new Date();
   const prevDay = new Date();
@@ -97,7 +98,7 @@ const DateSlider = ({ pickingDate, onSetDate, pickingDay }) => {
         <div className={styles.col}>
           <label>LOCATION</label>
           <div className={clsx(styles.row, styles.cityPickingDropbox)}>
-            <Dropdown defaultValue={'Select City'} content={citiesList} />
+            <Dropdown defaultValue={'Select City'} content={citiesList} returnValue={onSelectCity} />
           </div>
         </div>
       </div>
