@@ -7,7 +7,11 @@ export const getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Không tìm thấy user' });
     }
-    
+
+    if (user.birthday) {
+      user.birthday = new Date(user.birthday).toISOString().split('T')[0];  
+    }
+
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
@@ -16,14 +20,20 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const { email, password, fullname, phone, birthday } = req.body;
+    const { email, fullname, phone, birthday } = req.body;
     const userId = req.user.id; // req.user lấy từ middleware auth
 
-    if (!email && !password && !fullname && !phone && !birthday) {
+    if (!email && !fullname && !phone && !birthday) {
       return res.status(400).json({ message: 'Không có thông tin nào để cập nhật' });
     }
 
     const updatedUser = await User.userUpdateUser(userId, fullname, phone, birthday);
+    
+    
+    if (updatedUser.birthday) {
+      updatedUser.birthday = new Date(updatedUser.birthday).toISOString().split('T')[0];  
+    }
+
     if (!updatedUser) {
       return res.status(404).json({ message: 'Không tìm thấy user để cập nhật hoặc thông tin không có thay đổi' });
     }
