@@ -1,0 +1,78 @@
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.seatMap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #0d0d0d;
+  width: 100%;
+  border-radius: 1rem;
+  margin-left: 3rem;
+  padding: 1rem;
+  position: relative;
+}
+
+.screenWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.screen {
+  width: 90%;
+  height: 50px;
+}
+
+.screenLabel {
+  position: absolute;
+  bottom: 0;
+  font-weight: 600;
+}
+
+.seatDefinition {
+  display: flex;
+  bottom: 0;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.regularSeat {
+  border: 1.5px solid white;
+  border-radius: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.coupleSeat {
+  border: 1.5px solid white;
+  border-radius: 0.5rem;
+  width: 4rem;
+  height: 2rem;
+}
+
+.takenSeat {
+  border: 1.5px solid white;
+  border-radius: 0.5rem;
+  background-color: #6e6e6e;
+  width: 2rem;
+  height: 2rem;
+}
+
+.selectedSeat {
+  border: 1.5px solid white;
+  border-radius: 0.5rem;
+  background-color: #fb2b2b;
+  width: 2rem;
+  height: 2rem;
+}
