@@ -156,7 +156,8 @@ connection.connect(async (err) => {
           FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE
         ) 
       `
-    }
+    },
+    
 
   ];
 

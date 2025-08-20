@@ -96,16 +96,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ###
 POST http://localhost:5003/admin/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NzMzNDAsImV4cCI6MTc1NTY3Njk0MH0.8Dfs_RmGNimo5mX0hOgiQsg8yryN8g7nUnFD7GmglLE
 
 {
-  "email": "long@gmail.com",
-  "password": "123456"
+  "email": "thinh@gmail.com",
+  "password": "123456",
+  "role": "user"
 }
 
 
 ###
-PUT http://localhost:5003/admin/users/3
+PUT http://localhost:5003/admin/users/4
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NzMzNDAsImV4cCI6MTc1NTY3Njk0MH0.8Dfs_RmGNimo5mX0hOgiQsg8yryN8g7nUnFD7GmglLE
 
@@ -120,5 +121,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 ###
 GET http://localhost:5003/user/movies
-Content-Type: application/json eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NjgxOTYsImV4cCI6MTc1NTY3MTc5Nn0.tqGj6qOXp2g7yyes1KDs1l--5yAwYow2NLLO7jKhoSA
-
+Content-Type: application/json eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1Njc1MjQwLCJleHAiOjE3NTU2Nzg4NDB9.YixWgWeZwOc3-MaBRfKyglZOb9fyNivUGa5h0fN0lCw
+### 
+GET http://localhost:5003/user/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1Njc1MjQwLCJleHAiOjE3NTU2Nzg4NDB9.YixWgWeZwOc3-MaBRfKyglZOb9fyNivUGa5h0fN0lCw
