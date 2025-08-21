@@ -151,6 +151,11 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4MDIxMjksImV4cCI6MTc1NTgwNTcyOX0.5rYPFUQd-F6H5YcrF0_oG7ZeS2TOhL9ph_vLBHRvpXE
 
 
+###   
+GET http://localhost:5003/admin/cinemas/2
+Content-Type: application/json
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4MDIxMjksImV4cCI6MTc1NTgwNTcyOX0.5rYPFUQd-F6H5YcrF0_oG7ZeS2TOhL9ph_vLBHRvpXE
+
 ### 
 PUT http://localhost:5003/admin/cinemas/1
 Content-Type: application/json
