@@ -2,14 +2,9 @@ import connection from '../db.js';
 
 const cinema = {
   async getAllcinemas() {
-    return new Promise((resolve, reject) => { 
-      connection.query('SELECT * FROM cinema', (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
+    const sqlGetAllCinema = 'SELECT * FROM cinema';
+    const [rows] = await connection.promise().execute(sqlGetAllCinema);
+    return rows;
   },
 
   async addCinema(cinemaData) {
@@ -26,6 +21,14 @@ const cinema = {
       return null; // Không thêm được rạp chiếu
     }
     return { cinemaID: result.insertId, ...cinemaData }; // Trả về thông tin rạp chiếu mới
+  },
+
+  async getCinemaById(cinemaID) { 
+    const sqlGetCinema = 'SELECT * FROM cinema WHERE cinemaID = ?';
+
+    const [rows] = await connection.promise().execute(sqlGetCinema, [cinemaID]);
+
+    return rows[0] || null; // Trả về rạp chiếu nếu tìm
   }
 };
 
