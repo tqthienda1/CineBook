@@ -124,11 +124,16 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU3ODkxNDMsImV4cCI6MTc1NTc5Mjc0M30.c3NcgGSx2__lccbHWNxWp3Zt0iGORPh_OPwyWv54TkI
 
 {
-  "cinemaName": "CGV Vincom",
-  "address": "123 Nguyen Hue, District 1, HCM",
+  "cinemaName": "CGV Hai Ba Trung",
+  "address": "123 Dong Khởi, Quan 10, HCM",
   "city": "Ho Chi Minh City",
-  "phone": "0901234567"
+  "phone": "0901234555"
 }
+
+###
+GET http://localhost:5003/admin/cinemas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU3ODkxNDMsImV4cCI6MTc1NTc5Mjc0M30.c3NcgGSx2__lccbHWNxWp3Zt0iGORPh_OPwyWv54TkI
 
 
 
