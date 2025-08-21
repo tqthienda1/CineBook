@@ -3,24 +3,39 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './AdminDashboard.module.scss';
 import { jwtDecode } from 'jwt-decode';
+import PopUp from '../../components/PopUp';
 
 const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout }) => {
   const currentSection = activeSectionFromLayout || 'dashboard';
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+
+  const showPopup = (msg) => {
+    setPopupMessage(msg);
+    setPopupOpen(true);
+  };
 
   const [formVisible, setFormVisible] = useState(false);
-  const [formType, setFormType] = useState(''); // 'add' hoặc 'edit'
+  const [formType, setFormType] = useState('');
   const [formData, setFormData] = useState({});
   const [entity, setEntity] = useState('');
 
   const [skipResetForm, setSkipResetForm] = useState(false);
   const firstRender = useRef(true);
+
   const [recentFilms, setRecentFilms] = useState([]);
   const [usersData, setUsersData] = useState([]);
+  const [showtimesData, setShowtimesData] = useState([]);
+  const [theatersData, setTheatersData] = useState([]);
+  const [promotionsData, setPromotionsData] = useState([]);
+  const [cinemasData, setCinemasData] = useState([]);
+  const [seatsData, setSeatsData] = useState([]);
+
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchData = async (url, setter, errorMsg) => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5003/admin/movies', {
+        const res = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -29,40 +44,31 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         });
 
         if (!res.ok) {
-          throw new Error('Lỗi khi lấy danh sách phim');
+          throw new Error(errorMsg);
         }
 
-        const movies = await res.json();
-        setRecentFilms(movies);
+        const data = await res.json();
+        setter(data);
       } catch (err) {
-        console.error('Fetch movies error:', err);
+        console.error(`Fetch error (${url}):`, err);
       }
     };
 
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5003/admin/users', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error('Lỗi khi lấy danh sách users');
-        }
-        const users = await res.json();
-        setUsersData(users);
-      } catch (err) {
-        console.error('Fetch movies error:', err);
-      }
-    };
-
-    fetchMovies();
-    fetchUsers();
+    fetchData('http://localhost:5003/admin/movies', setRecentFilms, 'Error to fetch movies data!');
+    fetchData('http://localhost:5003/admin/users', setUsersData, 'Error to fetch users data!');
+    fetchData('http://localhost:5003/admin/cinemas', setCinemasData, 'Error to fetch cinemas data!');
+    fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
+    fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
+    fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
   }, []);
+
+  const statsData = [
+    { icon: '🎬', value: recentFilms.length, label: 'Total Films', color: '#ff0000' },
+    { icon: '👥', value: usersData.length, label: 'Active Users', color: '#ff3333' },
+    { icon: '🎭', value: theatersData.length, label: 'Theaters', color: '#ff6666' },
+    { icon: '🎟️', value: promotionsData.length, label: 'Active Promotions', color: '#ff9999' },
+  ];
+
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
@@ -76,6 +82,33 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     }
   }, [currentSection]);
 
+  const apiRequest = async ({ url, method = 'GET', body, onSuccess }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (onSuccess) {
+          onSuccess(data);
+        }
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Có lỗi xảy ra');
+      }
+    } catch (err) {
+      console.error(err);
+      showPopup('Cannot access to Server!!!');
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -83,162 +116,334 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       handleSubmitMovie(e);
     } else if (entityLabels[entity] === 'User') {
       handleSubmitUser(e);
+    } else if (entityLabels[entity] === 'Cinema') {
+      handleSubmitCinema(e);
+    } else if (entityLabels[entity] === 'Layout') {
+      handleSubmitSeat(e);
     } else {
-      console.log('Chưa có handler cho:', entityLabels[entity]);
+      console.log('No handler for:', entityLabels[entity]);
     }
   };
 
-  const handleDeleteMovie = async (movieID) => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5003/admin/movies/${movieID}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
+  const handleDeleteMovie = (movieID) => {
+    apiRequest({
+      url: `http://localhost:5003/admin/movies/${movieID}`,
+      method: 'DELETE',
+      onSuccess: () => {
         setRecentFilms((prev) => prev.filter((m) => m.movieID !== movieID));
-      } else {
-        const err = await res.json();
-        alert(err.message || 'Xóa phim thất bại');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Không kết nối được backend');
-    }
+        showPopup('Delete Movie successfully!');
+      },
+    });
   };
 
-  const handleDeleteUser = async (userID) => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5003/admin/users/${userID}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  const handleDeleteUser = (userID) => {
+    apiRequest({
+      url: `http://localhost:5003/admin/users/${userID}`,
+      method: 'DELETE',
+      onSuccess: () => {
+        setUsersData((prev) => prev.filter((u) => u.userID !== userID));
+        showPopup('Delete User successfully!');
+      },
+    });
+  };
 
-      console.log(userID);
+  const handleDeleteCinema = (cinemaID) => {
+    apiRequest({
+      url: `http://localhost:5003/admin/cinemas/${cinemaID}`,
+      method: 'DELETE',
+      onSuccess: () => {
+        setUsersData((prev) => prev.filter((c) => c.cinemaID !== cinemaID));
+        showPopup('Delete Cinema successfully!');
+      },
+    });
+  };
 
-      if (res.ok) {
-        setUsersData((prev) => prev.filter((m) => m.userID !== userID));
-      } else {
-        const err = await res.json();
-        alert(err.message || 'Xóa user thất bại');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Không kết nối được backend');
-    }
+  const handleDeleteShowtime = (showtimeID) => {
+    apiRequest({
+      url: `http://localhost:5003/admin/showtimes/${showtimeID}`,
+      method: 'DELETE',
+      onSuccess: () => {
+        setUsersData((prev) => prev.filter((s) => s.showtimeID !== showtimeID));
+        showPopup('Delete Showtime successfully!');
+      },
+    });
+  };
+
+  const handleDeleteTheater = (theaterID) => {
+    apiRequest({
+      url: `http://localhost:5003/admin/theaters/${theaterID}`,
+      method: 'DELETE',
+      onSuccess: () => {
+        setUsersData((prev) => prev.filter((t) => t.theaterID !== theaterID));
+        showPopup('Delete Theater successfully!');
+      },
+    });
+  };
+
+  const handleDeletePromotion = (promotionID) => {
+    apiRequest({
+      url: `http://localhost:5003/admin/promotions/${promotionID}`,
+      method: 'DELETE',
+      onSuccess: () => {
+        setUsersData((prev) => prev.filter((p) => p.promotionID !== promotionID));
+        showPopup('Delete Promotion successfully!');
+      },
+    });
   };
 
   const handleSubmitMovie = async (e) => {
     e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
 
-      const arrayFields = ['category', 'directors', 'writers', 'actors'];
-      const processedData = { ...formData };
+    const arrayFields = ['category', 'directors', 'writers', 'actors'];
+    const processedData = { ...formData };
 
-      arrayFields.forEach((field) => {
-        if (processedData[field]) {
-          if (typeof processedData[field] === 'string') {
-            processedData[field] = processedData[field]
-              .split(',')
-              .map((item) => item.trim())
-              .filter((item) => item);
-          } else if (Array.isArray(processedData[field])) {
-            processedData[field] = processedData[field].map((item) => item.trim());
-          }
-        }
-      });
-
-      if (formType === 'add') {
-        const res = await fetch('http://localhost:5003/admin/movies', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(processedData),
-        });
-
-        if (res.ok) {
-          const newMovie = await res.json();
-
-          setRecentFilms((prev) => [...prev, newMovie]);
-        }
-      } else {
-        const res = await fetch(`http://localhost:5003/admin/movies/${formData.movieID}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(processedData),
-        });
-        console.log(res);
-        if (res.ok) {
-          const editedMovie = await res.json();
-          setRecentFilms((prev) =>
-            prev.map((movie) => (String(movie.movieID) === String(editedMovie.movieID) ? editedMovie : movie)),
-          );
+    arrayFields.forEach((field) => {
+      if (processedData[field]) {
+        if (typeof processedData[field] === 'string') {
+          processedData[field] = processedData[field]
+            .split(',')
+            .map((item) => item.trim())
+            .filter((item) => item);
+        } else if (Array.isArray(processedData[field])) {
+          processedData[field] = processedData[field].map((item) => item.trim());
         }
       }
-    } catch (err) {
-      console.error(err);
-      alert('Không kết nối được backend');
-    }
+    });
 
-    closeForm();
+    if (formType === 'add') {
+      apiRequest({
+        url: 'http://localhost:5003/admin/movies',
+        method: 'POST',
+        body: processedData,
+        onSuccess: (newMovie) => {
+          setRecentFilms((prev) => [...prev, newMovie]);
+          showPopup('Add Movie successfully!');
+          closeForm();
+        },
+      });
+    } else {
+      apiRequest({
+        url: `http://localhost:5003/admin/movies/${formData.movieID}`,
+        method: 'PUT',
+        body: processedData,
+        onSuccess: (editedMovie) => {
+          setRecentFilms((prev) =>
+            prev.map((m) => (String(m.movieID) === String(editedMovie.movieID) ? editedMovie : m)),
+          );
+          showPopup('Edit Movie successfully!');
+          closeForm();
+        },
+      });
+    }
   };
 
   const handleSubmitUser = async (e) => {
     e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
 
-      if (formType === 'add') {
-        const res = await fetch('http://localhost:5003/admin/users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (res.ok) {
-          const newUser = await res.json();
+    if (formType === 'add') {
+      apiRequest({
+        url: 'http://localhost:5003/admin/users',
+        method: 'POST',
+        body: formData,
+        onSuccess: (newUser) => {
           setUsersData((prev) => [...prev, newUser]);
-        }
-
-        console.log(usersData);
-      } else {
-        const res = await fetch(`http://localhost:5003/admin/users/${formData.userID}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ role: formData.role }),
-        });
-
-        if (res.ok) {
-          const editedUser = await res.json();
-          setUsersData((prev) =>
-            prev.map((user) => (String(user.userID) === String(editedUser.userID) ? editedUser : user)),
-          );
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Không kết nối được backend');
+          showPopup('Add User successfully!');
+          closeForm();
+        },
+      });
+    } else {
+      apiRequest({
+        url: `http://localhost:5003/admin/users/${formData.userID}`,
+        method: 'PUT',
+        body: { role: formData.role },
+        onSuccess: (editedUser) => {
+          setUsersData((prev) => prev.map((u) => (String(u.userID) === String(editedUser.userID) ? editedUser : u)));
+          showPopup('Edit User successfully!');
+          closeForm();
+        },
+      });
     }
+  };
 
-    closeForm();
+  const handleSubmitCinema = async (e) => {
+    e.preventDefault();
+
+    if (formType === 'add') {
+      apiRequest({
+        url: 'http://localhost:5003/admin/cinemas',
+        method: 'POST',
+        body: formData,
+        onSuccess: (newCinema) => {
+          setCinemasData((prev) => [...prev, newCinema]);
+          showPopup('Add Cinema successfully!');
+          closeForm();
+        },
+      });
+    } else {
+      apiRequest({
+        url: `http://localhost:5003/admin/cinemas/${formData.cinemaID}`,
+        method: 'PUT',
+        body: formData,
+        onSuccess: (editedCinema) => {
+          setCinemasData((prev) =>
+            prev.map((c) => (String(c.cinemaID) === String(editedCinema.cinemaID) ? editedCinema : c)),
+          );
+          showPopup('Edit Cinema successfully!');
+          closeForm();
+        },
+      });
+    }
+  };
+
+  const handleSubmitShowtime = async (e) => {
+    e.preventDefault();
+
+    if (formType === 'add') {
+      apiRequest({
+        url: 'http://localhost:5003/admin/showtimes',
+        method: 'POST',
+        body: formData,
+        onSuccess: (newShowtime) => {
+          setShowtimesData((prev) => [...prev, newShowtime]);
+          showPopup('Add Showtime successfully!');
+          closeForm();
+        },
+      });
+    } else {
+      apiRequest({
+        url: `http://localhost:5003/admin/cinemas/${formData.showtimeID}`,
+        method: 'PUT',
+        body: formData,
+        onSuccess: (editedShowtime) => {
+          setShowtimesData((prev) =>
+            prev.map((s) => (String(s.showtimeID) === String(editedShowtime.showtimeID) ? editedShowtime : s)),
+          );
+          showPopup('Edit Showtime successfully!');
+          closeForm();
+        },
+      });
+    }
+  };
+
+  const handleSubmitTheater = async (e) => {
+    e.preventDefault();
+
+    if (formType === 'add') {
+      apiRequest({
+        url: 'http://localhost:5003/admin/theaters',
+        method: 'POST',
+        body: formData,
+        onSuccess: (newTheater) => {
+          setTheatersData((prev) => [...prev, newTheater]);
+          showPopup('Add Theater successfully!');
+          closeForm();
+        },
+      });
+    } else {
+      apiRequest({
+        url: `http://localhost:5003/admin/theaters/${formData.theaterID}`,
+        method: 'PUT',
+        body: formData,
+        onSuccess: (editedTheater) => {
+          setTheatersData((prev) =>
+            prev.map((t) => (String(t.theaterID) === String(editedTheater.theaterID) ? editedTheater : t)),
+          );
+          showPopup('Edit Theater successfully!');
+          closeForm();
+        },
+      });
+    }
+  };
+
+  const handleSubmitPromotion = async (e) => {
+    e.preventDefault();
+
+    if (formType === 'add') {
+      apiRequest({
+        url: 'http://localhost:5003/admin/promotions',
+        method: 'POST',
+        body: formData,
+        onSuccess: (newPromotion) => {
+          setPromotionsData((prev) => [...prev, newPromotion]);
+          showPopup('Add Promotion successfully!');
+          closeForm();
+        },
+      });
+    } else {
+      apiRequest({
+        url: `http://localhost:5003/admin/promotions/${formData.promotionID}`,
+        method: 'PUT',
+        body: formData,
+        onSuccess: (editedPromotion) => {
+          setPromotionsData((prev) =>
+            prev.map((p) => (String(p.PromotionID) === String(editedPromotion.promotionID) ? editedPromotion : p)),
+          );
+          showPopup('Edit Promotion successfully!');
+          closeForm();
+        },
+      });
+    }
+  };
+
+  const handleSubmitSeat = async (e) => {
+    e.preventDefault();
+
+    console.log('123');
+    console.log(seatMatrix);
+    const combinedData = {
+      ...formData,
+      layout: seatMatrix,
+    };
+
+    console.log(combinedData);
+
+    if (formType === 'add') {
+      apiRequest({
+        url: 'http://localhost:5003/admin/seats',
+        method: 'POST',
+        body: seatMatrix,
+        onSuccess: (newSeat) => {
+          setSeatsData((prev) => [...prev, newSeat]);
+          showPopup('Add Promotion successfully!');
+          closeForm();
+        },
+      });
+    } else {
+      apiRequest({
+        url: `http://localhost:5003/admin/Seats/${formData.seatID}`,
+        method: 'PUT',
+        body: formData,
+        onSuccess: (editedSeat) => {
+          setSeatsData((prev) => prev.map((s) => (String(s.seatID) === String(editedSeat.seatID) ? editedSeat : s)));
+          showPopup('Edit Seat successfully!');
+          closeForm();
+        },
+      });
+    }
+  };
+
+  const [seatStep, setSeatStep] = useState(1);
+  const [seatMatrix, setSeatMatrix] = useState([]);
+
+  const handleSubmitSeatStep = (e) => {
+    e.preventDefault();
+    const rows = parseInt(formData.rows, 10);
+    const cols = parseInt(formData.columns, 10);
+
+    if (!rows || !cols) {
+      alert('Vui lòng nhập số dòng/cột hợp lệ!');
+      return;
+    }
+    const matrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+    setSeatMatrix(matrix);
+    setSeatStep(2);
+  };
+
+  const submitButtonLabels = {
+    movies: { add: 'Create', edit: 'Update' },
+    users: { add: 'Create', edit: 'Update' },
+    seats: { add: 'Next', edit: 'Next' },
+    showtimes: { add: 'Save', edit: 'Save' },
   };
 
   const formConfigs = {
@@ -278,6 +483,16 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'title', label: 'Title', type: 'text' },
       { name: 'discount', label: 'Discount', type: 'text' },
     ],
+    cinemas: [
+      { name: 'name', label: 'Name', type: 'text' },
+      { name: 'address', label: 'Address', type: 'text' },
+      { name: 'city', label: 'City', type: 'text' },
+      { name: 'phone', label: 'Phone Number', type: 'text' },
+    ],
+    seats: [
+      { name: 'rows', label: 'Number of rows', type: 'number' },
+      { name: 'columns', label: 'Number of columns', type: 'number' },
+    ],
   };
 
   const entityLabels = {
@@ -287,6 +502,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     editusers: 'User',
     theaters: 'Theater',
     promotions: 'Promotion',
+    cinemas: 'Cinema',
+    seats: 'Layout',
   };
 
   const closeForm = () => {
@@ -316,28 +533,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
     .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
   const latest4Films = showingMovies.slice(0, 4);
-
-  const [statsData, setStatsData] = useState([
-    { icon: '🎬', value: '150+', label: 'Total Films', color: '#ff0000' },
-    { icon: '👥', value: '2.5K+', label: 'Active Users', color: '#ff3333' },
-    { icon: '🎭', value: '8', label: 'Theaters', color: '#ff6666' },
-    { icon: '🎟️', value: '25', label: 'Active Promotions', color: '#ff9999' },
-  ]);
-
-  const [showtimesData, setShowtimesData] = useState([
-    { id: 1, movie: 'Avatar: The Way of Water', theater: 'Theater 1', time: '14:00', status: 'Active' },
-    { id: 2, movie: 'Top Gun: Maverick', theater: 'Theater 2', time: '16:30', status: 'Active' },
-  ]);
-
-  const [theatersData, setTheatersData] = useState([
-    { id: 1, name: 'Theater 1', seats: 100, location: 'Building A' },
-    { id: 2, name: 'Theater 2', seats: 80, location: 'Building B' },
-  ]);
-
-  const [promotionsData, setPromotionsData] = useState([
-    { id: 1, title: 'Summer Sale', discount: '20%', status: 'Active' },
-    { id: 2, title: 'Black Friday', discount: '50%', status: 'Upcoming' },
-  ]);
 
   const renderDashboard = () => (
     <div className={styles.dashboardContent}>
@@ -625,7 +820,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   );
 
   const renderPromotionManagement = () => (
-    // closeForm();
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
         <h2>Promotion Management</h2>
@@ -669,6 +863,91 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     </div>
   );
 
+  const renderCinemaManagement = () => (
+    <div className={styles.sectionContent}>
+      <div className={styles.sectionHeader}>
+        <h2>Cinema Management</h2>
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'cinemas')}>
+          Add New Cinema
+        </button>
+      </div>
+      <div className={styles.tableContainer}>
+        <table className={styles.dataTable}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Phone</th>
+              <th>Number of theaters</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cinemasData.map((cinema) => (
+              <tr key={cinema.cinemaID}>
+                <td style={{ width: '30%' }}>{cinema.cinemaName}</td>
+                <td style={{ width: '15%' }}>{cinema.address}</td>
+                <td style={{ width: '15%' }}>{cinema.phone}</td>
+                <td style={{ width: '15%' }}>{cinemasData.length}</td>
+                <td>
+                  <div className={styles.actionBtns}>
+                    <button className={styles.editBtn} onClick={() => openForm('edit', 'cinemas', cinema)}>
+                      Edit
+                    </button>
+                    <button className={styles.deleteBtn} onClick={() => handleDeleteMovie(cinema.cinemaID)}>
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
+  const renderSeatManagement = () => (
+    <div className={styles.sectionContent}>
+      <div className={styles.sectionHeader}>
+        <h2>Seat Management</h2>
+        <button className={styles.primaryBtn} onClick={() => openForm('add', 'seats')}>
+          Add New Layout
+        </button>
+      </div>
+      <div className={styles.tableContainer}>
+        <table className={styles.dataTable}>
+          <thead>
+            <tr>
+              <th>Layout</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          {/* <tbody>
+            {cinemasData.map((cinema) => (
+              <tr key={cinema.cinemaID}>
+                <td style={{ width: '30%' }}>{cinema.cinemaName}</td>
+                <td style={{ width: '15%' }}>{cinema.address}</td>
+                <td style={{ width: '15%' }}>{cinema.phone}</td>
+                <td style={{ width: '15%' }}>{cinemasData.length}</td>
+                <td>
+                  <div className={styles.actionBtns}>
+                    <button className={styles.editBtn} onClick={() => openForm('edit', 'cinemas', cinema)}>
+                      Edit
+                    </button>
+                    <button className={styles.deleteBtn} onClick={() => handleDeleteMovie(cinema.cinemaID)}>
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody> */}
+        </table>
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
     switch (currentSection) {
       case 'dashboard':
@@ -683,6 +962,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         return renderTheaterSeatManagement();
       case 'promotions':
         return renderPromotionManagement();
+      case 'cinemas':
+        return renderCinemaManagement();
+      case 'seats':
+        return renderSeatManagement();
       default:
         return renderDashboard();
     }
@@ -698,36 +981,70 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               <h3 className={styles.formTitle}>
                 {formType.startsWith('add') ? 'Add New ' : 'Edit '} {entityLabels[entity]}
               </h3>
-              <form className={styles.form} onSubmit={handleSubmit}>
-                {formConfigs[entity]?.map((field) => (
-                  <label key={field.name} className={styles.formGroup}>
-                    <span className={styles.formLabel}>{field.label}:</span>
-                    <input
-                      className={styles.formInput}
-                      type={field.type}
-                      name={field.name}
-                      value={
-                        Array.isArray(formData[field.name])
-                          ? formData[field.name].join(', ')
-                          : formData[field.name] || ''
-                      }
-                      onChange={(e) => handleChange(field, e)}
-                      required
-                    />
-                  </label>
-                ))}
-                <div className={styles.formActions}>
-                  <button className={styles.submitBtn} type="submit">
-                    {formType === 'add' ? 'Create' : 'Update'}
-                  </button>
-                  <button className={styles.cancelBtn} type="button" onClick={closeForm}>
-                    Cancel
-                  </button>
+
+              {/* Step 1: form nhập rows/columns */}
+              {entity !== 'seats' || seatStep === 1 ? (
+                <form className={styles.form} onSubmit={entity === 'seats' ? handleSubmitSeatStep : handleSubmit}>
+                  {formConfigs[entity]?.map((field) => (
+                    <label key={field.name} className={styles.formGroup}>
+                      <span className={styles.formLabel}>{field.label}:</span>
+                      <input
+                        className={styles.formInput}
+                        type={field.type}
+                        name={field.name}
+                        value={formData[field.name] || ''}
+                        onChange={(e) => handleChange(field, e)}
+                        required
+                      />
+                    </label>
+                  ))}
+                  <div className={styles.formActions}>
+                    <button className={styles.submitBtn} type="submit">
+                      Next
+                    </button>
+                    <button className={styles.cancelBtn} type="button" onClick={closeForm}>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+
+              {entity === 'seats' && seatStep === 2 && seatMatrix.length > 0 && (
+                <div className={styles.seatMatrix}>
+                  {seatMatrix.map((rowArr, rowIndex) => (
+                    <div key={rowIndex} className={styles.row}>
+                      {rowArr.map((seat, colIndex) => (
+                        <button
+                          key={colIndex}
+                          className={`${styles.seatBtn} ${seat ? styles.selected : ''}`}
+                          onClick={() => {
+                            const newMatrix = seatMatrix.map((r) => [...r]);
+                            newMatrix[rowIndex][colIndex] = seat ? 0 : 1;
+                            setSeatMatrix(newMatrix);
+                            console.log(newMatrix);
+                          }}
+                        >
+                          {seat}
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+                  <div className={styles.formActions}>
+                    <button
+                      onClick={(e) => {
+                        handleSubmitSeat(e);
+                      }}
+                    >
+                      Submit Seats
+                    </button>
+                    <button onClick={() => setSeatStep(1)}>Back</button>
+                  </div>
                 </div>
-              </form>
+              )}
             </div>
           </div>
         )}
+        {popupOpen && <PopUp setPosition={''} content={popupMessage} onClick={() => setPopupOpen(false)} />}
       </div>
     </div>
   );

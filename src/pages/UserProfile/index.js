@@ -10,7 +10,7 @@ import FilterPurchaseHistory from '../../components/FilterPurchaseHistory';
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState('general');
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,7 +24,6 @@ const UserProfile = () => {
         });
         if (!res.ok) throw new Error('Failed to fetch user');
         const data = await res.json();
-        console.log(data);
         setUserData(data);
       } catch (err) {
         console.error(err);
@@ -60,7 +59,7 @@ const UserProfile = () => {
 
         {activeTab === 'general' && (
           <div className={styles.profileContent}>
-            <AvatarCard name={userData.fullname} avatarUrl={avatar} />
+            <AvatarCard name={userData.fullname || ''} avatarUrl={avatar} />
             {userData ? (
               <GeneralInformationForm
                 fullName={userData.fullname || ''}

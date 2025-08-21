@@ -359,12 +359,13 @@
 }
 
 .formBox {
+  display: inline-block;
   background: #fff;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
-  width: 100%;
+  width: 600px;
+  max-width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
   animation: fadeIn 0.3s ease;
@@ -390,4 +391,34 @@
 
 .formInput {
   caret-color: black;
+}
+
+.seatMatrix {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  padding: 10px;
+  white-space: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+}
+
+.seatBtn {
+  width: 40px;
+  height: 40px;
+  margin: 2px;
+  background-color: #eee;
+  border: 1px solid #aaa;
+  cursor: pointer;
+}
+
+.seatBtn.selected {
+  background-color: #4caf50;
+  color: white;
 }
