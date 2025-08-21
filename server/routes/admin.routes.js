@@ -5,7 +5,7 @@ import { checkAdminRole } from '../middlewares/roleMiddleware.js';
 
 import {  getMovies, addMovie, editMovie, deleteMovie, 
           getAllUsers, createUser, updateUser, deleteUser,
-          addCinema, getAllCinemas
+          addCinema, getAllCinemas, updateCinema, deleteCinema, getCinemaById
         } from '../controllers/adminController.js';
 
 
@@ -25,5 +25,9 @@ router.delete('/users/:userID', verifyToken, checkAdminRole, deleteUser);
 // Các route quản lý cinema
 router.post('/cinemas', verifyToken, checkAdminRole, addCinema);
 router.get('/cinemas', verifyToken, checkAdminRole, getAllCinemas);
+router.get('/cinemas/:cinemaID', verifyToken, checkAdminRole, getCinemaById);
+router.put('/cinemas/:cinemaID', verifyToken, checkAdminRole, updateCinema);
+router.delete('/cinemas/:cinemaID', verifyToken, checkAdminRole, deleteCinema);
+
 
 export default router;

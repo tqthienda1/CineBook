@@ -11,24 +11,24 @@ const connection = mysql.createConnection({
 
 connection.connect(async (err) => {
   if (err) {
-    console.error('❌ Lỗi kết nối MySQL:', err.message);
+    console.error('Lỗi kết nối MySQL:', err.message);
     process.exit(1);
   }
-  console.log('✅ Đã kết nối MySQL Railway');
+  console.log('Đã kết nối MySQL Railway');
 
 
-  // check is connect to railway
-  // show table on railway
-  connection.query('SHOW TABLES', (err, results) => {
-    if (err) {
-      console.error('❌ Lỗi khi lấy danh sách bảng:', err.message);
-    } else {
-      console.log('📋 Danh sách bảng hiện có trên Railway:');
-      results.forEach((row) => {
-        console.log(`- ${Object.values(row)[0]}`);
-      });
-    }
-  });
+  // // check is connect to railway
+  // // show table on railway
+  // connection.query('SHOW TABLES', (err, results) => {
+  //   if (err) {
+  //     console.error('❌ Lỗi khi lấy danh sách bảng:', err.message);
+  //   } else {
+  //     console.log('📋 Danh sách bảng hiện có trên Railway:');
+  //     results.forEach((row) => {
+  //       console.log(`- ${Object.values(row)[0]}`);
+  //     });
+  //   }
+  // });
 
   // const dropTables = [
   //   // 'movie_director',
@@ -256,10 +256,11 @@ connection.connect(async (err) => {
       await new Promise((resolve) => {
         connection.query(table.sql, (err) => {
           if (err) {
-            console.error(`❌ Lỗi khi tạo bảng "${table.name}":`, err.message);
-          } else {
-            console.log(`✅ Bảng "${table.name}" đã sẵn sàng.`);
+            console.error(`Lỗi khi tạo bảng "${table.name}":`, err.message);
           }
+          //  else {
+          //   console.log(`✅ Bảng "${table.name}" đã sẵn sàng.`);
+          // }
           resolve();
         });
       });
@@ -267,7 +268,7 @@ connection.connect(async (err) => {
   };
 
   createTablesSequentially().then(() => {
-    console.log("✅ Tất cả bảng đã được tạo xong!");
+    console.log("Tất cả bảng đã được tạo xong!");
   });
 
 });
