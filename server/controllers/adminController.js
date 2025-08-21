@@ -1,5 +1,6 @@
 import Movie from '../models/Movie.js';
 import User from '../models/User.js';
+import Cinema from '../models/Cinema.js';
 
 export const getMovies = async (req, res) => {
   try {
@@ -239,5 +240,55 @@ export const deleteUser = async (req, res) => {
     res.status(200).json({ message: 'Xóa người dùng thành công' });
   } catch (err) {
     res.status(500).json({ message: 'Lỗi server', error: err });
+  }
+}
+
+export const addCinema = async (req, res) => {
+  try {
+    const { cinemaName, address, phone, city } = req.body;
+    
+    // Validate required fields
+    if (!cinemaName || !address || !phone || !city) {
+      return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+    }
+    const cinemaData = { cinemaName, address, phone, city }; 
+    
+    // Gọi model để thêm rạp chiếu mới
+    const newCinema = await Cinema.addCinema(cinemaData);
+    if (!newCinema) {
+      return res.status(500).json({ message: 'Không thể thêm rạp chiếu mới' });
+    }
+
+    res.status(201).json(newCinema);
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ message: 'Rạp chiếu đã tồn tại' });
+    }
+    res.status(500).json({ message: 'Lỗi server', error: err });
+  }
+}
+
+export const getAllCinemas = async (req, res) => {
+  try {
+    const cinemas = await Cinema.getAllcinemas();
+    res.json(cinemas);
+    console.log('Lấy tất cả rạp chiếu thành công:', cinemas);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server', error });
+  }
+}
+
+export const getCinemaById = async (req, res) => {
+  try {
+    const { cinemaID } = req.params; // Lấy cinemaID từ URL (vd: /cinemas/:cinemaID)
+    const cinema = await Cinema.getCinemaById(cinemaID);
+    
+    if (!cinema) {
+      return res.status(404).json({ message: 'Rạp chiếu không tồn tại' });
+    }
+
+    res.json(cinema);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server', error });
   }
 }

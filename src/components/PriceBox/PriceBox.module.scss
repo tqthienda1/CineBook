@@ -5,6 +5,7 @@
 .seats {
   flex-wrap: wrap;
   width: 5rem;
+  justify-content: end;
 }
 
 .typeSeatSection {
@@ -52,4 +53,20 @@
 
 .line {
   margin: 0;
+}
+
+.buyButton {
+  text-align: center;
+  width: 100%;
+  border: 1.5px white solid;
+  border-radius: 1rem;
+  background-color: black;
+  font-size: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buyButton:hover {
+  background-color: #fb2b2b;
 }

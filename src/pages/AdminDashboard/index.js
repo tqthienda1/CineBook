@@ -534,6 +534,22 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
   const latest4Films = showingMovies.slice(0, 4);
 
+  useEffect(() => {
+    setStatsData([
+      { icon: '🎬', value: recentFilms.length, label: 'Total Films', color: '#ff0000' },
+      { icon: '👥', value: usersData.length, label: 'Active Users', color: '#ff3333' },
+      { icon: '🎭', value: theatersData.length, label: 'Theaters', color: '#ff6666' },
+      { icon: '🎟️', value: promotionsData.length, label: 'Active Promotions', color: '#ff9999' },
+    ]);
+  }, [recentFilms, usersData, theatersData, promotionsData]);
+
+  const [statsData, setStatsData] = useState([
+    { icon: '🎬', value: recentFilms.length, label: 'Total Films', color: '#ff0000' },
+    { icon: '👥', value: usersData.length, label: 'Active Users', color: '#ff3333' },
+    { icon: '🎭', value: theatersData.length, label: 'Theaters', color: '#ff6666' },
+    { icon: '🎟️', value: promotionsData.length, label: 'Active Promotions', color: '#ff9999' },
+  ]);
+
   const renderDashboard = () => (
     <div className={styles.dashboardContent}>
       <div className={styles.statsGrid}>

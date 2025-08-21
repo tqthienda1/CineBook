@@ -1,7 +1,7 @@
 .col {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 1rem;
 }
 
 .row {
@@ -40,11 +40,15 @@
   font-weight: 600;
 }
 
-.seatDefinition {
+.seatDefinitionWrapper {
   display: flex;
   bottom: 0;
   justify-content: space-between;
   width: 100%;
+}
+
+.seatDefinition {
+  align-items: center;
 }
 
 .regularSeat {
@@ -52,6 +56,7 @@
   border-radius: 0.5rem;
   width: 2rem;
   height: 2rem;
+  transition: background-color 0.3s ease;
 }
 
 .coupleSeat {
@@ -59,20 +64,40 @@
   border-radius: 0.5rem;
   width: 4rem;
   height: 2rem;
+  transition: background-color 0.3s ease;
 }
 
 .takenSeat {
-  border: 1.5px solid white;
-  border-radius: 0.5rem;
   background-color: #6e6e6e;
+  filter: brightness(50%);
+}
+
+.selectedSeat {
+  background-color: #fb2b2b;
+}
+
+.path {
   width: 2rem;
   height: 2rem;
 }
 
-.selectedSeat {
-  border: 1.5px solid white;
-  border-radius: 0.5rem;
-  background-color: #fb2b2b;
-  width: 2rem;
-  height: 2rem;
+.seatLayoutWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 2rem 0;
+
+  .regularSeat:not(.takenSeat):hover,
+  .coupleSeat:not(.takenSeat):hover {
+    cursor: pointer;
+  }
+}
+
+.seat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1rem;
+  font-weight: 600;
 }

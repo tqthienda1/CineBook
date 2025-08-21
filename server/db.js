@@ -16,17 +16,39 @@ connection.connect(async (err) => {
   }
   console.log('✅ Đã kết nối MySQL Railway');
 
+
+  // check is connect to railway
+  // show table on railway
+  connection.query('SHOW TABLES', (err, results) => {
+    if (err) {
+      console.error('❌ Lỗi khi lấy danh sách bảng:', err.message);
+    } else {
+      console.log('📋 Danh sách bảng hiện có trên Railway:');
+      results.forEach((row) => {
+        console.log(`- ${Object.values(row)[0]}`);
+      });
+    }
+  });
+
   // const dropTables = [
-  //   'movie_director',
-  //   'movie_actor', 
-  //   'movie_writer',
-  //   'movie_category',
-  //   'movie',
-  //   'user',
-  //   'category',
-  //   'director',
-  //   'writer',
-  //   'actor'
+  //   // 'movie_director',
+  //   // 'movie_actor', 
+  //   // 'movie_writer',
+  //   // 'movie_category',
+  //   // 'movie',
+  //   // 'user',
+  //   // 'category',
+  //   // 'director',
+  //   // 'writer',
+  //   // 'actor'
+  //   'cinema_room',
+  //   'cinema',
+    
+  //   'room',
+  //   'layout',
+  //   'seat',
+  //   'showtime'
+
   // ];
 
   // for (const table of dropTables) {
@@ -157,6 +179,73 @@ connection.connect(async (err) => {
         ) 
       `
     },
+    {
+      name: 'cinema',
+      sql: `
+        CREATE TABLE IF NOT EXISTS cinema (
+          cinemaID INT AUTO_INCREMENT PRIMARY KEY,
+          cinemaName VARCHAR(255) NOT NULL UNIQUE,
+          address NVARCHAR(255) NOT NULL,
+          city VARCHAR(100) NOT NULL,
+          phone VARCHAR(20)
+        )
+      `
+    },
+    {
+      name: 'room',
+      sql: `
+        CREATE TABLE IF NOT EXISTS cinema_room (
+          roomID INT AUTO_INCREMENT,
+          cinemaID INT NOT NULL,
+          roomName VARCHAR(50) NOT NULL,
+          capacity INT NOT NULL,
+          layoutID INT NOT NULL,
+
+          PRIMARY KEY (roomID, cinemaID),
+          FOREIGN KEY (cinemaID) REFERENCES cinema(cinemaID) ON DELETE CASCADE
+        )
+      `
+    },
+    {
+      name: 'layout',
+      sql: `
+        CREATE TABLE IF NOT EXISTS layout (
+          layoutID INT AUTO_INCREMENT PRIMARY KEY,
+          numCol INT NOT NULL,
+          numRow INT NOT NULL
+        )
+      `
+    },
+    {
+      name: 'seat',
+      sql: `
+        CREATE TABLE IF NOT EXISTS seat (
+          seatID char(5) PRIMARY KEY,
+          layoutID INT NOT NULL,
+          rowNum INT NOT NULL,
+          colNum INT NOT NULL,
+          status VARCHAR(20) DEFAULT 'available',
+          type VARCHAR(20) DEFAULT 'regular',
+
+          FOREIGN KEY (layoutID) REFERENCES layout(layoutID) ON DELETE CASCADE
+        )
+      `
+    }
+    // {
+    //   name: 'showtime',
+    //   sql: `
+    //     CREATE TABLE IF NOT EXISTS showtime (
+    //       showtimeID INT AUTO_INCREMENT PRIMARY KEY,
+    //       movieID INT NOT NULL,
+    //       roomID INT NOT NULL,
+    //       startTime DATETIME NOT NULL,
+    //       endTime DATETIME NOT NULL,
+
+    //       FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
+    //       FOREIGN KEY (roomID) REFERENCES cinema_room(roomID) ON DELETE CASCADE
+    //     )
+    //   `
+    // }
     
 
   ];
