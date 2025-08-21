@@ -18,8 +18,10 @@ const AdminLayout = ({ children }) => {
     { id: 'movies', label: 'Movies', icon: '🎬' },
     { id: 'showtimes', label: 'Showtimes', icon: '🕐' },
     { id: 'users', label: 'User Accounts', icon: '👥' },
-    { id: 'theaters', label: 'Theater & Seats', icon: '🎭' },
+    { id: 'theaters', label: 'Theaters', icon: '🎭' },
     { id: 'promotions', label: 'Promotions', icon: '🎟️' },
+    { id: 'cinemas', label: 'Cinemas', icon: '🎦' },
+    { id: 'seats', label: 'Seats', icon: '🎦' },
   ];
 
   const childrenWithProps = React.cloneElement(children, {
