@@ -11,7 +11,7 @@ export const getMovies = async (req, res) => {
     }));
 
     res.json(formattedMovies);
-    console.log('Lấy tất cả phim thành công:', formattedMovies);
+
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
@@ -290,5 +290,46 @@ export const getCinemaById = async (req, res) => {
     res.json(cinema);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
+  }
+}
+
+export const updateCinema = async (req, res) => {
+  try {
+    const { cinemaID } = req.params; // Lấy cinemaID từ URL (vd: /cinemas/:cinemaID)
+    const { cinemaName, address, phone, city } = req.body;
+
+    if (!cinemaName || !address || !phone || !city) {
+      return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+    }
+
+    const updatedCinemaData = { cinemaName, address, phone, city };
+
+    // Gọi model update
+    const updatedCinema = await Cinema.updateCinema(cinemaID, updatedCinemaData);
+    
+    if (!updatedCinema) {
+      return res.status(404).json({ message: 'Không tìm thấy rạp chiếu để cập nhật' });
+    }
+
+    res.status(200).json(updatedCinema);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err });
+  }
+}
+
+export const deleteCinema = async (req, res) => {
+  try {
+    const { cinemaID } = req.params; // Lấy cinemaID từ URL (vd: /cinemas/:cinemaID)
+
+    // Gọi model delete
+    const result = await Cinema.deleteCinema(cinemaID);
+
+    if (!result) {
+      return res.status(404).json({ message: 'Không tìm thấy rạp chiếu để xóa' });
+    }
+
+    res.status(200).json({ message: 'Xóa rạp chiếu thành công' });
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err });
   }
 }

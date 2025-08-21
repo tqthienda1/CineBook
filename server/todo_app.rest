@@ -118,25 +118,55 @@ DELETE http://localhost:5003/admin/users/3
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU2NzMzNDAsImV4cCI6MTc1NTY3Njk0MH0.8Dfs_RmGNimo5mX0hOgiQsg8yryN8g7nUnFD7GmglLE
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ###
 POST http://localhost:5003/admin/cinemas
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU3ODkxNDMsImV4cCI6MTc1NTc5Mjc0M30.c3NcgGSx2__lccbHWNxWp3Zt0iGORPh_OPwyWv54TkI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4MDIxMjksImV4cCI6MTc1NTgwNTcyOX0.5rYPFUQd-F6H5YcrF0_oG7ZeS2TOhL9ph_vLBHRvpXE
 
 {
-  "cinemaName": "CGV Hai Ba Trung",
-  "address": "123 Dong Khởi, Quan 10, HCM",
-  "city": "Ho Chi Minh City",
+  "cinemaName": "CGV Long Xuyen",
+  "address": "123 Ly Thai To, Phuong Long Xuyen, An Giang",
+  "city": "An Giang",
   "phone": "0901234555"
 }
 
 ###
 GET http://localhost:5003/admin/cinemas
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU3ODkxNDMsImV4cCI6MTc1NTc5Mjc0M30.c3NcgGSx2__lccbHWNxWp3Zt0iGORPh_OPwyWv54TkI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4MDIxMjksImV4cCI6MTc1NTgwNTcyOX0.5rYPFUQd-F6H5YcrF0_oG7ZeS2TOhL9ph_vLBHRvpXE
 
 
+### 
+PUT http://localhost:5003/admin/cinemas/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4MDIxMjksImV4cCI6MTc1NTgwNTcyOX0.5rYPFUQd-F6H5YcrF0_oG7ZeS2TOhL9ph_vLBHRvpXE
 
+{
+  "cinemaName": "CGV Vincom Dong Khoi",
+  "address": "123 Dong Khoi, Quan 1, HCM",
+  "city": "Ho Chi Minh City",
+  "phone": "0901234555"
+}
+
+### 
+DELETE http://localhost:5003/admin/cinemas/1
+Content-Type: application/json  
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4MDIxMjksImV4cCI6MTc1NTgwNTcyOX0.5rYPFUQd-F6H5YcrF0_oG7ZeS2TOhL9ph_vLBHRvpXE
 
 
 
