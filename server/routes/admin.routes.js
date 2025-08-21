@@ -3,7 +3,10 @@ import { verifyToken } from '../middlewares/authMiddleware.js';
 import { checkAdminRole } from '../middlewares/roleMiddleware.js';
 
 
-import { getMovies, addMovie, editMovie, deleteMovie, getAllUsers, createUser, updateUser, deleteUser } from '../controllers/adminController.js';
+import {  getMovies, addMovie, editMovie, deleteMovie, 
+          getAllUsers, createUser, updateUser, deleteUser,
+          addCinema
+        } from '../controllers/adminController.js';
 
 
 const router = express.Router();
@@ -18,5 +21,9 @@ router.get('/users', verifyToken, checkAdminRole, getAllUsers);
 router.post('/users', verifyToken, checkAdminRole, createUser);
 router.put('/users/:userID', verifyToken, checkAdminRole, updateUser);
 router.delete('/users/:userID', verifyToken, checkAdminRole, deleteUser);
+
+// Các route quản lý cinema
+router.post('/cinemas', verifyToken, checkAdminRole, addCinema);
+// router.get('/cinemas', verifyToken, checkAdminRole, getCinemas);
 
 export default router;
