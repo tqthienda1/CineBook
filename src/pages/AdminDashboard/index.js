@@ -387,21 +387,16 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const handleSubmitSeat = async (e) => {
     e.preventDefault();
-
-    console.log('123');
-    console.log(seatMatrix);
     const combinedData = {
       ...formData,
       layout: seatMatrix,
     };
 
-    console.log(combinedData);
-
     if (formType === 'add') {
       apiRequest({
         url: 'http://localhost:5003/admin/seats',
         method: 'POST',
-        body: seatMatrix,
+        body: combinedData,
         onSuccess: (newSeat) => {
           setSeatsData((prev) => [...prev, newSeat]);
           showPopup('Add Promotion successfully!');
@@ -412,7 +407,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       apiRequest({
         url: `http://localhost:5003/admin/Seats/${formData.seatID}`,
         method: 'PUT',
-        body: formData,
+        body: combinedData,
         onSuccess: (editedSeat) => {
           setSeatsData((prev) => prev.map((s) => (String(s.seatID) === String(editedSeat.seatID) ? editedSeat : s)));
           showPopup('Edit Seat successfully!');
@@ -533,22 +528,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
     .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
   const latest4Films = showingMovies.slice(0, 4);
-
-  useEffect(() => {
-    setStatsData([
-      { icon: '🎬', value: recentFilms.length, label: 'Total Films', color: '#ff0000' },
-      { icon: '👥', value: usersData.length, label: 'Active Users', color: '#ff3333' },
-      { icon: '🎭', value: theatersData.length, label: 'Theaters', color: '#ff6666' },
-      { icon: '🎟️', value: promotionsData.length, label: 'Active Promotions', color: '#ff9999' },
-    ]);
-  }, [recentFilms, usersData, theatersData, promotionsData]);
-
-  const [statsData, setStatsData] = useState([
-    { icon: '🎬', value: recentFilms.length, label: 'Total Films', color: '#ff0000' },
-    { icon: '👥', value: usersData.length, label: 'Active Users', color: '#ff3333' },
-    { icon: '🎭', value: theatersData.length, label: 'Theaters', color: '#ff6666' },
-    { icon: '🎟️', value: promotionsData.length, label: 'Active Promotions', color: '#ff9999' },
-  ]);
 
   const renderDashboard = () => (
     <div className={styles.dashboardContent}>
@@ -1037,7 +1016,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                             const newMatrix = seatMatrix.map((r) => [...r]);
                             newMatrix[rowIndex][colIndex] = seat ? 0 : 1;
                             setSeatMatrix(newMatrix);
-                            console.log(newMatrix);
                           }}
                         >
                           {seat}
