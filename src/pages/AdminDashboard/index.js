@@ -317,13 +317,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay));
   const latest4Films = showingMovies.slice(0, 4);
 
-  const [statsData, setStatsData] = useState([
-    { icon: '🎬', value: '150+', label: 'Total Films', color: '#ff0000' },
-    { icon: '👥', value: '2.5K+', label: 'Active Users', color: '#ff3333' },
-    { icon: '🎭', value: '8', label: 'Theaters', color: '#ff6666' },
-    { icon: '🎟️', value: '25', label: 'Active Promotions', color: '#ff9999' },
-  ]);
-
   const [showtimesData, setShowtimesData] = useState([
     { id: 1, movie: 'Avatar: The Way of Water', theater: 'Theater 1', time: '14:00', status: 'Active' },
     { id: 2, movie: 'Top Gun: Maverick', theater: 'Theater 2', time: '16:30', status: 'Active' },
@@ -337,6 +330,22 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [promotionsData, setPromotionsData] = useState([
     { id: 1, title: 'Summer Sale', discount: '20%', status: 'Active' },
     { id: 2, title: 'Black Friday', discount: '50%', status: 'Upcoming' },
+  ]);
+
+  useEffect(() => {
+    setStatsData([
+      { icon: '🎬', value: recentFilms.length, label: 'Total Films', color: '#ff0000' },
+      { icon: '👥', value: usersData.length, label: 'Active Users', color: '#ff3333' },
+      { icon: '🎭', value: theatersData.length, label: 'Theaters', color: '#ff6666' },
+      { icon: '🎟️', value: promotionsData.length, label: 'Active Promotions', color: '#ff9999' },
+    ]);
+  }, [recentFilms, usersData, theatersData, promotionsData]);
+
+  const [statsData, setStatsData] = useState([
+    { icon: '🎬', value: recentFilms.length, label: 'Total Films', color: '#ff0000' },
+    { icon: '👥', value: usersData.length, label: 'Active Users', color: '#ff3333' },
+    { icon: '🎭', value: theatersData.length, label: 'Theaters', color: '#ff6666' },
+    { icon: '🎟️', value: promotionsData.length, label: 'Active Promotions', color: '#ff9999' },
   ]);
 
   const renderDashboard = () => (
