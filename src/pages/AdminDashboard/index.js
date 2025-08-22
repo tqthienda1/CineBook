@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './AdminDashboard.module.scss';
 import { jwtDecode } from 'jwt-decode';
 import PopUp from '../../components/PopUp';
+import clsx from 'clsx';
 
 const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout }) => {
   const currentSection = activeSectionFromLayout || 'dashboard';
@@ -30,6 +31,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [promotionsData, setPromotionsData] = useState([]);
   const [cinemasData, setCinemasData] = useState([]);
   const [seatsData, setSeatsData] = useState([]);
+
+  const [seatType, setSeatType] = useState('');
+  const typeClass = {
+    path: styles.pathSeat,
+    regular: styles.regularSeat,
+    couple: styles.coupleSeat,
+  };
 
   useEffect(() => {
     const fetchData = async (url, setter, errorMsg) => {
@@ -429,11 +437,18 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       alert('Vui lòng nhập số dòng/cột hợp lệ!');
       return;
     }
-    const matrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+    const matrix = Array.from({ length: rows }, (_, r) =>
+      Array.from({ length: cols }, (_, c) => ({
+        row: r,
+        col: c,
+        seatID: null,
+        type: 'path',
+      })),
+    );
+
     setSeatMatrix(matrix);
     setSeatStep(2);
   };
-
   const submitButtonLabels = {
     movies: { add: 'Create', edit: 'Update' },
     users: { add: 'Create', edit: 'Update' },
@@ -479,7 +494,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'discount', label: 'Discount', type: 'text' },
     ],
     cinemas: [
-      { name: 'name', label: 'Name', type: 'text' },
+      { name: 'cinemaName', label: 'Name', type: 'text' },
       { name: 'address', label: 'Address', type: 'text' },
       { name: 'city', label: 'City', type: 'text' },
       { name: 'phone', label: 'Phone Number', type: 'text' },
@@ -1005,41 +1020,97 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               ) : null}
 
               {entity === 'seats' && seatStep === 2 && seatMatrix.length > 0 && (
-                <div className={styles.seatMatrix}>
-                  {seatMatrix.map((rowArr, rowIndex) => (
-                    <div key={rowIndex} className={styles.row}>
-                      {rowArr.map((seat, colIndex) => (
-                        <button
-                          key={colIndex}
-                          className={`${styles.seatBtn} ${seat ? styles.selected : ''}`}
-                          onClick={() => {
-                            const newMatrix = seatMatrix.map((r) => [...r]);
-                            newMatrix[rowIndex][colIndex] = seat ? 0 : 1;
-                            setSeatMatrix(newMatrix);
-                          }}
-                        >
-                          {seat}
-                        </button>
-                      ))}
+                <>
+                  <select value={seatType} onChange={(e) => setSeatType(e.target.value)}>
+                    <option value="regular">Regular</option>
+                    <option value="couple">Couple</option>
+                  </select>
+                  <div className={styles.seatMatrix}>
+                    {seatMatrix.map((rowArr, rowIndex) => (
+                      <div key={rowIndex} className={styles.row}>
+                        {rowArr.map((seat, colIndex) => (
+                          <button
+                            key={colIndex}
+                            className={clsx(styles.seatBtn, typeClass[seat.type], {
+                              [styles.selected]: seat.type !== null,
+                            })}
+                            onClick={() => {
+                              const newMatrix = seatMatrix.map((r) => [...r]);
+
+                              if (seatType === 'couple') {
+                                const rightSeat = newMatrix[rowIndex][colIndex + 1];
+
+                                if (seat.type === 'couple') {
+                                  // Nếu đang là couple thì hủy cả 2 ghế
+                                  newMatrix[rowIndex][colIndex] = {
+                                    row: rowIndex,
+                                    col: colIndex,
+                                    type: 'path',
+                                    seatID: null,
+                                  };
+                                  if (rightSeat && rightSeat.type === 'couple') {
+                                    newMatrix[rowIndex][colIndex + 1] = {
+                                      row: rowIndex,
+                                      col: colIndex + 1,
+                                      type: 'path',
+                                      seatID: null,
+                                    };
+                                  }
+                                } else if (seat.type === 'path' && rightSeat && rightSeat.type === 'path') {
+                                  newMatrix[rowIndex][colIndex] = {
+                                    row: rowIndex,
+                                    col: colIndex,
+                                    type: 'couple',
+                                    seatID: null,
+                                  };
+                                  newMatrix[rowIndex][colIndex + 1] = {
+                                    row: rowIndex,
+                                    col: colIndex + 1,
+                                    type: 'couple',
+                                    seatID: null,
+                                  };
+                                } else {
+                                  console.log('Không thể đặt couple tại đây');
+                                  return;
+                                }
+                              } else {
+                                const newSeat =
+                                  seat.type !== 'path'
+                                    ? { row: rowIndex, col: colIndex, type: 'path', seatID: null }
+                                    : { row: rowIndex, col: colIndex, type: seatType, seatID: null };
+
+                                newMatrix[rowIndex][colIndex] = newSeat;
+                              }
+
+                              setSeatMatrix(newMatrix);
+
+                              console.log('seatType:', seatType);
+                              console.log('newMatrix:', newMatrix);
+                            }}
+                          >
+                            {seat.type}
+                          </button>
+                        ))}
+                      </div>
+                    ))}
+                    <div className={styles.formActions}>
+                      <button
+                        onClick={(e) => {
+                          handleSubmitSeat(e);
+                        }}
+                      >
+                        Submit Seats
+                      </button>
+                      <button onClick={() => setSeatStep(1)}>Back</button>
                     </div>
-                  ))}
-                  <div className={styles.formActions}>
-                    <button
-                      onClick={(e) => {
-                        handleSubmitSeat(e);
-                      }}
-                    >
-                      Submit Seats
-                    </button>
-                    <button onClick={() => setSeatStep(1)}>Back</button>
                   </div>
-                </div>
+                </>
               )}
             </div>
           </div>
         )}
-        {popupOpen && <PopUp setPosition={''} content={popupMessage} onClick={() => setPopupOpen(false)} />}
       </div>
+      {popupOpen && <PopUp setPosition={'unset'} content={popupMessage} onClick={() => setPopupOpen(false)} />}
     </div>
   );
 };

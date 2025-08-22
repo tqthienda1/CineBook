@@ -396,7 +396,6 @@
 .seatMatrix {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
   padding: 10px;
   white-space: nowrap;
   justify-content: center;
@@ -416,9 +415,51 @@
   background-color: #eee;
   border: 1px solid #aaa;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
-.seatBtn.selected {
-  background-color: #4caf50;
-  color: white;
+.coupleSeat {
+  background-color: pink;
+  width: 80px; /* gấp đôi ghế thường */
+}
+
+.pathSeat {
+  background-color: gray; /* lối đi */
+}
+
+.regularSeat {
+  background-color: green; /* ghế thường */
+}
+
+.coupleSeat {
+  background-color: pink; /* ghế đôi */
+}
+
+.pathSeat.selected {
+  background-color: gray;
+  outline: 3px solid yellow;
+}
+
+.regularSeat.selected {
+  background-color: green;
+  outline: 3px solid yellow;
+}
+
+.coupleSeat.selected {
+  background-color: pink; /* ghế đôi */
+  outline: 3px solid yellow;
+}
+
+// .seatBtn.selected {
+//   background-color: #4caf50;
+//   color: white;
+// }
+
+.popup {
+  position: fixed; /* popup đứng cố định trên màn hình */
+  top: 50%; /* đặt vị trí top ở giữa chiều cao màn hình */
+  left: 50%; /* đặt vị trí left ở giữa chiều ngang màn hình */
+  transform: translate(-50%, -50%);
 }
