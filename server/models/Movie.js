@@ -1,3 +1,4 @@
+import { getMovieByID } from '../controllers/userController.js';
 import connection from '../db.js';
 
 const Movie = {
@@ -41,44 +42,46 @@ const Movie = {
     return rows;
   },
 
-  // // Lấy phim theo id
-  // async getMovieById(id) {
-  //   const sql = `
-  //     SELECT
-  //       m.movideID,
-  //       m.name,
-  //       m.language,
-  //       m.duration,
-  //       m.releaseDay,
-  //       m.IMDBrating,
-  //       m.description,
-  //       m.posterURL,
-  //       m.backdropURL,
+  // Lấy phim theo id
+  async getMovieByID(movieID) {
+    const sql = `
+      SELECT
+        m.movieID,
+        m.name,
+        m.language,
+        m.duration,
+        m.releaseDay,
+        m.IMDBrating,
+        m.description,
+        m.ageLimit,
+        m.status,
+        m.posterURL,
+        m.backdropURL,
 
-  //       GROUP_CONCAT(DISTINCT c.name ORDER BY c.name SEPARATOR ', ') AS category,
-  //       GROUP_CONCAT(DISTINCT d.name ORDER BY d.name SEPARATOR ', ') AS directors,
-  //       GROUP_CONCAT(DISTINCT w.name ORDER BY w.name SEPARATOR ', ') AS writers,
-  //       GROUP_CONCAT(DISTINCT a.name ORDER BY a.name SEPARATOR ', ') AS actors
+        CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(c.categoryName)), ']') AS JSON) AS category,
+        CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(d.directorName)), ']') AS JSON) AS directors,
+        CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(w.writerName)), ']') AS JSON) AS writers,
+        CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(a.actorName)), ']') AS JSON) AS actors  
 
-  //     FROM movie m
-  //     LEFT JOIN movie_director md ON m.movideID = md.movideID
-  //     LEFT JOIN director d ON md.directorID = d.directorID
+      FROM movie m
+      LEFT JOIN movie_director md ON m.movieID = md.movieID
+      LEFT JOIN director d ON md.directorID = d.directorID
 
-  //     LEFT JOIN movie_writer mw ON m.movideID = mw.movideID
-  //     LEFT JOIN writer w ON mw.writerID = w.writerID
+      LEFT JOIN movie_writer mw ON m.movieID = mw.movieID
+      LEFT JOIN writer w ON mw.writerID = w.writerID
 
-  //     LEFT JOIN movie_actor ma ON m.movideID = ma.movideID
-  //     LEFT JOIN actor a ON ma.actorID = a.actorID
+      LEFT JOIN movie_actor ma ON m.movieID = ma.movieID
+      LEFT JOIN actor a ON ma.actorID = a.actorID
 
-  //     LEFT JOIN movie_category mc ON m.movideID = mc.movideID
-  //     LEFT JOIN category c ON mc.categoryID = c.categoryID
+      LEFT JOIN movie_category mc ON m.movieID = mc.movieID
+      LEFT JOIN category c ON mc.categoryID = c.categoryID
 
-  //     WHERE m.movideID = ?
-  //     GROUP BY m.movideID
-  //   `;
-  //   const [rows] = await connection.promise().execute(sql, [id]);
-  //   return rows[0] || null;
-  // },
+      WHERE m.movieID = ?
+      GROUP BY m.movieID
+    `;
+    const [rows] = await connection.promise().execute(sql, [movieID]);
+    return rows[0] || null;
+  },
 
   async createMovie(movieData) {
     const {
