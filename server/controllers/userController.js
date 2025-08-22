@@ -1,5 +1,6 @@
 import User from '../models/User.js'
 import Movie from '../models/Movie.js'
+import Cinema from '../models/Cinema.js';
 
 export const getUserById = async (req, res) => {
   try {
@@ -49,43 +50,43 @@ export const getMovieWithCities = async (req, res) => {
     const movieID = req.params.id;
 
     const movie = await Movie.getMovieByID(movieID);
-    const cities = await Movie.getAllCity();
 
-    if (!movie) {
+     if (!movie) {
       return res.status(404).json({ message: 'Không tìm thấy phim' });
     }
     
-    if (!cities || cities.length === 0) {
-      return res.status(404).json({ message: 'Không tìm thấy thành phố nào' });
-    }
-    const cityNames = cities.map(c => c.city);
-    console.log('Lấy thông tin phim thành công:', movie);
-
     if (movie.releaseDay) {
       movie.releaseDay = new Date(movie.releaseDay).toISOString().split('T')[0];  
     }
 
-    res.status(200).json({
-      movie,
-      cities: cityNames
-    }); 
+    let response = { movie }
+
+    // lấy thông tin thành phố
+    const { city } = req.query;
+
+    if (city) {
+      const cinema = await Cinema.getCinemasByCity(city);
+    
+      if (!cinema) {
+        return res.status(404).json({ message: 'Không tìm thấy rạp phim nào trong thành phố này' });
+      }
+      if (cinema.releaseDay) {
+        cinema.releaseDay = new Date(cinema.releaseDay).toISOString().split('T')[0];  
+      }
+      response.cinema = cinema;
+
+    } else {
+      const cities = await Movie.getAllCity();
+      if (!cities || cities.length === 0) {
+        return res.status(404).json({ message: 'Không tìm thấy thành phố nào' });
+      }
+      const citiesMap = cities.map(c => c.city);
+
+      response.cities = citiesMap;
+    }
+
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
 }
-
-// export const getAllCity = async (req, res) => {
-//   try {
-
-//     const cities = await Movie.getAllCity();
-
-//     if (!cities || cities.length === 0) {
-//       return res.status(404).json({ message: 'Không tìm thấy thành phố nào' });
-//     }
-
-//     console.log('Lấy thông tin thành phố thành công:', cities);
-//     res.status(200).json(cities);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Lỗi server', error });
-//   }
-// }

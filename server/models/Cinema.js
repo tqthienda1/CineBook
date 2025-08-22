@@ -15,6 +15,17 @@ const cinema = {
     return rows[0] || null; // Trả về rạp chiếu nếu tìm
   },
 
+  async getCinemasByCity(city) {
+    console.log('Fetching cinemas in city:', city);
+    const sqlGetCinemasByCity = 'SELECT * FROM cinema WHERE city = ?';
+    const [rows] = await connection.promise().execute(sqlGetCinemasByCity, [city]);   
+
+    if (rows.length === 0) {
+      return null; // Không tìm thấy rạp chiếu nào trong thành phố này
+    }
+    return rows; // Trả về danh sách rạp chiếu trong thành phố
+  },
+
   async addCinema(cinemaData) {
     const { cinemaName, address, city, phone } = cinemaData;
     console.log('Adding cinema:', cinemaData);
