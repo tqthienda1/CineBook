@@ -9,21 +9,21 @@ import clsx from 'clsx';
 import SeparateLine from '../SeparateLine';
 
 const MovieDeTail = ({
-  poster,
-  title,
+  posterURL,
+  name,
   category,
   language,
   duration,
-  imdb,
+  IMDBrating,
   ageLimit,
   releaseDate,
   description,
-  director,
-  writer,
-  actor,
+  directors,
+  Writers,
+  actors,
 }) => {
   //Chuyển định dạng ngày
-  const [day, month, year] = releaseDate.split('/');
+  const [year, month, day] = releaseDate.split('-');
   const dateObj = new Date(year, month - 1, day);
 
   return (
