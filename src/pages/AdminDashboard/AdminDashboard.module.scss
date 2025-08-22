@@ -364,8 +364,8 @@
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  width: 600px;
-  max-width: 90vw;
+  // width: 600px;
+  // max-width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
   animation: fadeIn 0.3s ease;
@@ -420,9 +420,24 @@
   display: flex;
 }
 
-.coupleSeat {
+.coupleLeft {
   background-color: pink;
-  width: 80px; /* gấp đôi ghế thường */
+  width: 40px;
+  border-top: 2px solid yellow;
+  border-bottom: 2px solid yellow;
+  border-left: 2px solid yellow;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+}
+
+.coupleRight {
+  background-color: pink;
+  width: 40px;
+  border-top: 2px solid yellow;
+  border-bottom: 2px solid yellow;
+  border-right: 2px solid yellow;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
 }
 
 .pathSeat {
@@ -431,10 +446,6 @@
 
 .regularSeat {
   background-color: green; /* ghế thường */
-}
-
-.coupleSeat {
-  background-color: pink; /* ghế đôi */
 }
 
 .pathSeat.selected {
@@ -447,10 +458,26 @@
   outline: 3px solid yellow;
 }
 
-.coupleSeat.selected {
-  background-color: pink; /* ghế đôi */
-  outline: 3px solid yellow;
+.coupleLeft.selected {
+  border-top: 2px solid yellow;
+  border-bottom: 2px solid yellow;
+  border-left: 2px solid yellow;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
 }
+
+.coupleRight.selected {
+  border-top: 2px solid yellow;
+  border-bottom: 2px solid yellow;
+  border-right: 2px solid yellow;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+}
+
+// .coupleSeat.selected {
+//   background-color: pink; /* ghế đôi */
+//   outline: 3px solid yellow;
+// }
 
 // .seatBtn.selected {
 //   background-color: #4caf50;
@@ -462,4 +489,17 @@
   top: 50%; /* đặt vị trí top ở giữa chiều cao màn hình */
   left: 50%; /* đặt vị trí left ở giữa chiều ngang màn hình */
   transform: translate(-50%, -50%);
+}
+
+.chooseBox {
+  display: flex;
+  .inputWarning {
+    border: 1px solid red;
+  }
+
+  .warningText {
+    color: red;
+    font-size: 12px;
+    margin-left: 4px;
+  }
 }
