@@ -60,11 +60,25 @@ const Home = () => {
   const showingMovies = movies
     .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
     .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay))
-    .map((film) => <MovieCard key={film.movieID} movieName={film.name} imgSource={`/assets/${film.posterURL}`} />);
+    .map((film) => (
+      <MovieCard
+        key={film.movieID}
+        movieName={film.name}
+        imgSource={`/assets/${film.posterURL}`}
+        movieID={film.movieID}
+      />
+    ));
   const comingMovies = movies
     .filter((film) => film.releaseDay && new Date(film.releaseDay) >= today)
     .sort((a, b) => new Date(a.releaseDay) - new Date(b.releaseDay)) // sớm nhất → muộn nhất
-    .map((film) => <MovieCard key={film.movieID} movieName={film.name} imgSource={`/assets/${film.posterURL}`} />);
+    .map((film) => (
+      <MovieCard
+        key={film.movieID}
+        movieName={film.name}
+        imgSource={`/assets/${film.posterURL}`}
+        movieID={film.movieID}
+      />
+    ));
 
   const promotionCards = [
     <PromotionCard imgSource={discount1} />,

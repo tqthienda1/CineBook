@@ -12,15 +12,13 @@ import HeaderOnlyLayout from '../components/Layout/HeaderOnlyLayout';
 import AdminLayout from '../components/Layout/AdminLayout';
 
 const publicRoutes = [
-
-    { path: '/', component: Home, layout: DefaultLayout },
-    { path: '/login', component: Login, layout: HeaderOnlyLayout },
-    { path: '/booking', component: Booking, layout: DefaultLayout },
-    { path: '/register', component: Register, layout: HeaderOnlyLayout },
-    { path: '/movies', component: Movies, layout: DefaultLayout },
-    { path: '/aboutus', component: AboutUs, layout: DefaultLayout },
-    { path: '/promotions', component: Promotion, layout: DefaultLayout },
-
+  { path: '/', component: Home, layout: DefaultLayout },
+  { path: '/login', component: Login, layout: HeaderOnlyLayout },
+  { path: '/booking/:movieID', component: Booking, layout: DefaultLayout },
+  { path: '/register', component: Register, layout: HeaderOnlyLayout },
+  { path: '/movies', component: Movies, layout: DefaultLayout },
+  { path: '/aboutus', component: AboutUs, layout: DefaultLayout },
+  { path: '/promotions', component: Promotion, layout: DefaultLayout },
 ];
 
 const userRoutes = [{ path: '/userprofile', component: UserProfile, layout: DefaultLayout }];
