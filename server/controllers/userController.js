@@ -54,6 +54,12 @@ export const getMovieByID = async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy phim' });
     }
 
+    console.log('Lấy thông tin phim thành công:', movie);
+    if (movie.releaseDay) {
+      movie.releaseDay = new Date(movie.releaseDay).toISOString().split('T')[0];  
+    }
+
+
     res.status(200).json(movie);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
