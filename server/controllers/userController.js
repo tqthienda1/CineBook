@@ -58,7 +58,7 @@ export const getMovieWithCities = async (req, res) => {
     if (!cities || cities.length === 0) {
       return res.status(404).json({ message: 'Không tìm thấy thành phố nào' });
     }
-
+    const cityNames = cities.map(c => c.city);
     console.log('Lấy thông tin phim thành công:', movie);
 
     if (movie.releaseDay) {
@@ -67,7 +67,7 @@ export const getMovieWithCities = async (req, res) => {
 
     res.status(200).json({
       movie,
-      cities
+      cities: cityNames
     }); 
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
