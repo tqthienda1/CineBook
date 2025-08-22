@@ -10,22 +10,6 @@ import Seat from '../../components/Seat';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-// const movieInfo = {
-//   poster: poster,
-//   title: 'F1 The Movie',
-//   category: ['Action', 'Drama'],
-//   language: 'US',
-//   duration: 156,
-//   imdb: 7.9,
-//   ageLimit: 13,
-//   releasedDate: '26/06/2025',
-//   description:
-//     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-//   director: ['Joseph Kosinski'],
-//   writer: ['duc thinh', 'baolong'],
-//   actor: ['quoc thien'],
-// };
-
 const cinemaInfo = [
   { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
   { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
@@ -34,9 +18,16 @@ const cinemaInfo = [
 const Booking = () => {
   const { movieID } = useParams();
   const [movieInfo, setMovieInfo] = useState(null);
+  const pickingDay = new Date();
+  const [pickingDate, setPickingDate] = useState(pickingDay);
+  const [selectSectionShowtime, setSelectSectionShowtime] = useState();
+  const [selectShowtime, setSelectShowtime] = useState();
+  const [selectTime, setSelectTime] = useState();
+  const [selectCity, setSelectCity] = useState();
+  const [cities, setCities] = useState();
 
   useEffect(() => {
-    const fetchMovieInfo = async () => {
+    const fetchMovieInfoAndCities = async () => {
       try {
         const res = await fetch(`http://localhost:5003/user/movies/${movieID}`, {
           method: 'GET',
@@ -52,21 +43,15 @@ const Booking = () => {
 
         const data = await res.json();
         console.log(data);
-        setMovieInfo(data);
+        setMovieInfo(data.movie);
+        setCities(data.cities);
       } catch (err) {
         console.error('Fetch movie error:', err);
       }
     };
     console.log(movieInfo);
-    fetchMovieInfo();
+    fetchMovieInfoAndCities();
   }, [movieID]);
-
-  const pickingDay = new Date();
-  const [pickingDate, setPickingDate] = useState(pickingDay);
-  const [selectSectionShowtime, setSelectSectionShowtime] = useState();
-  const [selectShowtime, setSelectShowtime] = useState();
-  const [selectTime, setSelectTime] = useState();
-  const [selectCity, setSelectCity] = useState();
 
   const handleSelectShowtime = (showtimeIndex, sectionIndex, time) => {
     setSelectShowtime(showtimeIndex);
@@ -99,6 +84,7 @@ const Booking = () => {
           onSetDate={handleSetDate}
           pickingDay={pickingDay}
           onSelectCity={handleSelectCity}
+          cities={cities}
         />
         <div className={styles.margin}></div>
 

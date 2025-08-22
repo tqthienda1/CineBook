@@ -10,7 +10,7 @@ import Dropdown from '../Dropdown';
 
 const citiesList = ['Ho Chi Minh City', 'Ha Noi', 'Da Nang'];
 
-const DateSlider = ({ pickingDate, onSetDate, pickingDay, onSelectCity }) => {
+const DateSlider = ({ pickingDate, onSetDate, pickingDay, onSelectCity, cities }) => {
   const today = new Date();
   const end = new Date();
   const prevDay = new Date();
@@ -98,7 +98,7 @@ const DateSlider = ({ pickingDate, onSetDate, pickingDay, onSelectCity }) => {
         <div className={styles.col}>
           <label>LOCATION</label>
           <div className={clsx(styles.row, styles.cityPickingDropbox)}>
-            <Dropdown defaultValue={'Select City'} content={citiesList} returnValue={onSelectCity} />
+            <Dropdown defaultValue={'Select City'} content={cities} returnValue={onSelectCity} />
           </div>
         </div>
       </div>
