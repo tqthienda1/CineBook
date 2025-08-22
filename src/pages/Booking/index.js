@@ -8,6 +8,7 @@ import DateSlider from '../../components/DateSlider';
 import Cinema from '../../components/Cinema';
 import Seat from '../../components/Seat';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const movieInfo = {
   poster: poster,
@@ -31,6 +32,35 @@ const cinemaInfo = [
 ];
 
 const Booking = () => {
+  const { movieID } = useParams();
+  const [movieInfo, setMovieInfo] = useState();
+
+  useEffect(() => {
+    const fetchMovieInfo = async () => {
+      try {
+        const res = await fetch(`http://localhost:5003/user/movie/${movieID}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy phim');
+        }
+        console.log(res);
+
+        const data = await res.json();
+        console.log(data);
+        setMovieInfo(data);
+      } catch (err) {
+        console.error('Fetch movie error:', err);
+      }
+    };
+
+    fetchMovieInfo();
+  }, [movieID]);
+
   const pickingDay = new Date();
   const [pickingDate, setPickingDate] = useState(pickingDay);
   const [selectSectionShowtime, setSelectSectionShowtime] = useState();
