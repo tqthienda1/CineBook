@@ -1,5 +1,5 @@
 import User from '../models/User.js'
-// import Movie from '../models/Movie'
+import Movie from '../models/Movie.js'
 
 export const getUserById = async (req, res) => {
   try {
@@ -39,6 +39,22 @@ export const updateUser = async (req, res) => {
     }
 
     res.json({ message: 'Cập nhật thành công', user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server', error });
+  }
+}
+
+export const getMovieByID = async (req, res) => {
+  try {
+    const movieID = req.params.id;
+
+    const movie = await Movie.getMovieByID(movieID);
+
+    if (!movie) {
+      return res.status(404).json({ message: 'Không tìm thấy phim' });
+    }
+
+    res.status(200).json(movie);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }

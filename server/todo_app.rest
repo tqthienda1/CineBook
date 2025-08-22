@@ -193,7 +193,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ###
 GET http://localhost:5003/user/movies
 Content-Type: application/json 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1Njc1MjQwLCJleHAiOjE3NTU2Nzg4NDB9.YixWgWeZwOc3-MaBRfKyglZOb9fyNivUGa5h0fN0lCw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4NTkwMDQsImV4cCI6MTc1NTg2MjYwNH0.74Lhlt0gcJ80H5-l62_nInVf40Om1-nWH_VoiyRtHu0
+
+
+###
+GET http://localhost:5003/user/movies/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4NTkwMDQsImV4cCI6MTc1NTg2MjYwNH0.74Lhlt0gcJ80H5-l62_nInVf40Om1-nWH_VoiyRtHu0
+
+
 
 ### 
 GET http://localhost:5003/user/profile
