@@ -16,38 +16,38 @@ const MovieDeTail = ({
   duration,
   IMDBrating,
   ageLimit,
-  releaseDate,
+  releaseDay,
   description,
   directors,
-  Writers,
+  writers,
   actors,
 }) => {
   //Chuyển định dạng ngày
-  const [year, month, day] = releaseDate.split('-');
+  const [year, month, day] = releaseDay.split('-');
   const dateObj = new Date(year, month - 1, day);
 
   return (
     <div className={clsx(styles.movieDetail, styles.row)}>
-      <img className={styles.poster} src={poster} alt="" />
+      <img className={styles.poster} src={`/assets/${posterURL}`} alt="" />
 
       <div className={clsx(styles.col, styles.info)}>
-        <h1>{title}</h1>
+        <h1>{name}</h1>
 
         <div className={clsx(styles.row, styles.subinfo1)}>
           <ul className={styles.row}>
-            <LuTags />
+            <LuTags className={styles.icon} />
             {category.map((item, index) => (
               <li key={index}>{item + (index !== category.length - 1 ? ', ' : '')}</li>
             ))}
           </ul>
 
-          <div>
-            <MdLanguage />
+          <div className={styles.language}>
+            <MdLanguage className={styles.icon} />
             {language}
           </div>
 
           <div>
-            <BiTime />
+            <BiTime className={styles.icon} />
             {duration}
           </div>
         </div>
@@ -55,7 +55,7 @@ const MovieDeTail = ({
         <div className={clsx(styles.row, styles.subinfo2)}>
           <div>
             <LiaImdb className={styles.imdb} />
-            {imdb}/10
+            {IMDBrating}/10
           </div>
 
           <div className={styles.ageLimit}>PG-{ageLimit}</div>
@@ -73,24 +73,24 @@ const MovieDeTail = ({
         <SeparateLine />
         <h2>Directors</h2>
         <ul>
-          {director.map((item, index) => (
-            <li key={index}>{item + (index !== director.length - 1 ? ',' : '')}</li>
+          {directors.map((item, index) => (
+            <li key={index}>{item + (index !== directors.length - 1 ? ',' : '')}</li>
           ))}
         </ul>
 
         <SeparateLine />
         <h2>Writers</h2>
         <ul>
-          {writer.map((item, index) => (
-            <li key={index}>{item + (index !== writer.length - 1 ? ',' : '')}</li>
+          {writers.map((item, index) => (
+            <li key={index}>{item + (index !== writers.length - 1 ? ',' : '')}</li>
           ))}
         </ul>
 
         <SeparateLine />
         <h2>Actor</h2>
         <ul>
-          {actor.map((item, index) => (
-            <li key={index}>{item + (index !== actor.length - 1 ? ',' : '')}</li>
+          {actors.map((item, index) => (
+            <li key={index}>{item + (index !== actors.length - 1 ? ',' : '')}</li>
           ))}
         </ul>
       </div>
