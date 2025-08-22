@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserById, updateUser, getMovieByID } from '../controllers/userController.js';
+import { getUserById, updateUser, getMovieWithCities } from '../controllers/userController.js';
 import { getMovies } from '../controllers/adminController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
@@ -10,7 +10,7 @@ router.get('/profile', verifyToken, getUserById);
 router.put('/profile', verifyToken, updateUser);
 
 router.get('/movies', getMovies);
-router.get('/movies/:id', getMovieByID)
+router.get('/movies/:id', getMovieWithCities)
 // router.get('/booking', createBooking);
 
 export default router;

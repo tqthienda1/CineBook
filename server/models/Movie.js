@@ -1,4 +1,3 @@
-import { getMovieByID } from '../controllers/userController.js';
 import connection from '../db.js';
 
 const Movie = {
@@ -368,12 +367,20 @@ const Movie = {
     await connection.promise().execute(`DELETE FROM movie_actor WHERE movieID=?`, [movieID]);
 
     return { message: 'Phim đã được xóa thành công' };
+  },
+
+  async getAllCity() {
+    const sql = `
+      SELECT DISTINCT city
+      FROM cinema
+      ORDER BY city
+    `;
+
+    const [rows] = await connection.promise().execute(sql);
+    return rows;
   }
 };
 
-//   return movie;
-//     return result.insertId;
-//   },
-// };
+
 
 export default Movie;

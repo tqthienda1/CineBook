@@ -44,26 +44,48 @@ export const updateUser = async (req, res) => {
   }
 }
 
-export const getMovieByID = async (req, res) => {
+export const getMovieWithCities = async (req, res) => {
   try {
     const movieID = req.params.id;
 
     const movie = await Movie.getMovieByID(movieID);
+    const cities = await Movie.getAllCity();
 
     if (!movie) {
       return res.status(404).json({ message: 'Không tìm thấy phim' });
     }
+    
+    if (!cities || cities.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy thành phố nào' });
+    }
 
     console.log('Lấy thông tin phim thành công:', movie);
+
     if (movie.releaseDay) {
       movie.releaseDay = new Date(movie.releaseDay).toISOString().split('T')[0];  
     }
 
-
-    res.status(200).json(movie);
+    res.status(200).json({
+      movie,
+      cities
+    }); 
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
 }
 
+// export const getAllCity = async (req, res) => {
+//   try {
 
+//     const cities = await Movie.getAllCity();
+
+//     if (!cities || cities.length === 0) {
+//       return res.status(404).json({ message: 'Không tìm thấy thành phố nào' });
+//     }
+
+//     console.log('Lấy thông tin thành phố thành công:', cities);
+//     res.status(200).json(cities);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Lỗi server', error });
+//   }
+// }
