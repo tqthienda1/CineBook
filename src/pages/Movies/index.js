@@ -36,7 +36,7 @@ const Movies = () => {
       <div className={styles.movieContainer}>
         {movies.map((movie) => (
           <>
-            <MovieCard movieName={movie.name} imgSource={`/assets/${movie.posterURL}`} />
+            <MovieCard movieName={movie.name} imgSource={`/assets/${movie.posterURL}`} movieID={movie.movieID} />
             {console.log(movie.posterURL)}
           </>
         ))}

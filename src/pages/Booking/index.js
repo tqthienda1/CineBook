@@ -8,7 +8,7 @@ import DateSlider from '../../components/DateSlider';
 import Cinema from '../../components/Cinema';
 import Seat from '../../components/Seat';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 
 const cinemaInfo = [
   { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
@@ -25,11 +25,12 @@ const Booking = () => {
   const [selectTime, setSelectTime] = useState();
   const [selectCity, setSelectCity] = useState();
   const [cities, setCities] = useState();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchMovieInfoAndCities = async () => {
       try {
-        const res = await fetch(`http://localhost:5003/user/movies/${movieID}`, {
+        const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -65,6 +66,7 @@ const Booking = () => {
 
   const handleSelectCity = (city) => {
     setSelectCity(city);
+    setSearchParams({ city });
   };
 
   if (movieInfo) {
