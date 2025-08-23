@@ -128,7 +128,6 @@ const Movie = {
     `;
 
     for (const cat of category) {
-      console.log('Adding category:', cat);
       await connection.promise().execute(sqlAddCategory, [cat]);
     }
 
@@ -149,19 +148,6 @@ const Movie = {
       INSERT INTO movie (name, language, duration, releaseDay, IMDBrating, description, ageLimit, status, posterURL, backdropURL)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
-    console.log('Adding movie with data:', {
-      name,
-      language,
-      duration,
-      releaseDay,
-      IMDBrating,
-      description,
-      ageLimit,
-      status,
-      posterURL,
-      backdropURL,
-    });
 
     const [result] = await connection
       .promise()

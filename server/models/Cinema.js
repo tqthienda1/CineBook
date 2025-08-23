@@ -27,7 +27,6 @@ const cinema = {
 
   async addCinema(cinemaData) {
     const { cinemaName, address, city, phone } = cinemaData;
-    console.log('Adding cinema:', cinemaData);
     const sqlAddCinema = `
     INSERT INTO cinema (cinemaName, address, city, phone)
     VALUES (?, ?, ?, ?)

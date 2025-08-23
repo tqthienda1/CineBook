@@ -130,7 +130,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 
 
+------------ ------------------------------------------------------------
 
+                                                                  CINEMA  
 
 
 ###
@@ -177,8 +179,54 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 
 
+------------ --------------------------------------------------------- LAYOUT 
+### POST / ADMIN / LAYOUTS 
+POST http://localhost:5003/admin/layouts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU5Nzg1NTAsImV4cCI6MTc1NTk4MjE1MH0.jrtVlB82FpS4MjecsF-dzvXrcMoCaf0Js_G4iO03DYQ
 
-
+{
+  "numRow":5,
+  "numCol":5,
+  "seats":
+  [
+    [
+      {"numRow":0,"numCol":0,"seatID":null,"type":"path","price":0},
+      {"numRow":0,"numCol":1,"seatID":null,"type":"path","price":0},
+      {"numRow":0,"numCol":2,"seatID":null,"type":"regular","price":"12"},
+      {"numRow":0,"numCol":3,"seatID":null,"type":"regular","price":"12"},
+      {"numRow":0,"numCol":4,"seatID":null,"type":"path","price":0}
+    ],
+    [
+      {"numRow":1,"numCol":0,"seatID":null,"type":"path","price":0},
+      {"numRow":1,"numCol":1,"seatID":null,"type":"path","price":0},
+      {"numRow":1,"numCol":2,"seatID":null,"type":"path","price":0},
+      {"numRow":1,"numCol":3,"seatID":null,"type":"path","price":0},
+      {"numRow":1,"numCol":4,"seatID":null,"type":"path","price":0}
+    ],
+    [
+      {"numRow":2,"numCol":0,"seatID":null,"type":"path","price":0},
+      {"numRow":2,"numCol":1,"seatID":null,"type":"path","price":0},
+      {"numRow":2,"numCol":2,"seatID":null,"type":"regular","price":"12"},
+      {"numRow":2,"numCol":3,"seatID":null,"type":"path","price":0},
+      {"numRow":2,"numCol":4,"seatID":null,"type":"path","price":0}
+      ],
+    [
+      {"numRow":3,"numCol":0,"seatID":null,"type":"path","price":0},
+      {"numRow":3,"numCol":1,"seatID":null,"type":"path","price":0},
+      {"numRow":3,"numCol":2,"seatID":null,"type":"couple","price":"12"},
+      {"numRow":3,"numCol":3,"seatID":null,"type":"couple","price":0},
+      {"numRow":3,"numCol":4,"seatID":null,"type":"path","price":0}
+    ],
+    [
+      {"numRow":4,"numCol":0,"seatID":null,"type":"path","price":0},
+      {"numRow":4,"numCol":1,"seatID":null,"type":"path","price":0},
+      {"numRow":4,"numCol":2,"seatID":null,"type":"path","price":0},
+      {"numRow":4,"numCol":3,"seatID":null,"type":"path","price":0},
+      {"numRow":4,"numCol":4,"seatID":null,"type":"path","price":0}
+    ]
+  ]
+}
 
 
 
@@ -202,7 +250,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4NTkwMDQsImV4cCI6MTc1NTg2MjYwNH0.74Lhlt0gcJ80H5-l62_nInVf40Om1-nWH_VoiyRtHu0
 
 ###
-GET http://localhost:5003/user/movies/search?name=R
+GET http://localhost:5003/user/movies/search?name=SHINCHAN
 Content-Type: application/json  
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU5NTUwMTEsImV4cCI6MTc1NTk1ODYxMX0.O34gXSO3qcuoO7j0VlgjYiZWe5CuPtEHkzqR4YuSxEU
 

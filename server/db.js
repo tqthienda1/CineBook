@@ -30,34 +30,34 @@ connection.connect(async (err) => {
   //   }
   // });
 
-  // const dropTables = [
-  //   // 'movie_director',
-  //   // 'movie_actor', 
-  //   // 'movie_writer',
-  //   // 'movie_category',
-  //   // 'movie',
-  //   // 'user',
-  //   // 'category',
-  //   // 'director',
-  //   // 'writer',
-  //   // 'actor'
-  //   'cinema_room',
-  //   'cinema',
+  const dropTables = [
+    // 'movie_director',
+    // 'movie_actor', 
+    // 'movie_writer',
+    // 'movie_category',
+    // 'movie',
+    // 'user',
+    // 'category',
+    // 'director',
+    // 'writer',
+    // 'actor'
+    // 'cinema_room',
+    // 'cinema',
     
-  //   'room',
-  //   'layout',
-  //   'seat',
-  //   'showtime'
+    // 'room',
+    // 'layout',
+    // 'seat',
+    // 'showtime'
 
-  // ];
+  ];
 
-  // for (const table of dropTables) {
-  //   await new Promise((resolve) => {
-  //     connection.query(`DROP TABLE IF EXISTS ${table}`, () => resolve());
-  //   });
-  //   console.log(`✅ Đã xóa bảng ${table}`);
-  // }
-  // console.log('🗑️ Đã xóa các bảng cũ');
+  for (const table of dropTables) {
+    await new Promise((resolve) => {
+      connection.query(`DROP TABLE IF EXISTS ${table}`, () => resolve());
+    });
+    console.log(`✅ Đã xóa bảng ${table}`);
+  }
+  console.log('🗑️ Đã xóa các bảng cũ');
 
     
 
@@ -91,6 +91,7 @@ connection.connect(async (err) => {
           status VARCHAR(20) DEFAULT 'active',
           posterURL NVARCHAR(250),
           backdropURL NVARCHAR(250),
+          trailerURL NVARCHAR(255),
 
           CONSTRAINT uq_movie_name_release UNIQUE (name, releaseDay)
         )
@@ -106,7 +107,7 @@ connection.connect(async (err) => {
       `
     },
     {
-      name: 'diretor',
+      name: 'director',
       sql: `
         CREATE TABLE IF NOT EXISTS director (
           directorID INT AUTO_INCREMENT PRIMARY KEY,
@@ -194,7 +195,7 @@ connection.connect(async (err) => {
     {
       name: 'room',
       sql: `
-        CREATE TABLE IF NOT EXISTS cinema_room (
+        CREATE TABLE IF NOT EXISTS room (
           roomID INT AUTO_INCREMENT,
           cinemaID INT NOT NULL,
           roomName VARCHAR(50) NOT NULL,
@@ -220,33 +221,35 @@ connection.connect(async (err) => {
       name: 'seat',
       sql: `
         CREATE TABLE IF NOT EXISTS seat (
-          seatID char(5) PRIMARY KEY,
-          layoutID INT NOT NULL,
-          rowNum INT NOT NULL,
-          colNum INT NOT NULL,
+          id INT AUTO_INCREMENT PRIMARY KEY, 
+          seatID char(5),
+          layoutID INT,
+          numRow INT NOT NULL,
+          numCol INT NOT NULL,
           status VARCHAR(20) DEFAULT 'available',
           type VARCHAR(20) DEFAULT 'regular',
+          price DECIMAL(10, 2) DEFAULT 0,
 
           FOREIGN KEY (layoutID) REFERENCES layout(layoutID) ON DELETE CASCADE
         )
       `
-    }
-    // {
-    //   name: 'showtime',
-    //   sql: `
-    //     CREATE TABLE IF NOT EXISTS showtime (
-    //       showtimeID INT AUTO_INCREMENT PRIMARY KEY,
-    //       movieID INT NOT NULL,
-    //       roomID INT NOT NULL,
-    //       startTime DATETIME NOT NULL,
-    //       endTime DATETIME NOT NULL,
+    },
+    {
+      name: 'showtime',
+      sql: `
+        CREATE TABLE IF NOT EXISTS showtime (
+          showtimeID INT AUTO_INCREMENT PRIMARY KEY,
+          movieID INT NOT NULL,
+          roomID INT NOT NULL,
+          cinemaID INT NOT NULL,
+          startTime DATETIME NOT NULL,
+          endTime DATETIME NOT NULL,
 
-    //       FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
-    //       FOREIGN KEY (roomID) REFERENCES cinema_room(roomID) ON DELETE CASCADE
-    //     )
-    //   `
-    // }
-    
+          FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
+          FOREIGN KEY (roomID, cinemaID) REFERENCES room(roomID, cinemaID) ON DELETE CASCADE
+        )
+      `
+    }, 
 
   ];
 

@@ -35,6 +35,7 @@ export const addMovie = async (req, res) => {
       status,
       posterURL,
       backdropURL,
+      trailerURL
     } = req.body;
 
     // Validate required fields
@@ -69,6 +70,7 @@ export const addMovie = async (req, res) => {
       status,
       posterURL,
       backdropURL,
+      trailerURL
     };
 
     // Call the model method to add the movie
@@ -105,6 +107,7 @@ export const editMovie = async (req, res) => {
       status,
       posterURL,
       backdropURL,
+      trailerURL
     } = req.body;
 
     // Validate bắt buộc (tùy bạn muốn strict hay không)
@@ -139,6 +142,7 @@ export const editMovie = async (req, res) => {
       status,
       posterURL,
       backdropURL,
+      trailerURL
     };
 
     // Gọi model update
@@ -333,3 +337,92 @@ export const deleteCinema = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error: err });
   }
 }
+
+
+// Quản lý layout
+
+import Layout from "../models/Layout.js";
+import Seat from "../models/Seat.js";
+
+function generateSeatIDs(seats) {
+  const seatList = [];
+  let emptyRow = 0; // đếm số hàng trống
+  seats.forEach((rowSeats, rowIndex) => {
+    let colCount = 1; 
+    let couple = 0;
+    
+    const rowLetter = String.fromCharCode(65 + rowIndex - emptyRow); // 65 = 'A' 
+    
+    rowSeats.forEach((seat) => {
+      let seatID = null;
+
+      if (seat.type !== "path") {
+        if (seat.type == "regular") {
+          seatID = `${rowLetter}${colCount}`;
+          colCount++;
+        }
+        if (seat.type == "couple") {
+          seatID = `${rowLetter}${colCount}`;
+
+          if(couple === 0) {
+            couple = 1;
+          } else {
+            colCount++;
+            couple = 0;
+          }
+        }
+      } else {
+        seatID = null;
+      }
+      seatList.push({
+        seatID,              // null nếu là path
+        numRow: seat.numRow,
+        numCol: seat.numCol,
+        type: seat.type,
+        status: 'available',
+        price: seat.price,
+      });
+
+    });
+
+    if(colCount === 1) {
+      emptyRow++;
+    }
+  });
+
+  return seatList;
+}
+
+export const addLayoutWithSeats = async (req, res) => {
+  try {
+    const { numRow, numCol, seats } = req.body;
+    
+    if (!numRow || !numCol || !seats) {
+      return res.status(400).json({ message: "Thiếu dữ liệu layout" });
+    }
+
+    const layoutData = { numRow, numCol };
+
+    // 1. Tạo layout mới
+    const layout = await Layout.addLayout(layoutData);
+
+    const seatList = generateSeatIDs(seats).map(seat => ({ 
+      layoutID: layout.layoutID,  
+      ...seat
+    }));
+
+    // 3. Insert tất cả seats
+    if (seatList.length > 0) {
+      await Seat.addSeat(seatList);
+    }
+
+    res.status(201).json({
+      message: "Tạo layout & seats thành công",
+      layoutID: layout.insertId,
+      seatCount: seatList.length,
+    });
+  } catch (error) {
+    console.error("❌ Lỗi khi tạo layout:", error);
+    res.status(500).json({ message: "Lỗi server khi tạo layout" });
+  }
+};
