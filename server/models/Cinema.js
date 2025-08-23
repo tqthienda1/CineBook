@@ -16,7 +16,6 @@ const cinema = {
   },
 
   async getCinemasByCity(city) {
-    console.log('Fetching cinemas in city:', city);
     const sqlGetCinemasByCity = 'SELECT * FROM cinema WHERE city = ?';
     const [rows] = await connection.promise().execute(sqlGetCinemasByCity, [city]);   
 
