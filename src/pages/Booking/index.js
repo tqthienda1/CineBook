@@ -1,7 +1,6 @@
 import styles from './Booking.module.scss';
 import MovieDeTail from '../../components/MovieDetail';
 import thumbnail from '../../assets/f1_thumbnail.jpg';
-import poster from '../../assets/f1_poster_02.jpg';
 import { FaCirclePlay } from 'react-icons/fa6';
 import SeparateLine from '../../components/SeparateLine';
 import DateSlider from '../../components/DateSlider';
@@ -24,13 +23,15 @@ const Booking = () => {
   const [selectShowtime, setSelectShowtime] = useState();
   const [selectTime, setSelectTime] = useState();
   const [selectCity, setSelectCity] = useState();
+  const [cinemasList, setCinemasList] = useState();
   const [cities, setCities] = useState();
+  const [selectCinema, setSelectCinema] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchMovieInfoAndCities = async () => {
       try {
-        const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}}`, {
+        const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -40,24 +41,29 @@ const Booking = () => {
         if (!res.ok) {
           throw new Error('Lỗi khi lấy phim');
         }
-        console.log(res);
 
         const data = await res.json();
-        console.log(data);
         setMovieInfo(data.movie);
-        setCities(data.cities);
+        setSelectCinema(null);
+        setSelectShowtime(null);
+        if (data.cities) {
+          setCities(data.cities);
+        }
+        if (data.cinema) {
+          setCinemasList(data.cinema);
+        }
       } catch (err) {
         console.error('Fetch movie error:', err);
       }
     };
-    console.log(movieInfo);
     fetchMovieInfoAndCities();
-  }, [movieID]);
+  }, [movieID, selectCity]);
 
-  const handleSelectShowtime = (showtimeIndex, sectionIndex, time) => {
+  const handleSelectShowtime = (showtimeIndex, sectionIndex, time, cinemaName) => {
     setSelectShowtime(showtimeIndex);
     setSelectSectionShowtime(sectionIndex);
     setSelectTime(time);
+    setSelectCinema(cinemaName);
   };
 
   const handleSetDate = (date) => {
@@ -90,11 +96,11 @@ const Booking = () => {
         />
         <div className={styles.margin}></div>
 
-        {selectCity && (
+        {cinemasList && (
           <>
             <SeparateLine text="CINEMA LIST" lineColor={'#fb2b2b'} className={styles.separateLine} />
             <Cinema
-              cinemaList={cinemaInfo}
+              cinemaList={cinemasList}
               onSelectShowtime={handleSelectShowtime}
               selectSectionShowtime={selectSectionShowtime}
               selectShowtime={selectShowtime}
@@ -106,9 +112,9 @@ const Booking = () => {
           <>
             <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine} />
             <Seat
-              movieName={'F1 The Movie'}
+              movieName={movieInfo.name}
               date={pickingDate.toLocaleDateString('vi-VN')}
-              cinemaName={'CineBook Quốc Thanh'}
+              cinemaName={selectCinema}
               time={selectTime}
             />
           </>

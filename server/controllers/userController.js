@@ -1,5 +1,5 @@
-import User from '../models/User.js'
-import Movie from '../models/Movie.js'
+import User from '../models/User.js';
+import Movie from '../models/Movie.js';
 import Cinema from '../models/Cinema.js';
 
 export const getUserById = async (req, res) => {
@@ -10,7 +10,7 @@ export const getUserById = async (req, res) => {
     }
 
     if (user.birthday) {
-      user.birthday = new Date(user.birthday).toISOString().split('T')[0];  
+      user.birthday = new Date(user.birthday).toISOString().split('T')[0];
     }
 
     res.status(200).json(user);
@@ -29,10 +29,9 @@ export const updateUser = async (req, res) => {
     }
 
     const updatedUser = await User.userUpdateUser(userId, fullname, phone, birthday);
-    
-    
+
     if (updatedUser.birthday) {
-      updatedUser.birthday = new Date(updatedUser.birthday).toISOString().split('T')[0];  
+      updatedUser.birthday = new Date(updatedUser.birthday).toISOString().split('T')[0];
     }
 
     if (!updatedUser) {
@@ -43,7 +42,7 @@ export const updateUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
-}
+};
 
 export const getMovieWithCities = async (req, res) => {
   try {
@@ -51,36 +50,36 @@ export const getMovieWithCities = async (req, res) => {
 
     const movie = await Movie.getMovieByID(movieID);
 
-     if (!movie) {
+    if (!movie) {
       return res.status(404).json({ message: 'Không tìm thấy phim' });
     }
-    
+
     if (movie.releaseDay) {
-      movie.releaseDay = new Date(movie.releaseDay).toISOString().split('T')[0];  
+      movie.releaseDay = new Date(movie.releaseDay).toISOString().split('T')[0];
     }
 
-    let response = { movie }
+    let response = { movie };
 
     // lấy thông tin thành phố
     const { city } = req.query;
+    console.log(city);
 
-    if (city) {
+    if (city !== 'undefined') {
       const cinema = await Cinema.getCinemasByCity(city);
-    
+
       if (!cinema) {
         return res.status(404).json({ message: 'Không tìm thấy rạp phim nào trong thành phố này' });
       }
       if (cinema.releaseDay) {
-        cinema.releaseDay = new Date(cinema.releaseDay).toISOString().split('T')[0];  
+        cinema.releaseDay = new Date(cinema.releaseDay).toISOString().split('T')[0];
       }
       response.cinema = cinema;
-
     } else {
       const cities = await Movie.getAllCity();
       if (!cities || cities.length === 0) {
         return res.status(404).json({ message: 'Không tìm thấy thành phố nào' });
       }
-      const citiesMap = cities.map(c => c.city);
+      const citiesMap = cities.map((c) => c.city);
 
       response.cities = citiesMap;
     }
@@ -89,4 +88,4 @@ export const getMovieWithCities = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
-}
+};
