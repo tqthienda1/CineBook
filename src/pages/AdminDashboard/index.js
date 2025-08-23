@@ -423,13 +423,19 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const handleSubmitSeat = async (e) => {
     e.preventDefault();
-    console.log(seatMatrix);
+
+    const combinedData = {
+      ...formData,
+      seats: seatMatrix,
+    };
+
+    console.log(combinedData);
 
     if (formType === 'add') {
       apiRequest({
         url: 'http://localhost:5003/admin/seats',
         method: 'POST',
-        body: JSON.stringify(seatMatrix),
+        body: JSON.stringify(combinedData),
         onSuccess: (newSeat) => {
           setSeatsData((prev) => [...prev, newSeat]);
           showPopup('Add Promotion successfully!');
@@ -440,7 +446,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       apiRequest({
         url: `http://localhost:5003/admin/seats/${formData.seatID}`,
         method: 'PUT',
-        body: JSON.stringify(seatMatrix),
+        body: JSON.stringify(combinedData),
         onSuccess: (editedSeat) => {
           setSeatsData((prev) => prev.map((s) => (String(s.seatID) === String(editedSeat.seatID) ? editedSeat : s)));
           showPopup('Edit Seat successfully!');
@@ -455,8 +461,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const handleSubmitSeatStep = (e) => {
     e.preventDefault();
-    const rows = parseInt(formData.rows, 10);
-    const cols = parseInt(formData.columns, 10);
+    const rows = parseInt(formData.numRow, 10);
+    const cols = parseInt(formData.numCol, 10);
 
     if (!rows || !cols) {
       alert('Vui lòng nhập số dòng/cột hợp lệ!');
@@ -487,7 +493,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'name', label: 'Title', type: 'text' },
       { name: 'category', label: 'Category', type: 'text' },
       { name: 'language', label: 'Language', type: 'text' },
-      { name: 'duration', label: 'Duration', type: 'text' },
+      { name: 'duration', label: 'Duration', type: 'number' },
       { name: 'releaseDay', label: 'Release Day', type: 'date' },
       { name: 'IMDBrating', label: ' IMDB Rating', type: 'number' },
       { name: 'description', label: 'Description', type: 'text' },
@@ -530,8 +536,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     ],
     theaters: [
       { name: 'name', label: 'Theater Name', type: 'text' },
-      { name: 'seats', label: 'Seats', type: 'number' },
-      { name: 'location', label: 'Location', type: 'text' },
+      {
+        name: 'cinema',
+        label: 'Cinema',
+        type: 'select',
+        options: cinemasData.map((item) => ({ value: item.cinemaName, label: item.cinemaName })),
+      },
     ],
     promotions: [
       { name: 'title', label: 'Title', type: 'text' },
@@ -544,13 +554,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         name: 'city',
         label: 'City',
         type: 'select',
-        options: [cityOptions],
+        options: cityOptions,
       },
       { name: 'phone', label: 'Phone Number', type: 'text' },
     ],
     seats: [
-      { name: 'rows', label: 'Number of rows', type: 'number' },
-      { name: 'columns', label: 'Number of columns', type: 'number' },
+      { name: 'numRow', label: 'Number of rows', type: 'number' },
+      { name: 'numCol', label: 'Number of columns', type: 'number' },
     ],
   };
 
@@ -1057,8 +1067,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                         >
                           <option value="">-- Select --</option>
                           {field.options?.map((opt) => (
-                            <option key={opt} value={opt}>
-                              {opt}
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
                             </option>
                           ))}
                         </select>
@@ -1113,7 +1123,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                         }}
                         className={clsx(styles.formInput, { [styles.inputWarning]: !!warning })}
                       />
-
                       {warning && <span className={styles.warningText}>{warning}</span>}
                     </div>
                   </div>
@@ -1202,6 +1211,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                             setRegularPrice('');
                             setCouplePrice('');
                             setSeatType('regular');
+                            setWarning('');
                           }}
                         >
                           Submit Seats
@@ -1212,6 +1222,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                             setRegularPrice('');
                             setCouplePrice('');
                             setSeatType('regular');
+                            setWarning('');
                           }}
                         >
                           Back
