@@ -201,7 +201,10 @@ GET http://localhost:5003/user/movies/1?city=Ho Chi Minh City
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU4NTkwMDQsImV4cCI6MTc1NTg2MjYwNH0.74Lhlt0gcJ80H5-l62_nInVf40Om1-nWH_VoiyRtHu0
 
-
+###
+GET http://localhost:5003/user/movies/search?name=R
+Content-Type: application/json  
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTU5NTUwMTEsImV4cCI6MTc1NTk1ODYxMX0.O34gXSO3qcuoO7j0VlgjYiZWe5CuPtEHkzqR4YuSxEU
 
 ### 
 GET http://localhost:5003/user/profile
