@@ -1,3 +1,4 @@
+import { getMovieByName } from '../controllers/userController.js';
 import connection from '../db.js';
 
 const Movie = {
@@ -80,6 +81,16 @@ const Movie = {
     `;
     const [rows] = await connection.promise().execute(sql, [movieID]);
     return rows[0] || null;
+  },
+
+  async getMovieByName(name) {
+    const sql = `
+      SELECT *
+      FROM movie 
+      WHERE name LIKE ?
+    `;
+    const [rows] = await connection.promise().execute(sql, [`%${name}%`]);
+    return rows;
   },
 
   async createMovie(movieData) {
