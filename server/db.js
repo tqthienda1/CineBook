@@ -230,22 +230,22 @@ connection.connect(async (err) => {
           FOREIGN KEY (layoutID) REFERENCES layout(layoutID) ON DELETE CASCADE
         )
       `
-    }
-    // {
-    //   name: 'showtime',
-    //   sql: `
-    //     CREATE TABLE IF NOT EXISTS showtime (
-    //       showtimeID INT AUTO_INCREMENT PRIMARY KEY,
-    //       movieID INT NOT NULL,
-    //       roomID INT NOT NULL,
-    //       startTime DATETIME NOT NULL,
-    //       endTime DATETIME NOT NULL,
+    },
+    {
+      name: 'showtime',
+      sql: `
+        CREATE TABLE IF NOT EXISTS showtime (
+          showtimeID INT AUTO_INCREMENT PRIMARY KEY,
+          movieID INT NOT NULL,
+          roomID INT NOT NULL,
+          startTime DATETIME NOT NULL,
+          endTime DATETIME NOT NULL,
 
-    //       FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
-    //       FOREIGN KEY (roomID) REFERENCES cinema_room(roomID) ON DELETE CASCADE
-    //     )
-    //   `
-    // }
+          FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
+          FOREIGN KEY (roomID) REFERENCES cinema_room(roomID) ON DELETE CASCADE
+        )
+      `
+    }
     
 
   ];

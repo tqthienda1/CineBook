@@ -333,3 +333,11 @@ export const deleteCinema = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error: err });
   }
 }
+
+// Quản lý layout
+
+
+// export const Layout = async (req, res) => { 
+//   try {
+
+//   }
