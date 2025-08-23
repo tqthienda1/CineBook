@@ -8,7 +8,6 @@ import VerticalLine from '../VerticalLine';
 import clsx from 'clsx';
 import Dropdown from '../Dropdown';
 
-const citiesList = ['Ho Chi Minh City', 'Ha Noi', 'Da Nang'];
 
 const DateSlider = ({ pickingDate, onSetDate, pickingDay, onSelectCity, cities }) => {
   const today = new Date();
