@@ -41,7 +41,7 @@ const ShowtimeSection = ({
                   ? styles.selectedShowtime
                   : ''
               }
-              onClick={() => handleSelectShowtime(index, sectionShowtimeIndex, item.time)}
+              onClick={() => handleSelectShowtime(index, sectionShowtimeIndex, item.time, cinemaName)}
               time={item.time}
               type={item.type}
             />
