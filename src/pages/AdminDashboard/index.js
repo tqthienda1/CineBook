@@ -31,11 +31,15 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [promotionsData, setPromotionsData] = useState([]);
   const [cinemasData, setCinemasData] = useState([]);
   const [seatsData, setSeatsData] = useState([]);
-  const priceInputRef = useRef(null);
   const [warning, setWarning] = useState('');
-
-  const [seatPrice, setSeatPrice] = useState('');
+  const [regularPrice, setRegularPrice] = useState('');
+  const [couplePrice, setCouplePrice] = useState('');
   const [seatType, setSeatType] = useState('regular');
+  const [cityOptions, setCityOptions] = useState([]);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+
+  const priceInputRef = useRef(null);
+
   const typeClass = {
     path: styles.pathSeat,
     regular: styles.regularSeat,
@@ -66,12 +70,32 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       }
     };
 
+    const fetchCities = async () => {
+      try {
+        const res = await fetch(
+          'https://provinces.open-api.vn/api/v2/p/?fbclid=IwY2xjawMWxA1leHRuA2FlbQIxMABicmlkETFsQzVKM2tqUTdYdmRKWHhrAR4BOfVBmcXim21IrDDH5D-oEvsziCYcScOjRyIXttVxDBL4wZAqF06MXj69KA_aem__pa7t-2pZAuF4kFjvUW8mA',
+        );
+        const data = await res.json();
+
+        const options = data.map((city) => ({
+          label: city.name,
+          value: city.code,
+        }));
+
+        setCityOptions(options);
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    };
+
     fetchData('http://localhost:5003/admin/movies', setRecentFilms, 'Error to fetch movies data!');
     fetchData('http://localhost:5003/admin/users', setUsersData, 'Error to fetch users data!');
     fetchData('http://localhost:5003/admin/cinemas', setCinemasData, 'Error to fetch cinemas data!');
     fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
     fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
     fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
+
+    fetchCities();
   }, []);
 
   const statsData = [
@@ -399,16 +423,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const handleSubmitSeat = async (e) => {
     e.preventDefault();
-    const combinedData = {
-      ...formData,
-      layout: seatMatrix,
-    };
+    console.log(seatMatrix);
 
     if (formType === 'add') {
       apiRequest({
         url: 'http://localhost:5003/admin/seats',
         method: 'POST',
-        body: JSON.stringify(combinedData),
+        body: JSON.stringify(seatMatrix),
         onSuccess: (newSeat) => {
           setSeatsData((prev) => [...prev, newSeat]);
           showPopup('Add Promotion successfully!');
@@ -417,9 +438,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       });
     } else {
       apiRequest({
-        url: `http://localhost:5003/admin/Seats/${formData.seatID}`,
+        url: `http://localhost:5003/admin/seats/${formData.seatID}`,
         method: 'PUT',
-        body: JSON.stringify(combinedData),
+        body: JSON.stringify(seatMatrix),
         onSuccess: (editedSeat) => {
           setSeatsData((prev) => prev.map((s) => (String(s.seatID) === String(editedSeat.seatID) ? editedSeat : s)));
           showPopup('Edit Seat successfully!');
@@ -476,7 +497,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'ageLimit', label: 'Age Limit', type: 'number' },
       { name: 'posterURL', label: 'Poster', type: 'text' },
       { name: 'backdropURL', label: 'Back Drop', type: 'text' },
-      { name: 'status', label: 'Status', type: 'text' },
+      { name: 'trailerURL', label: 'Trailer', type: 'text' },
+      {
+        name: 'status',
+        label: 'Status',
+        type: 'select',
+        options: ['Coming Soon', 'Now Showing', 'Ended'],
+      },
     ],
     showtimes: [
       { name: 'movie', label: 'Movie', type: 'text' },
@@ -486,9 +513,21 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     addusers: [
       { name: 'email', label: 'Email', type: 'text' },
       { name: 'password', label: 'Password', type: 'text' },
-      { name: 'role', label: 'Role', type: 'text' },
+      {
+        name: 'role',
+        label: 'Role',
+        type: 'select',
+        options: ['Admin', 'User'],
+      },
     ],
-    editusers: [{ name: 'role', label: 'Role', type: 'text' }],
+    editusers: [
+      {
+        name: 'role',
+        label: 'Role',
+        type: 'select',
+        options: ['Admin', 'User'],
+      },
+    ],
     theaters: [
       { name: 'name', label: 'Theater Name', type: 'text' },
       { name: 'seats', label: 'Seats', type: 'number' },
@@ -501,7 +540,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     cinemas: [
       { name: 'cinemaName', label: 'Name', type: 'text' },
       { name: 'address', label: 'Address', type: 'text' },
-      { name: 'city', label: 'City', type: 'text' },
+      {
+        name: 'city',
+        label: 'City',
+        type: 'select',
+        options: [cityOptions],
+      },
       { name: 'phone', label: 'Phone Number', type: 'text' },
     ],
     seats: [
@@ -1003,19 +1047,36 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                   {formConfigs[entity]?.map((field) => (
                     <label key={field.name} className={styles.formGroup}>
                       <span className={styles.formLabel}>{field.label}:</span>
-                      <input
-                        className={styles.formInput}
-                        type={field.type}
-                        name={field.name}
-                        value={formData[field.name] || ''}
-                        onChange={(e) => handleChange(field, e)}
-                        required
-                      />
+                      {field.type === 'select' ? (
+                        <select
+                          className={styles.formInput}
+                          name={field.name}
+                          value={formData[field.name] || ''}
+                          onChange={(e) => handleChange(field, e)}
+                          required
+                        >
+                          <option value="">-- Select --</option>
+                          {field.options?.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          className={styles.formInput}
+                          type={field.type}
+                          name={field.name}
+                          value={formData[field.name] || ''}
+                          onChange={(e) => handleChange(field, e)}
+                          required
+                        />
+                      )}
                     </label>
                   ))}
                   <div className={styles.formActions}>
                     <button className={styles.submitBtn} type="submit">
-                      Next
+                      {entity === 'seats' ? 'Next' : formType === 'edit' ? 'Edit' : 'Add'}
                     </button>
                     <button className={styles.cancelBtn} type="button" onClick={closeForm}>
                       Cancel
@@ -1031,105 +1092,131 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                       value={seatType}
                       onChange={(e) => {
                         setSeatType(e.target.value);
-                        setSeatPrice('');
                         setWarning('');
                       }}
                     >
                       <option value="regular">Regular</option>
                       <option value="couple">Couple</option>
                     </select>
-                    <input
-                      ref={priceInputRef}
-                      placeholder="Enter price"
-                      value={seatPrice}
-                      onChange={(e) => {
-                        setSeatPrice(e.target.value);
-                        setWarning('');
-                      }}
-                      className={clsx({ [styles.inputWarning]: !!warning })}
-                    />
+                    <div className={styles.inputWrapper}>
+                      <input
+                        ref={priceInputRef}
+                        placeholder="Enter price"
+                        value={seatType === 'regular' ? regularPrice : couplePrice}
+                        onChange={(e) => {
+                          if (seatType === 'regular') {
+                            setRegularPrice(e.target.value);
+                          } else {
+                            setCouplePrice(e.target.value);
+                          }
+                          setWarning('');
+                        }}
+                        className={clsx(styles.formInput, { [styles.inputWarning]: !!warning })}
+                      />
+
+                      {warning && <span className={styles.warningText}>{warning}</span>}
+                    </div>
                   </div>
-                  <div className={styles.seatMatrix}>
-                    {seatMatrix.map((rowArr, rowIndex) => (
-                      <div key={rowIndex} className={styles.row}>
-                        {rowArr.map((seat, colIndex) => (
-                          <button
-                            key={colIndex}
-                            className={clsx(styles.seatBtn, typeClass[seat.type], {
-                              [styles.selected]: seat.type !== null,
-                            })}
-                            onClick={() => {
-                              // Nếu chưa nhập giá thì cảnh báo và không làm gì
-                              if (!seatPrice) {
-                                setWarning('Vui lòng nhập giá trước khi chọn ghế');
-                                priceInputRef.current?.focus();
-                                return;
-                              }
-
-                              const newMatrix = seatMatrix.map((row) => [...row]);
-
-                              if (seatType === 'couple') {
-                                const rightSeat = newMatrix[rowIndex][colIndex + 1];
-
-                                if (seat.type === 'coupleLeft' && rightSeat?.type === 'coupleRight') {
-                                  // Bỏ chọn couple
-                                  newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
-                                  newMatrix[rowIndex][colIndex + 1] = { ...rightSeat, type: 'path', price: '' };
-                                } else if (
-                                  seat.type === 'coupleRight' &&
-                                  newMatrix[rowIndex][colIndex - 1]?.type === 'coupleLeft'
-                                ) {
-                                  // Bỏ chọn couple từ ghế bên phải
-                                  const leftSeat = newMatrix[rowIndex][colIndex - 1];
-                                  newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
-                                  newMatrix[rowIndex][colIndex - 1] = { ...leftSeat, type: 'path', price: '' };
-                                } else if (rightSeat && rightSeat.type === 'path') {
-                                  // Tạo couple mới
-                                  newMatrix[rowIndex][colIndex] = { ...seat, type: 'coupleLeft', price: seatPrice };
-                                  newMatrix[rowIndex][colIndex + 1] = {
-                                    ...rightSeat,
-                                    type: 'coupleRight',
-                                    price: seatPrice,
-                                  };
+                  <div onMouseDown={() => setIsMouseDown(true)} onMouseUp={() => setIsMouseDown(false)}>
+                    <div className={styles.seatMatrix}>
+                      {seatMatrix.map((rowArr, rowIndex) => (
+                        <div key={rowIndex} className={styles.row}>
+                          {rowArr.map((seat, colIndex) => (
+                            <button
+                              key={colIndex}
+                              className={clsx(styles.seatBtn, typeClass[seat.type], {
+                                [styles.selected]: seat.type !== null,
+                              })}
+                              onClick={() => {
+                                if (seatType === 'regular' && !regularPrice) {
+                                  setWarning('Please enter price for regular seat before choose!');
+                                  priceInputRef.current?.focus();
+                                  priceInputRef.current?.select();
+                                  return;
                                 }
-                              } else {
-                                // Regular hoặc Path
-                                if (seat.type !== 'path') {
-                                  newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
-                                } else {
-                                  newMatrix[rowIndex][colIndex] = { ...seat, type: seatType, price: seatPrice };
-                                }
-                              }
 
-                              setSeatMatrix(newMatrix);
-                            }}
-                          >
-                            {seat.type === 'path'
-                              ? 'P'
-                              : seat.type === 'regular'
-                              ? 'R'
-                              : seat.type === 'coupleLeft'
-                              ? 'C'
-                              : seat.type === 'coupleRight'
-                              ? 'P'
-                              : ''}
-                          </button>
-                        ))}
+                                if (seatType === 'couple' && !couplePrice) {
+                                  setWarning('Please enter price for couple seat before choose!');
+                                  priceInputRef.current?.focus();
+                                  priceInputRef.current?.select();
+                                  return;
+                                }
+
+                                const newMatrix = seatMatrix.map((row) => [...row]);
+
+                                if (seatType === 'couple') {
+                                  const rightSeat = newMatrix[rowIndex][colIndex + 1];
+
+                                  if (seat.type === 'coupleLeft' && rightSeat?.type === 'coupleRight') {
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
+                                    newMatrix[rowIndex][colIndex + 1] = { ...rightSeat, type: 'path', price: '' };
+                                  } else if (
+                                    seat.type === 'coupleRight' &&
+                                    newMatrix[rowIndex][colIndex - 1]?.type === 'coupleLeft'
+                                  ) {
+                                    const leftSeat = newMatrix[rowIndex][colIndex - 1];
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
+                                    newMatrix[rowIndex][colIndex - 1] = { ...leftSeat, type: 'path', price: '' };
+                                  } else if (rightSeat && rightSeat.type === 'path') {
+                                    // Thêm ghế couple
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'coupleLeft', price: couplePrice };
+                                    newMatrix[rowIndex][colIndex + 1] = {
+                                      ...rightSeat,
+                                      type: 'coupleRight',
+                                      price: couplePrice,
+                                    };
+                                  }
+                                } else if (seatType === 'regular') {
+                                  // Logic ghế thường
+                                  if (seat.type === 'regular') {
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
+                                  } else {
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'regular', price: regularPrice };
+                                  }
+                                }
+
+                                setSeatMatrix(newMatrix);
+                              }}
+                            >
+                              {seat.type === 'path'
+                                ? 'P'
+                                : seat.type === 'regular'
+                                ? 'R'
+                                : seat.type === 'coupleLeft'
+                                ? 'C'
+                                : seat.type === 'coupleRight'
+                                ? 'P'
+                                : ''}
+                            </button>
+                          ))}
+                        </div>
+                      ))}
+                      <div className={styles.formActions}>
+                        <button
+                          style={{
+                            background: '#007bff',
+                            color: '#fff',
+                          }}
+                          onClick={(e) => {
+                            handleSubmitSeat(e);
+                            setRegularPrice('');
+                            setCouplePrice('');
+                            setSeatType('regular');
+                          }}
+                        >
+                          Submit Seats
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSeatStep(1);
+                            setRegularPrice('');
+                            setCouplePrice('');
+                            setSeatType('regular');
+                          }}
+                        >
+                          Back
+                        </button>
                       </div>
-                    ))}
-                    <div className={styles.formActions}>
-                      <button
-                        style={{
-                          background: '#007bff',
-                          color: '#fff',
-                        }}
-                        onClick={(e) => {
-                          handleSubmitSeat(e);
-                        }}
-                      >
-                        Submit Seats
-                      </button>
-                      <button onClick={() => setSeatStep(1)}>Back</button>
                     </div>
                   </div>
                 </>

@@ -364,8 +364,6 @@
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  // width: 600px;
-  // max-width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
   animation: fadeIn 0.3s ease;
@@ -493,13 +491,27 @@
 
 .chooseBox {
   display: flex;
-  .inputWarning {
-    border: 1px solid red;
-  }
+  flex-direction: column;
+  align-items: left;
+  justify-content: center;
+  width: 100px;
+}
 
-  .warningText {
-    color: red;
-    font-size: 12px;
-    margin-left: 4px;
-  }
+.inputWarning {
+  border: 2px solid red;
+  width: 150px;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  width: 400px;
+  gap: 10px;
+}
+
+.warningText {
+  width: 600px;
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 4px;
 }
