@@ -16,7 +16,7 @@
 .movieContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, minmax(auto, auto));
+  
   gap: 5rem;
   place-content: center;
 }

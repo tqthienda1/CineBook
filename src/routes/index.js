@@ -10,6 +10,7 @@ import Promotion from '../pages/Promotion';
 import DefaultLayout from '../components/Layout/DefaultLayout';
 import HeaderOnlyLayout from '../components/Layout/HeaderOnlyLayout';
 import AdminLayout from '../components/Layout/AdminLayout';
+import Search from '../pages/Search';
 
 const publicRoutes = [
   { path: '/', component: Home, layout: DefaultLayout },
@@ -19,6 +20,7 @@ const publicRoutes = [
   { path: '/movies', component: Movies, layout: DefaultLayout },
   { path: '/aboutus', component: AboutUs, layout: DefaultLayout },
   { path: '/promotions', component: Promotion, layout: DefaultLayout },
+  { path: '/search', component: Search, layout: DefaultLayout },
 ];
 
 const userRoutes = [{ path: '/userprofile', component: UserProfile, layout: DefaultLayout }];
