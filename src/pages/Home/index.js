@@ -20,12 +20,6 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const navigate = useNavigate();
 
-  const banners = [
-    <Banner movieName="jurassic world rebirth" imgSource={banner1} />,
-    <Banner movieName="lilo & stitch" imgSource={banner2} />,
-    <Banner movieName="Demon Slayer: Infinity Castle" imgSource={banner3} />,
-  ];
-
   const promotionCards = [
     <PromotionCard imgSource={discount1} />,
     <PromotionCard imgSource={discount2} />,
@@ -39,6 +33,11 @@ const Home = () => {
   const [movies, setMovies] = useState([]);
   const today = new Date();
   const [activeTab, setActiveTab] = useState('showing');
+
+  const banners = movies
+    .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
+    .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay))
+    .map((film) => <Banner movieName={film.name} imgSource={`/assets/${film.backdropURL}`} />);
 
   const showingMovies = movies
     .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)

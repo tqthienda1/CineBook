@@ -9,11 +9,6 @@ import Seat from '../../components/Seat';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 
-const cinemaInfo = [
-  { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
-  { cinemaName: 'CineBook Quốc Thanh', address: '271 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Thành Phố Hồ Chí Minh' },
-];
-
 const Booking = () => {
   const { movieID } = useParams();
   const [movieInfo, setMovieInfo] = useState(null);
@@ -79,7 +74,7 @@ const Booking = () => {
     return (
       <div className={styles.container}>
         <div className={styles.thumbnailWrapper}>
-          <img className={styles.thumbnail} src={thumbnail} alt="" />
+          <img className={styles.thumbnail} src={`/assets/${movieInfo.backdropURL}`} alt="" />
           <FaCirclePlay className={styles.playButton} />
         </div>
         <MovieDeTail {...movieInfo} />
