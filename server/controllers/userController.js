@@ -89,3 +89,31 @@ export const getMovieWithCities = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error });
   }
 };
+
+export const getMovieByName = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    if (!name) {
+      const movie = getMovies();
+      res.status(200).json(movie);
+    }
+
+    const movies = await Movie.getMovieByName(name);
+
+    if (!movies || movies.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy phim nào với tên đã cho' });
+    }
+
+    const formattedMovies = movies.map((movie) => {
+      if (movie.releaseDay) {
+        movie.releaseDay = new Date(movie.releaseDay).toISOString().split('T')[0];
+      }
+      return movie;
+    });
+
+    res.status(200).json(formattedMovies);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server', error });
+  }
+}
