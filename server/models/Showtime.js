@@ -24,7 +24,22 @@ const showtime = {
     const [rows] = await connection.promise().execute(sqlGetAllShowtime);
     
     return rows;
+  },
+
+  async getShowtimeForUser(showtimeData) {
+    const { cinemaID, movieID, showDate } = showtimeData
+    console.log(showtimeData);
+    const sqlGetShowtime = `
+      SELECT * 
+      FROM showtime
+      WHERE cinemaID = ? AND movieID = ? AND DATE(showDate) = ?  
+    `;
+
+    const [result] = await connection.promise().execute(sqlGetShowtime, [cinemaID, movieID, showDate]);
+
+    return result.length > 0 ? result : null
   }
+
 
 }
 
