@@ -48,6 +48,7 @@ const Home = () => {
         movieName={film.name}
         imgSource={`/assets/${film.posterURL}`}
         movieID={film.movieID}
+        movieTrailer={film.trailerURL}
       />
     ));
 
@@ -60,6 +61,7 @@ const Home = () => {
         movieName={film.name}
         imgSource={`/assets/${film.posterURL}`}
         movieID={film.movieID}
+        movieTrailer={film.trailerURL}
       />
     ));
 
