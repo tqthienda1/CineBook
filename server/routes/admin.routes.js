@@ -8,7 +8,7 @@ import {  getMovies, addMovie, editMovie, deleteMovie,
           addCinema, getAllCinemas, updateCinema, deleteCinema, getCinemaById,
           addLayoutWithSeats, getLayoutWithSeats, deleteLayoutWithSeats, getAllLayouts, updateLayoutWithSeats, getLayoutWithSeatsByRoomID,
           addRoom, getRoomByID, deleteRoom, updateRoom, getAllRoom,
-          addShowtime, getAllShowtime, deleteShowtime, getShowtimeByRoomID,
+          addShowtime, getAllShowtime, deleteShowtime, getShowtimeByRoomID, updateShowtime,
         } from '../controllers/adminController.js';
 
 
@@ -52,4 +52,5 @@ router.post('/showtimes', verifyToken, checkAdminRole, addShowtime);
 router.get('/showtimes', verifyToken, checkAdminRole, getAllShowtime);
 router.get('/showtimes/room/:roomID', verifyToken, checkAdminRole, getShowtimeByRoomID);
 router.delete('/showtimes/:showtimeID', verifyToken, checkAdminRole, deleteShowtime);
+router.put('/showtimes/:showtimeID', verifyToken, checkAdminRole, updateShowtime);
 export default router;

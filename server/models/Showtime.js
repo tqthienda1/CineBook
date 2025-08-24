@@ -53,7 +53,6 @@ const showtime = {
     return result;
   },
   
-
   async deleteShowtime(showtimeID) {
     const sqlDelete = `
       DELETE 
@@ -68,6 +67,29 @@ const showtime = {
     }
 
     return showtimeID;
+  },
+
+  async updateShowtime(showtimeData) {
+    const { showtimeID, movieID, roomID, cinemaID, showDate, startTime, endTime } = showtimeData;
+
+    const sqlUpdate = `
+      UPDATE showtime
+      SET movieID = ?,
+          roomID = ?,
+          cinemaID = ?,
+          showDate = ?,
+          startTime = ?,
+          endTime = ?
+      WHERE showtimeID = ?
+    `;
+
+    const [result] = await connection.promise().execute(sqlUpdate, [movieID, roomID, cinemaID, showDate, startTime, endTime, showtimeID]);
+    
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return showtimeData;
   }
 }
 

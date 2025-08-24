@@ -765,4 +765,38 @@ export const deleteShowtime = async (req, res) => {
   }
 }
 
+export const updateShowtime = async (req, res) => {
+  try {
+    const { showtimeID } = req.params;
+    const { movieID, roomID, cinemaID, showDate, startTime, endTime } = req.body;
 
+    if (!showtimeID) {
+      return res.status(400).json({ message: "Thiếu showtimeID" });
+    }
+    if (!movieID || !roomID || !cinemaID || !showDate || !startTime || !endTime) {
+      return res.status(400).json({ message: "Thiếu thông tin bắt buộc" });
+    }
+
+    const showtimeData = { showtimeID, movieID, roomID, cinemaID, showDate, startTime, endTime };
+    const updatedShowtime = await Showtime.updateShowtime(showtimeData);
+
+    if (!updatedShowtime) {
+      return res.status(404).json({ message: "Không tìm thấy suất chiếu để cập nhật" });
+    } 
+
+
+    if(updatedShowtime) {
+      updatedShowtime.showDate = new Date(updatedShowtime.showDate).toISOString().split('T')[0];
+    }
+
+    res.status(200).json(updatedShowtime);
+  } catch (err) {
+    if (err.code === "ER_NO_REFERENCED_ROW_2") {
+      return res.status(400).json({
+        message: "roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu",
+        error: err.sqlMessage,
+      });
+    }
+    res.status(500).json({ message: "Lỗi khi cập nhật suất chiếu", error: err });
+  }
+}
