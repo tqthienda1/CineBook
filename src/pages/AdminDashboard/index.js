@@ -94,6 +94,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
     fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
     fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
+    fetchData('http://localhost:5003/admin/layouts', setSeatsData, 'Error to fetch layouts data!');
+    console.log(seatsData);
 
     fetchCities();
   }, []);
@@ -439,7 +441,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         : `http://localhost:5003/admin/layouts/${formData.seatID}`;
 
     const method = formType === 'add' ? 'POST' : 'PUT';
-
     // Gọi apiRequest
     apiRequest({
       url,
@@ -447,14 +448,15 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       body: combinedData, // để nguyên object, apiRequest sẽ stringify
       onSuccess: (responseData) => {
         if (formType === 'add') {
-          setSeatsData((prev) => [...prev, responseData]);
+          setSeatsData((prev) => [...prev, combinedData]);
           showPopup('Add Seat successfully!');
         } else {
           setSeatsData((prev) =>
-            prev.map((s) => (String(s.seatID) === String(responseData.seatID) ? responseData : s)),
+            prev.map((s, index) => (String(s.seatID) === String(responseData.seatID) ? combinedData : s)),
           );
           showPopup('Edit Seat successfully!');
         }
+        console.log(seatsData);
         closeForm();
       },
     });
@@ -635,8 +637,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                     {film.category.join(', ')} • {film.duration} mins
                   </p>
                 </div>
-                <span className={`${styles.status} ${film.status === 'Showing' ? styles.active : styles.inactive}`}>
-                  {film.status}
+                <span
+                  className={`${styles.status} ${
+                    new Date(film.releaseDay) <= new Date() ? styles.active : styles.inactive
+                  }`}
+                >
+                  {new Date(film.releaseDay) > new Date() ? 'Up Coming' : 'Showing'}
                 </span>
               </div>
             ))}
@@ -997,9 +1003,78 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <thead>
             <tr>
               <th>Layout</th>
+              <th>Rows</th>
+              <th>Columns</th>
+              <th>Layout Detail</th>
               <th>Actions</th>
             </tr>
           </thead>
+          <tbody>
+            {seatsData.map((seat) => (
+              <tr key={seat.seatID}>
+                <td style={{ width: '30%' }}>{seat.seatID}</td>
+                <td style={{ width: '15%' }}>{seat.rowNum}</td>
+                <td style={{ width: '15%' }}>{seat.colNum}</td>
+                <td>
+                  <button
+                    key={seat.seatID}
+                    style={{
+                      width: '50px',
+                      height: '50px',
+                      margin: '2px',
+                      backgroundColor: seat.type === 'path' ? '#ccc' : '#4caf50',
+                    }}
+                    onClick={() => {
+                      seatsData.map((layout, i) => (
+                        <div key={i} style={{ marginBottom: '20px' }}>
+                          <h4>Layout {i + 1}</h4>
+                          <table>
+                            <tbody>
+                              {layout.seats.map((row, rIndex) => (
+                                <tr key={rIndex}>
+                                  {row.map((seat, cIndex) => (
+                                    <td
+                                      key={cIndex}
+                                      style={{
+                                        width: '30px',
+                                        height: '30px',
+                                        textAlign: 'center',
+                                        border: '1px solid black',
+                                        backgroundColor:
+                                          seat.type === 'regular'
+                                            ? '#4caf50'
+                                            : seat.type.includes('couple')
+                                            ? '#ff9800'
+                                            : '#e0e0e0',
+                                      }}
+                                    >
+                                      {seat.type[0].toUpperCase()}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      ));
+                    }}
+                  >
+                    {seat.type !== 'path' ? seat.price : ''}
+                  </button>
+                </td>
+                <td>
+                  <div className={styles.actionBtns}>
+                    <button className={styles.editBtn} onClick={() => openForm('edit', 'seats', seat)}>
+                      Edit
+                    </button>
+                    <button className={styles.deleteBtn} onClick={() => handleDeleteMovie(seat.seatID)}>
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>
@@ -1023,6 +1098,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         return renderCinemaManagement();
       case 'seats':
         return renderSeatManagement();
+
       default:
         return renderDashboard();
     }
