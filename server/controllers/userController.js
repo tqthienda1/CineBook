@@ -40,9 +40,9 @@ export const updateUser = async (req, res) => {
 
     res.status(200).json({ message: 'Cập nhật thành công', user: updatedUser });
   } catch (error) {
-    if (error.code === "ER_NO_REFERENCED_ROW_2") {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
       return res.status(400).json({
-        message: "roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu",
+        message: 'roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu',
         error: error.sqlMessage,
       });
     }
@@ -53,12 +53,11 @@ export const updateUser = async (req, res) => {
 export const addFavoriteCinema = async (req, res) => {
   try {
     const userID = req.user.id;
-    const { favoriteCinema } = req.body
-    console.log(userID, favoriteCinema)
+    const { favoriteCinema } = req.body;
+    console.log(userID, favoriteCinema);
     if (!favoriteCinema) {
-      return res.status(400).json({message: "Không có thông tin rạp yêu thích"});
+      return res.status(400).json({ message: 'Không có thông tin rạp yêu thích' });
     }
-
 
     const updatedUser = await User.addFavoriteCinema(userID, favoriteCinema);
 
@@ -70,17 +69,17 @@ export const addFavoriteCinema = async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy user để cập nhật hoặc thông tin không có thay đổi' });
     }
 
-    res.status(200).json({ message: 'Cập nhật thành công rạp yêu thích'});
+    res.status(200).json({ message: 'Cập nhật thành công rạp yêu thích' });
   } catch (error) {
-    if (error.code === "ER_NO_REFERENCED_ROW_2") {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
       return res.status(400).json({
-        message: "roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu",
+        message: 'roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu',
         error: error.sqlMessage,
       });
     }
     res.status(500).json({ message: 'Lỗi server', error });
   }
-}
+};
 
 // ---------------------- MOVIE
 export const getMovieWithCities = async (req, res) => {
@@ -154,30 +153,32 @@ export const getMovieByName = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
-}
-
+};
 
 // ------------------------------------------ SHOWTIME
-import Showtime from '../models/Showtime.js'
+import Showtime from '../models/Showtime.js';
 
 export const getShowtimeForUser = async (req, res) => {
   try {
-    const { movieID, cinemaID, showDate } = req.body;
-    
-    if(!movieID || !cinemaID || !showDate) {
-      return res.status(400).json({message: "Thiếu thông tin bắt buộc"});
+    const { movieID, cinemaID, showDate } = req.query;
+    console.log('movieid', movieID);
+    console.log('cinemaid', cinemaID);
+    console.log('date', showDate);
+
+    if (!movieID || !cinemaID || !showDate) {
+      return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
     }
 
     const showtimeData = { movieID, cinemaID, showDate };
     let showtime = await Showtime.getShowtimeForUser(showtimeData);
-   
-    showtime = showtime.map(st => ({
+
+    showtime = showtime.map((st) => ({
       ...st,
-      showDate: new Date(st.showDate).toISOString().split('T')[0]
+      showDate: new Date(st.showDate).toISOString().split('T')[0],
     }));
 
-    res.status(200).json(showtime)
+    res.status(200).json(showtime);
   } catch (err) {
-    res.status(500).json({message: "Lỗi khi tìm kiếm suất chiếu", error: err});
+    res.status(500).json({ message: 'Lỗi khi tìm kiếm suất chiếu', error: err });
   }
-}
+};

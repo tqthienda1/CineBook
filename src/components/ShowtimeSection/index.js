@@ -3,12 +3,11 @@ import { CiLocationOn } from 'react-icons/ci';
 import { FaHeartCirclePlus } from 'react-icons/fa6';
 import Showtime from '../Showtime';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ShowtimeSection = ({
   cinemaName,
   address,
-  showtimesList,
   selectShowtime,
   handleSelectFavorite,
   handleSelectShowtime,
@@ -17,7 +16,36 @@ const ShowtimeSection = ({
   sectionShowtimeIndex,
   selectSectionShowtime,
   cinemaID,
+  pickingDate,
+  movieID,
 }) => {
+  const [showtimesList, setShowtimesList] = useState();
+
+  useEffect(() => {
+    const getShowtimesList = async () => {
+      try {
+        const formattedPickingDate = pickingDate
+          .toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })
+          .replace(/\//g, '-');
+
+        const res = await fetch(
+          `http://localhost:5003/user/showtimes?movieID=${movieID}&cinemaID=${cinemaID}&showDate=${formattedPickingDate}`,
+        );
+
+        const data = await res.json();
+
+        console.log(data);
+      } catch (error) {
+        console.log('Fetch showtimes list error: ', error);
+      }
+    };
+    getShowtimesList();
+  }, [pickingDate]);
+
   return (
     <div className={clsx(styles.col, styles.showtimeSection)}>
       <div className={clsx(styles.row, styles.labelWrapper)}>
@@ -33,22 +61,24 @@ const ShowtimeSection = ({
           </div>
         </div>
       </div>
-      <ul className={styles.showtimesList}>
-        {showtimesList.map((item, index) => (
-          <li key={index}>
-            <Showtime
-              className={
-                index === selectShowtime && sectionShowtimeIndex === selectSectionShowtime
-                  ? styles.selectedShowtime
-                  : ''
-              }
-              onClick={() => handleSelectShowtime(index, sectionShowtimeIndex, item.time, cinemaName)}
-              time={item.time}
-              type={item.type}
-            />
-          </li>
-        ))}
-      </ul>
+      {showtimesList && (
+        <ul className={styles.showtimesList}>
+          {showtimesList.map((item, index) => (
+            <li key={index}>
+              <Showtime
+                className={
+                  index === selectShowtime && sectionShowtimeIndex === selectSectionShowtime
+                    ? styles.selectedShowtime
+                    : ''
+                }
+                onClick={() => handleSelectShowtime(index, sectionShowtimeIndex, item.time, cinemaName)}
+                time={item.time}
+                type={item.type}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
