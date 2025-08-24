@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import styles from './AdminDashboard.module.scss';
 import { jwtDecode } from 'jwt-decode';
 import PopUp from '../../components/PopUp';
 import ShowLayoutDetail from '../../components/ShowLayoutDetail'; // import component mới
+import { generateTimeSlots, getAvailableTimeOptions } from '../../components/GenerateTimeSlot';
 import clsx from 'clsx';
 
 const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout }) => {
@@ -43,7 +44,18 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const priceInputRef = useRef(null);
 
-  const cinemaMap = Object.fromEntries(cinemasData.map((c) => [String(c.cinemaID), c.cinemaName]));
+  const hasConflict = (newStart, runtime, buffer, existingShowtimes) => {
+    const newEnd = newStart + runtime + buffer;
+
+    return existingShowtimes.some((show) => {
+      const showStart = show.startTime; // phút (VD: 17:30 => 1050)
+      const showEnd = show.startTime + show.runtime + show.buffer;
+
+      return !(newEnd <= showStart || newStart >= showEnd); // overlap
+    });
+  };
+
+  const baseTimeSlots = useMemo(() => generateTimeSlots({ start: '09:00', end: '23:30', step: 30, format: '12' }), []);
 
   const typeClass = {
     path: styles.pathSeat,
@@ -69,6 +81,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         }
 
         const data = await res.json();
+        console.log(data);
+
         setter(data);
       } catch (err) {
         console.error(`Fetch error (${url}):`, err);
@@ -81,13 +95,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           'https://provinces.open-api.vn/api/v2/p/?fbclid=IwY2xjawMWxA1leHRuA2FlbQIxMABicmlkETFsQzVKM2tqUTdYdmRKWHhrAR4BOfVBmcXim21IrDDH5D-oEvsziCYcScOjRyIXttVxDBL4wZAqF06MXj69KA_aem__pa7t-2pZAuF4kFjvUW8mA',
         );
         const data = await res.json();
-
         const options = data.map((city) => ({
           label: city.name, // cái hiển thị trong dropdown
           value: city.code, // giá trị khi chọn
         }));
-
-        console.log('options nè:', options);
 
         setCityOptions(options);
       } catch (error) {
@@ -98,7 +109,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     fetchData('http://localhost:5003/admin/movies', setRecentFilms, 'Error to fetch movies data!');
     fetchData('http://localhost:5003/admin/users', setUsersData, 'Error to fetch users data!');
     fetchData('http://localhost:5003/admin/cinemas', setCinemasData, 'Error to fetch cinemas data!');
-    // fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
+    fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
     fetchData('http://localhost:5003/admin/rooms', setTheatersData, 'Error to fetch theaters data!');
     // fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
     fetchData('http://localhost:5003/admin/layouts', setSeatsData, 'Error to fetch layouts data!');
@@ -165,6 +176,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       handleSubmitSeat(e);
     } else if (entityLabels[entity] === 'Room') {
       handleSubmitTheater(e);
+    } else if (entityLabels[entity] === 'Showtime') {
+      handleSubmitShowtime(e);
     } else {
       console.log('No handler for:', entityLabels[entity]);
     }
@@ -354,22 +367,90 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const handleSubmitShowtime = async (e) => {
     e.preventDefault();
 
-    if (formType === 'add') {
-      apiRequest({
-        url: 'http://localhost:5003/admin/showtimes',
-        method: 'POST',
-        body: formData,
-        onSuccess: (newShowtime) => {
-          setShowtimesData((prev) => [...prev, newShowtime]);
-          showPopup('Add Showtime successfully!');
-          closeForm();
-        },
+    const movie = recentFilms.find((m) => String(m.movieID) === String(formData.movie));
+
+    const calculateEndTime = (startTime, duration, buffer = 30) => {
+      if (!startTime || !duration) return null;
+      const [h, m] = startTime.split(':').map(Number);
+      const start = new Date();
+      start.setHours(h, m, 0, 0);
+      const end = new Date(start.getTime() + (duration + buffer) * 60000);
+      return end.toTimeString().slice(0, 8);
+    };
+
+    // ---- 1. Generate danh sách ngày hợp lệ
+    let dates = [];
+    if (formData.dateMode === 'specific') {
+      dates = formData.specificDates || [];
+    } else if (formData.dateMode === 'weekly') {
+      const start = new Date(formData.startDate);
+      const end = new Date(formData.endDate);
+      const selectedDays = formData.daysOfWeek || []; // ví dụ ["monday","wednesday"]
+
+      const dayMap = {
+        sunday: 0,
+        monday: 1,
+        tuesday: 2,
+        wednesday: 3,
+        thursday: 4,
+        friday: 5,
+        saturday: 6,
+      };
+
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const dayName = Object.keys(dayMap).find((k) => dayMap[k] === d.getDay());
+        if (selectedDays.includes(dayName)) {
+          dates.push(d.toISOString().split('T')[0]); // format yyyy-mm-dd
+        }
+      }
+    }
+
+    // ---- 2. Generate tất cả suất chiếu (date x timeSlot)
+    const newShowtimes = [];
+    dates.forEach((date) => {
+      (formData.timeSlots || []).forEach((time) => {
+        newShowtimes.push({
+          movieID: formData.movie,
+          cinemaID: formData.cinema,
+          roomID: formData.room,
+          showDate: date,
+          startTime: time,
+          endTime: calculateEndTime(time, movie?.duration),
+        });
       });
+    });
+
+    console.log('Generated Showtimes:', newShowtimes);
+
+    // ---- 3. Gọi API cho từng suất
+    if (formType === 'add') {
+      for (const payload of newShowtimes) {
+        await apiRequest({
+          url: 'http://localhost:5003/admin/showtimes',
+          method: 'POST',
+          body: payload,
+          onSuccess: (newShowtime) => {
+            setShowtimesData((prev) => [...prev, newShowtime]);
+          },
+        });
+      }
+      showPopup('Add Showtimes successfully!');
+      closeForm();
     } else {
+      const payload = {
+        showtimeID: formData.showtimeID,
+        movieID: formData.movie,
+        cinemaID: formData.cinema,
+        roomID: formData.room,
+        showDate: formData.specificDates?.[0] || formData.startDate,
+        startTime: formData.timeSlots?.[0],
+        endTime: calculateEndTime(formData.timeSlots?.[0], movie?.duration),
+      };
+
       apiRequest({
-        url: `http://localhost:5003/admin/cinemas/${formData.showtimeID}`,
+        url: `http://localhost:5003/admin/showtimes/${formData.showtimeID}`,
         method: 'PUT',
-        body: formData,
+        body: payload,
         onSuccess: (editedShowtime) => {
           setShowtimesData((prev) =>
             prev.map((s) => (String(s.showtimeID) === String(editedShowtime.showtimeID) ? editedShowtime : s)),
@@ -533,9 +614,55 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'trailerURL', label: 'Trailer', type: 'text' },
     ],
     showtimes: [
-      { name: 'movie', label: 'Movie', type: 'text' },
-      { name: 'theater', label: 'Theater', type: 'text' },
-      { name: 'time', label: 'Time', type: 'time' },
+      {
+        name: 'movie',
+        label: 'Movie',
+        type: 'select',
+        options: recentFilms.map((m) => ({
+          value: m.movieID,
+          label: `${m.name} (${m.duration} min)`,
+        })),
+      },
+      {
+        name: 'cinema',
+        label: 'Cinema',
+        type: 'select',
+        options: cinemasData.map((c) => ({
+          value: c.cinemaID,
+          label: c.cinemaName,
+        })),
+      },
+      {
+        name: 'room',
+        label: 'Screening Room',
+        type: 'select',
+        options: [],
+      },
+      {
+        name: 'dateMode',
+        label: 'Date Selection',
+        type: 'radio', // Specific Dates / Weekly Pattern
+        options: [
+          { value: 'specific', label: 'Specific Dates' },
+          { value: 'weekly', label: 'Weekly Pattern' },
+        ],
+      },
+      {
+        name: 'startDate',
+        label: 'Start Date',
+        type: 'date',
+      },
+      {
+        name: 'endDate',
+        label: 'End Date',
+        type: 'date',
+      },
+      {
+        name: 'timeSlots',
+        label: 'Time Selection',
+        type: 'multi-select', // custom component, hiển thị grid giờ
+        options: generateTimeSlots(), // ví dụ 9AM, 10AM, ... 11PM
+      },
     ],
     addusers: [
       { name: 'email', label: 'Email', type: 'text' },
@@ -648,17 +775,44 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       }
     }
 
+    if (entity === 'showtimes' && type === 'edit' && data) {
+      setFormData({
+        movie: data.movie,
+        cinema: data.cinema,
+        room: data.room,
+        dateMode: 'specific',
+        specificDates: data.specificDates,
+        timeSlots: data.timeSlots,
+        showtimeIDs: data.showtimeIDs, // giữ để biết update record nào
+      });
+      return;
+    }
+
     setFormData(data || {});
   };
 
   const handleChange = (field, e) => {
-    let value = e.target.value;
+    const { name, value, checked } = e.target;
 
-    if (field.type === 'number') {
-      value = Number(value);
-    }
+    setFormData((prev) => {
+      if (field.type === 'checkbox-group' || field.type === 'multi-select') {
+        const currentValues = Array.isArray(prev[name]) ? prev[name] : [];
+        return {
+          ...prev,
+          [name]: checked ? [...currentValues, value] : currentValues.filter((v) => v !== value),
+        };
+      }
 
-    setFormData({ ...formData, [field.name]: value });
+      if (field.type === 'number') {
+        return { ...prev, [name]: Number(value) };
+      }
+
+      return {
+        ...prev,
+        [name]: value,
+        ...(field.name === 'cinema' && { room: '' }),
+      };
+    });
   };
 
   const today = new Date();
@@ -844,25 +998,23 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <thead>
             <tr>
               <th>Film</th>
+              <th>Cinema</th>
               <th>Theater</th>
-              <th>Time</th>
-              <th>Status</th>
+              <th>Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {showtimesData.map((showtime) => (
-              <tr key={showtime.id}>
-                <td>{showtime.movie}</td>
-                <td>{showtime.theater}</td>
-                <td>{showtime.time}</td>
-                <td>
-                  <span
-                    className={`${styles.status} ${showtime.status === 'Active' ? styles.active : styles.inactive}`}
-                  >
-                    {showtime.status}
-                  </span>
-                </td>
+              <tr key={showtime.showtimeID}>
+                <td>{showtime.movieID}</td>
+                <td>{showtime.cinemaID}</td>
+                <td>{showtime.roomID}</td>
+                <td>{showtime.showDate}</td>
+                <td>{showtime.startTime}</td>
+                <td>{showtime.endTime}</td>
                 <td>
                   <div className={styles.actionBtns}>
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'showtimes', showtime)}>
@@ -1034,6 +1186,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             <tr>
               <th>Name</th>
               <th>Address</th>
+              <th>City</th>
               <th>Phone</th>
               <th>Number of theaters</th>
               <th>Actions</th>
@@ -1042,8 +1195,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <tbody>
             {cinemasData.map((cinema) => (
               <tr key={cinema.cinemaID}>
-                <td style={{ width: '30%' }}>{cinema.cinemaName}</td>
+                <td style={{ width: '20%' }}>{cinema.cinemaName}</td>
                 <td style={{ width: '15%' }}>{cinema.address}</td>
+                <td style={{ width: '15%' }}>{cinema.city}</td>
                 <td style={{ width: '15%' }}>{cinema.phone}</td>
                 <td style={{ width: '15%' }}>{theatersData.length}</td>
                 <td>
@@ -1169,6 +1323,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                   {formConfigs[entity]?.map((field) => (
                     <label key={field.name} className={styles.formGroup}>
                       <span className={styles.formLabel}>{field.label}:</span>
+
                       {field.type === 'select' ? (
                         <select
                           className={styles.formInput}
@@ -1178,15 +1333,145 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           required
                         >
                           <option value="">-- Select --</option>
-                          {field.options?.map((opt) => (
-                            <option
-                              key={opt.value}
-                              value={field.name === 'cinemaID' || field.name === 'layoutID' ? opt.value : opt.label}
-                            >
-                              {opt.label}
-                            </option>
-                          ))}
+
+                          {field.name === 'room'
+                            ? theatersData
+                                .filter((r) => String(r.cinemaID) === String(formData.cinema))
+                                .map((r) => (
+                                  <option key={r.roomID} value={r.roomID}>
+                                    {`${r.roomName} (${r.capacity} seats)`}
+                                  </option>
+                                ))
+                            : field.name === 'time'
+                            ? getAvailableTimeOptions({
+                                formData,
+                                baseSlots: baseTimeSlots,
+                                showtimesData,
+                                defaultBuffer: 30,
+                              }).map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </option>
+                              ))
+                            : field.options?.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </option>
+                              ))}
                         </select>
+                      ) : field.type === 'radio' ? (
+                        <>
+                          <div className={styles.radioGroup}>
+                            {field.options?.map((opt) => (
+                              <label key={opt.value} className={styles.radioOption}>
+                                <input
+                                  type="radio"
+                                  name={field.name}
+                                  value={opt.value}
+                                  checked={formData[field.name] === opt.value}
+                                  onChange={(e) => handleChange(field, e)}
+                                />
+                                {opt.label}
+                              </label>
+                            ))}
+                          </div>
+
+                          {/* 👇 nếu chọn Weekly Pattern → hiện checkbox thứ trong tuần */}
+                          {formData[field.name] === 'weekly' && (
+                            <div className={styles.checkboxGroup}>
+                              {[
+                                { value: 'monday', label: 'Monday' },
+                                { value: 'tuesday', label: 'Tuesday' },
+                                { value: 'wednesday', label: 'Wednesday' },
+                                { value: 'thursday', label: 'Thursday' },
+                                { value: 'friday', label: 'Friday' },
+                                { value: 'saturday', label: 'Saturday' },
+                                { value: 'sunday', label: 'Sunday' },
+                              ].map((opt) => (
+                                <label key={opt.value} className={styles.checkboxOption}>
+                                  <input
+                                    type="checkbox"
+                                    name="daysOfWeek"
+                                    value={opt.value}
+                                    checked={formData.daysOfWeek?.includes(opt.value)}
+                                    onChange={(e) => handleChange({ name: 'daysOfWeek', type: 'checkbox-group' }, e)}
+                                  />
+                                  {opt.label}
+                                </label>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* 👇 nếu chọn Specific Dates → hiện input chọn nhiều ngày */}
+                          {formData[field.name] === 'specific' && (
+                            <div className={styles.specificDates}>
+                              <input
+                                type="date"
+                                className={styles.formInput}
+                                onChange={(e) => {
+                                  const newDate = e.target.value;
+                                  if (newDate && !formData.specificDates?.includes(newDate)) {
+                                    handleChange(
+                                      { name: 'specificDates', type: 'multi-select' },
+                                      {
+                                        target: {
+                                          value: newDate,
+                                          checked: true,
+                                          name: 'specificDates',
+                                        },
+                                      },
+                                    );
+                                  }
+                                }}
+                              />
+                              <div className={styles.selectedDates}>
+                                {formData.specificDates?.map((d) => (
+                                  <span key={d} className={styles.dateTag}>
+                                    {d}
+                                    <button
+                                      type="button"
+                                      className={styles.removeDateBtn}
+                                      onClick={() =>
+                                        handleChange(
+                                          { name: 'specificDates', type: 'multi-select' },
+                                          {
+                                            target: {
+                                              value: d,
+                                              checked: false,
+                                              name: 'specificDates',
+                                            },
+                                          },
+                                        )
+                                      }
+                                    >
+                                      ×
+                                    </button>
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : field.type === 'multi-select' ? (
+                        <div className={styles.multiSelectGrid}>
+                          {field.options?.map((opt) => (
+                            <label
+                              key={opt.value}
+                              className={`${styles.multiSelectOption} ${
+                                formData[field.name]?.includes(opt.value) ? styles.selected : ''
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                name={field.name}
+                                value={opt.value}
+                                checked={formData[field.name]?.includes(opt.value)}
+                                onChange={(e) => handleChange(field, e)}
+                              />
+                              {opt.label}
+                            </label>
+                          ))}
+                        </div>
                       ) : (
                         <input
                           className={styles.formInput}
