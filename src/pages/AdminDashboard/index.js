@@ -230,6 +230,17 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     });
   };
 
+  const handleDeleteLayout = (layoutID) => {
+    apiRequest({
+      url: `http://localhost:5003/admin/layouts/${layoutID}`,
+      method: 'DELETE',
+      onSuccess: () => {
+        setSeatsData((layout) => layout.filter((p) => p.layoutID !== layoutID));
+        showPopup('Delete Layout successfully!');
+      },
+    });
+  };
+
   const handleSubmitMovie = async (e) => {
     e.preventDefault();
 
@@ -306,6 +317,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const handleSubmitCinema = async (e) => {
     e.preventDefault();
+    console.log(formData);
 
     if (formType === 'add') {
       apiRequest({
@@ -592,11 +604,41 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     setFormData({});
   };
 
-  const openForm = (type, entityName, data = {}) => {
+  const openForm = (type, entity, data = null) => {
     setFormType(type);
-    setEntity(entityName);
-    setFormData(data);
+    setEntity(entity);
     setFormVisible(true);
+
+    if (entity === 'seats') {
+      if (type === 'edit' && data) {
+        const rows = data.numRow;
+        const cols = data.numCol;
+
+        // tạo ma trận từ seats lưu trong DB
+        const matrix = [];
+        for (let r = 0; r < rows; r++) {
+          matrix.push(data.seats.slice(r * cols, (r + 1) * cols));
+        }
+        setSeatMatrix(matrix);
+        setSeatStep(2);
+
+        // 👉 Lấy giá: giả sử regular/couple đều có price
+        const allSeats = data.seats;
+        const foundRegular = allSeats.find((s) => s.type === 'regular');
+        const foundCouple = allSeats.find((s) => s.type === 'coupleLeft');
+        // (chỉ lấy 1 trong cặp left/right là đủ)
+
+        if (foundRegular) setRegularPrice(foundRegular.price);
+        if (foundCouple) setCouplePrice(foundCouple.price);
+      } else {
+        setSeatStep(1);
+        setSeatMatrix([]);
+        setRegularPrice('');
+        setCouplePrice('');
+      }
+    }
+
+    setFormData(data || {});
   };
 
   const handleChange = (field, e) => {
@@ -1018,8 +1060,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           </thead>
           <tbody>
             {seatsData.map((seat) => (
-              <tr key={seat.seatID}>
-                <td style={{ width: '30%' }}>{seat.seatID}</td>
+              <tr key={seat.layoutID}>
+                <td style={{ width: '30%' }}>{seat.layoutID}</td>
                 <td style={{ width: '15%' }}>{seat.numRow}</td>
                 <td style={{ width: '15%' }}>{seat.numCol}</td>
                 <td>
@@ -1028,7 +1070,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                       <td>
                         <button
                           onClick={() => {
-                            console.log('Click show layout:', seat); // thử log ra để check
+                            // thử log ra để check
                             setSelectedLayout(seat);
                             setShowLayoutDetail(true);
                           }}
@@ -1044,7 +1086,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'seats', seat)}>
                       Edit
                     </button>
-                    <button className={styles.deleteBtn} onClick={() => handleDeleteMovie(seat.seatID)}>
+                    <button className={styles.deleteBtn} onClick={() => handleDeleteLayout(seat.layoutID)}>
                       Delete
                     </button>
                   </div>
@@ -1285,6 +1327,18 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           }}
                         >
                           Back
+                        </button>
+                        <button
+                          style={{ background: '#f44336', color: '#fff' }}
+                          onClick={() => {
+                            // Reset toàn bộ về path
+                            const cleared = seatMatrix.map((row) =>
+                              row.map((seat) => ({ ...seat, type: 'path', price: 0 })),
+                            );
+                            setSeatMatrix(cleared);
+                          }}
+                        >
+                          Clear
                         </button>
                       </div>
                     </div>
