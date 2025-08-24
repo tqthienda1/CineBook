@@ -1117,7 +1117,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                       {warning && <span className={styles.warningText}>{warning}</span>}
                     </div>
                   </div>
-                  <div onMouseDown={() => setIsMouseDown(true)} onMouseUp={() => setIsMouseDown(false)}>
+                  <div
+                    style={{ 'justify-content': 'center' }}
+                    onMouseDown={() => setIsMouseDown(true)}
+                    onMouseUp={() => setIsMouseDown(false)}
+                  >
                     <div className={styles.seatMatrix}>
                       {seatMatrix.map((rowArr, rowIndex) => (
                         <div key={rowIndex} className={styles.row}>
