@@ -37,7 +37,7 @@ const Home = () => {
   const banners = movies
     .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
     .sort((a, b) => new Date(b.releaseDay) - new Date(a.releaseDay))
-    .map((film) => <Banner movieName={film.name} imgSource={`/assets/${film.backdropURL}`} movieID={film.movieID} />);
+    .map((film) => <Banner movieName={film.name} imgSource={`/assets/${film.backdropURL}`} movieID={film.movieID} movieTrailer={film.trailerURL} />);
 
   const showingMovies = movies
     .filter((film) => film.releaseDay && new Date(film.releaseDay) < today)
