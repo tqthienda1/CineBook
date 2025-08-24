@@ -47,6 +47,7 @@ const Booking = () => {
         if (data.cinema) {
           setCinemasList(data.cinema);
         }
+        console.log(data);
       } catch (err) {
         console.error('Fetch movie error:', err);
       }
@@ -73,10 +74,12 @@ const Booking = () => {
   if (movieInfo) {
     return (
       <div className={styles.container}>
-        <div className={styles.thumbnailWrapper}>
-          <img className={styles.thumbnail} src={`/assets/${movieInfo.backdropURL}`} alt="" />
-          <FaCirclePlay className={styles.playButton} />
-        </div>
+        <a href={movieInfo.trailerURL} target="_blank">
+          <div className={styles.thumbnailWrapper}>
+            <img className={styles.thumbnail} src={`/assets/${movieInfo.backdropURL}`} alt="" />
+            <FaCirclePlay className={styles.playButton} />
+          </div>
+        </a>
         <MovieDeTail {...movieInfo} />
 
         <div className={styles.margin}></div>
