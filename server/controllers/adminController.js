@@ -32,7 +32,6 @@ export const addMovie = async (req, res) => {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL
@@ -67,7 +66,6 @@ export const addMovie = async (req, res) => {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL
@@ -85,7 +83,7 @@ export const addMovie = async (req, res) => {
     if (err.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ message: 'Phim đã tồn tại' });
     }
-    res.status(500).json({ message: 'Lỗi server', error });
+    res.status(500).json({ message: 'Lỗi server', error: err });
   }
 };
 
@@ -104,7 +102,6 @@ export const editMovie = async (req, res) => {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL
@@ -139,7 +136,6 @@ export const editMovie = async (req, res) => {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL

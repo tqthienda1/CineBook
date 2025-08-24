@@ -14,7 +14,6 @@ const Movie = {
         m.IMDBrating,
         m.description,
         m.ageLimit,
-        m.status,
         m.posterURL,
         m.backdropURL,
         m.trailerURL,
@@ -55,7 +54,6 @@ const Movie = {
         m.IMDBrating,
         m.description,
         m.ageLimit,
-        m.status,
         m.posterURL,
         m.backdropURL,
         trailerURL,
@@ -108,11 +106,11 @@ const Movie = {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL
     } = movieData;
+
 
     const sqlAddCategory = `
       INSERT IGNORE INTO category (categoryName) VALUES (?)
@@ -148,10 +146,10 @@ const Movie = {
 
     // Insert movie chính
     const sqlAddMovie = `
-      INSERT INTO movie (name, language, duration, releaseDay, IMDBrating, description, ageLimit, status, posterURL, backdropURL, trailerURL)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO movie (name, language, duration, releaseDay, IMDBrating, description, ageLimit, posterURL, backdropURL, trailerURL)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
+    
     const [result] = await connection
       .promise()
       .execute(sqlAddMovie, [
@@ -162,10 +160,9 @@ const Movie = {
         IMDBrating,
         description,
         ageLimit,
-        status,
         posterURL,
         backdropURL,
-        trailerURL,
+        trailerURL
       ]);
 
     const sqlAddMovieCategory = `
@@ -214,7 +211,6 @@ const Movie = {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL,
@@ -237,7 +233,6 @@ const Movie = {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL,
@@ -273,7 +268,6 @@ const Movie = {
       IMDBrating=?, 
       description=?, 
       ageLimit=?, 
-      status=?, 
       posterURL=?, 
       backdropURL=?,
       trailerURL = ?
@@ -291,7 +285,6 @@ const Movie = {
         IMDBrating,
         description,
         ageLimit,
-        status,
         posterURL,
         backdropURL,
         trailerURL,
@@ -350,7 +343,6 @@ const Movie = {
       writers,
       actors,
       ageLimit,
-      status,
       posterURL,
       backdropURL,
       trailerURL,
