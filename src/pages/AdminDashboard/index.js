@@ -32,8 +32,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [cinemasData, setCinemasData] = useState([]);
   const [seatsData, setSeatsData] = useState([]);
   const [warning, setWarning] = useState('');
-  const [regularPrice, setRegularPrice] = useState(0);
-  const [couplePrice, setCouplePrice] = useState(0);
+  const [regularPrice, setRegularPrice] = useState();
+  const [couplePrice, setCouplePrice] = useState();
   const [seatType, setSeatType] = useState('regular');
   const [cityOptions, setCityOptions] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -508,12 +508,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       { name: 'posterURL', label: 'Poster', type: 'text' },
       { name: 'backdropURL', label: 'Back Drop', type: 'text' },
       { name: 'trailerURL', label: 'Trailer', type: 'text' },
-      {
-        name: 'status',
-        label: 'Status',
-        type: 'select',
-        options: ['Coming Soon', 'Now Showing', 'Ended'],
-      },
     ],
     showtimes: [
       { name: 'movie', label: 'Movie', type: 'text' },
@@ -546,6 +540,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         type: 'select',
         options: cinemasData.map((item) => ({ value: item.cinemaName, label: item.cinemaName })),
       },
+      // {
+      //   name: 'layout',
+      //   label: 'Layout',
+      //   type: 'select',
+      //   options:
+      // }
     ],
     promotions: [
       { name: 'title', label: 'Title', type: 'text' },
@@ -1118,12 +1118,26 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                         placeholder="Enter price"
                         value={seatType === 'regular' ? regularPrice : couplePrice}
                         onChange={(e) => {
-                          if (seatType === 'regular') {
-                            setRegularPrice(Number(e.target.value));
+                          const value = e.target.value;
+
+                          // Kiểm tra nếu value là số hợp lệ
+                          if (!isNaN(value) && value !== '') {
+                            const numberValue = Number(value);
+                            if (seatType === 'regular') {
+                              setRegularPrice(numberValue);
+                            } else {
+                              setCouplePrice(numberValue);
+                            }
+                            setWarning('');
                           } else {
-                            setCouplePrice(Number(e.target.value));
+                            // Nếu nhập chữ, reset về 0 hoặc giữ giá trị cũ
+                            if (seatType === 'regular') {
+                              setRegularPrice('');
+                            } else {
+                              setCouplePrice('');
+                            }
+                            setWarning('Chỉ được nhập số');
                           }
-                          setWarning('');
                         }}
                         className={clsx(styles.formInput, { [styles.inputWarning]: !!warning })}
                       />
