@@ -16,12 +16,13 @@ const ShowtimeSection = ({
   selectSectionFavorite,
   sectionShowtimeIndex,
   selectSectionShowtime,
+  cinemaID,
 }) => {
   return (
     <div className={clsx(styles.col, styles.showtimeSection)}>
       <div className={clsx(styles.row, styles.labelWrapper)}>
         <FaHeartCirclePlus
-          onClick={() => handleSelectFavorite(sectionFavoriteIndex)}
+          onClick={() => handleSelectFavorite(sectionFavoriteIndex, cinemaID)}
           className={clsx(styles.favoriteButton, sectionFavoriteIndex === selectSectionFavorite ? styles.selected : '')}
         />
         <div className={clsx(styles.col)}>

@@ -1,6 +1,7 @@
 import styles from './Cinema.module.scss';
 import ShowtimeSection from '../ShowtimeSection';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const showtimeInfo = [
   { time: '11:45', type: '2d' },
@@ -21,15 +22,41 @@ const showtimeInfo = [
   { time: '11:45', type: '2d' },
 ];
 
-const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionShowtime }) => {
+const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionShowtime}) => {
+  const navigate = useNavigate();
   const [selectSectionFavorite, setSelectSectionFavorite] = useState();
 
-  const handleSelectFavorite = (sectionIndex) => {
+  const updateFavoriteCinema = async (cinemaID) => {
+    try {
+      const res = await fetch(`http://localhost:5003/user/favoritecinema`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          favoriteCinema: cinemaID,
+        }),
+      });
+    } catch (err) {
+      console.error('Fetch movie error:', err);
+    }
+  };
+
+  const handleSelectFavorite = (sectionIndex, cinemaID) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
     if (selectSectionFavorite === sectionIndex) {
       setSelectSectionFavorite(null);
     } else {
       setSelectSectionFavorite(sectionIndex);
     }
+
+    updateFavoriteCinema(cinemaID)
   };
 
   return (
@@ -47,6 +74,7 @@ const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionSho
             handleSelectShowtime={onSelectShowtime}
             sectionFavoriteIndex={index}
             sectionShowtimeIndex={index}
+            cinemaID={item.cinemaID}
           />
         </li>
       ))}
