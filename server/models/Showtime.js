@@ -40,6 +40,20 @@ const showtime = {
     return result.length > 0 ? result : null
   },
 
+  async getShowtimeByRoomID(roomID) {
+    const sql = `
+      SELECT *
+      FROM showtime
+      WHERE roomID = ?
+    `;
+ 
+    const [result] = await connection.promise().execute(sql, [roomID]);
+    console.log(result);
+
+    return result;
+  },
+  
+
   async deleteShowtime(showtimeID) {
     const sqlDelete = `
       DELETE 

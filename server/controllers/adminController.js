@@ -720,6 +720,31 @@ export const getAllShowtime = async (req, res) => {
   }
 }
 
+export const getShowtimeByRoomID = async (req, res) => {
+  try {
+    const { roomID } = req.params;
+
+    if (!roomID) {
+      return res.status(400).json({ message: "Thiếu roomID" });
+    }
+
+    let showtimes = await Showtime.getShowtimeByRoomID(roomID);
+
+    if (!showtimes || showtimes.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy suất chiếu cho phòng này" });
+    }
+
+    showtimes = showtimes.map(st => ({
+      ...st,
+      showDate: new Date(st.showDate).toISOString().split('T')[0]
+    }));
+
+    res.status(200).json(showtimes);
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi khi lấy suất chiếu theo roomID", error: err });
+  }
+}
+
 export const deleteShowtime = async (req, res) => {
   try {
     const { showtimeID } = req.params;
