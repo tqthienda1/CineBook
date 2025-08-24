@@ -34,7 +34,24 @@ const Room = {
     }
 
     return result[0];
-  } 
+  },
+
+  async deleteRoom(roomID) {
+
+    const sqlDelete = `
+      DELETE
+      FROM room
+      WHERE roomID = ?
+    `;
+
+    const [result] = await connection.promise().execute(sqlDelete, [roomID]);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return roomID;
+  }
 }
 
 export default Room;
