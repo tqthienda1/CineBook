@@ -43,6 +43,24 @@ const layout = {
     }
 
     return layoutID;
+  },
+
+  async updateLayout(layoutData) {
+    const { layoutID, numRow, numCol } = layoutData;
+
+    const sqlUpdateLayout = `
+      UPDATE layout
+      SET numRow = ?, numCol = ?
+      WHERE layoutID = ?
+    `;
+
+    const [result] = await connection.promise().execute(sqlUpdateLayout, [numRow, numCol, layoutID])
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return {layoutData}
   }
 } 
 
