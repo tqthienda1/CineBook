@@ -38,12 +38,13 @@ const Room = {
 
   async getAllRoom() {
     const sqlGetAll = `
-      SELECT *
-      FROM room
+      SELECT r.roomID, r.roomName, r.cinemaID, r.capacity, r.layoutID, c.cinemaName 
+      FROM room r
+      JOIN cinema c ON c.cinemaID = r.cinemaID
     `;
 
     const [result] = await connection.promise().execute(sqlGetAll);
-
+ 
     return result;
   },
 
