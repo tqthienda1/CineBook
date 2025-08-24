@@ -357,15 +357,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 POST http://localhost:5003/admin/showtimes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNTY3NDUsImV4cCI6MTc1NjA2MDM0NX0.5osRf-VdO1OAEpyGDCDzA0AMDUcNivqGToxJaNEbpk4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNjExNDMsImV4cCI6MTc1NjA2NDc0M30.Q6FTBaDlCisGY_Tcr3DdDF3cBuNyCncsubE0PVfPrTU
 
 {
-  "movieID": 1,
-  "roomID": 3,
-  "cinemaID": 2,
-  "showDate": "2025-08-25",
-  "startTime": "19:00:00",
-  "endTime": "21:00:00"
+  "movieID": 2,
+  "roomID": 2,
+  "cinemaID": 3,
+  "showDate": "2025-08-21",
+  "startTime": "19:30:00",
+  "endTime": "22:00:00"
 }
 
 
@@ -374,6 +374,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 GET http://localhost:5003/admin/showtimes
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNTY3NDUsImV4cCI6MTc1NjA2MDM0NX0.5osRf-VdO1OAEpyGDCDzA0AMDUcNivqGToxJaNEbpk4
+
+### 
+DELETE http://localhost:5003/admin/showtimes/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNjExNDMsImV4cCI6MTc1NjA2NDc0M30.Q6FTBaDlCisGY_Tcr3DdDF3cBuNyCncsubE0PVfPrTU
 
 
 
@@ -434,3 +439,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   "movieID": 1,
   "showDate": "2025-08-25"
 }
+

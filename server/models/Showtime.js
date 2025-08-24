@@ -28,7 +28,7 @@ const showtime = {
 
   async getShowtimeForUser(showtimeData) {
     const { cinemaID, movieID, showDate } = showtimeData
-    console.log(showtimeData);
+
     const sqlGetShowtime = `
       SELECT * 
       FROM showtime
@@ -38,9 +38,23 @@ const showtime = {
     const [result] = await connection.promise().execute(sqlGetShowtime, [cinemaID, movieID, showDate]);
 
     return result.length > 0 ? result : null
+  },
+
+  async deleteShowtime(showtimeID) {
+    const sqlDelete = `
+      DELETE 
+      FROM showtime
+      WHERE showtimeID = ?
+    `;
+
+    const [result] = await connection.promise().execute(sqlDelete, [showtimeID]);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return showtimeID;
   }
-
-
 }
 
 export default showtime;

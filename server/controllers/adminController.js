@@ -695,6 +695,12 @@ export const addShowtime = async (req, res) => {
 
     res.status(200).json(showtime);
   } catch (err) {
+    if (err.code === "ER_NO_REFERENCED_ROW_2") {
+      return res.status(400).json({
+        message: "roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu",
+        error: err.sqlMessage,
+      });
+    }
     res.status(500).json({message: "Lỗi khi thêm suất chiếu", error: err})
   }
 }
@@ -713,4 +719,25 @@ export const getAllShowtime = async (req, res) => {
     res.status(500).json({message: "Lỗi khi lấy tất cả suất chiếu", error: err});
   }
 }
+
+export const deleteShowtime = async (req, res) => {
+  try {
+    const { showtimeID } = req.params;
+    console.log(showtimeID)
+    if (!showtimeID) {
+      return res.status(400).json({message: "Thiếu showtimeID"});
+    }
+
+    const showtime = await Showtime.deleteShowtime(showtimeID);
+
+    if (!showtime) {
+      return res.status(400).json({message: "Không tìm thấy suất chiếu để xóa"});
+    }
+
+    res.status(200).json({message: "Xóa suất chiếu thành công"});
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi xóa suất chiếu", error: err});
+  }
+}
+
 
