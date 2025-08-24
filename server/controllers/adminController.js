@@ -284,7 +284,7 @@ export const getAllCinemas = async (req, res) => {
 
 export const getCinemaById = async (req, res) => {
   try {
-    const { cinemaID } = req.params; // Lấy cinemaID từ URL (vd: /cinemas/:cinemaID)
+    const { cinemaID } = req.params; 
     const cinema = await Cinema.getCinemaById(cinemaID);
     
     if (!cinema) {
@@ -299,7 +299,7 @@ export const getCinemaById = async (req, res) => {
 
 export const updateCinema = async (req, res) => {
   try {
-    const { cinemaID } = req.params; // Lấy cinemaID từ URL (vd: /cinemas/:cinemaID)
+    const { cinemaID } = req.params; 
     const { cinemaName, address, phone, city } = req.body;
 
     if (!cinemaName || !address || !phone || !city) {
@@ -423,5 +423,31 @@ export const addLayoutWithSeats = async (req, res) => {
   } catch (error) {
     console.error("Lỗi khi tạo layout:", error);
     res.status(500).json({ message: "Lỗi server khi tạo layout" });
+  }
+};
+
+export const getLayoutWithSeats = async (req, res) => {
+  try {
+    const { layoutID } = req.params;
+
+    if (!layoutID) {
+      return res.status(400).json({ message: "Thiếu layoutID" });
+    }
+
+    const layout = await Layout.getLayoutById(layoutID);
+    if (!layout) {
+      return res.status(404).json({ message: "Không tìm thấy layout" });
+    }
+
+    const seats = await Seat.getSeatsByLayoutID(layoutID);
+
+    console.log(seats);
+    
+    res.status(200).json({
+      layout,
+      seats
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server khi lấy layout và seats", error });
   }
 };
