@@ -56,7 +56,7 @@ const Booking = () => {
 
     const fetchMovieInfoAndCities = async () => {
       try {
-        const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}&date=${pickingDate}`, {
+        const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -76,11 +76,11 @@ const Booking = () => {
           setCities(data.cities);
         }
         if (data.cinema) {
-          const favoriteCinema = getFavoriteCinema();
+          // const favoriteCinema = getFavoriteCinema();
 
-          if (favoriteCinema) {
-            prioritizeFavoriteCinema(data.cinema, favoriteCinema);
-          }
+          // if (favoriteCinema) {
+          //   prioritizeFavoriteCinema(data.cinema, favoriteCinema);
+          // }
 
           setCinemasList(data.cinema);
         }
@@ -138,6 +138,8 @@ const Booking = () => {
               onSelectShowtime={handleSelectShowtime}
               selectSectionShowtime={selectSectionShowtime}
               selectShowtime={selectShowtime}
+              pickingDate={pickingDate}
+              movieID={movieInfo.movieID}
             />
           </>
         )}
