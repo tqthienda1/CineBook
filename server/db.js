@@ -44,10 +44,10 @@ connection.connect(async (err) => {
     // 'cinema_room',
     // 'cinema',
     
-    // 'room',
-    // 'layout',
-    // 'seat',
-    // 'showtime'
+    'room',
+    'layout',
+    'seat',
+    'showtime'
 
   ];
 
