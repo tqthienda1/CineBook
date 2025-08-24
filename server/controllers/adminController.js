@@ -533,6 +533,65 @@ export const updateLayoutWithSeats = async (req, res) => {
 
     res.status(200).json({layoutData, seatList});
   } catch (err) {
-    res.status(500).json({message: "Lỗi khi tạo cập nhật layout và ghế", err});
+    res.status(500).json({message: "Lỗi khi tạo cập nhật layout và ghế", error: err});
   }
 }
+
+
+
+
+// ------------------------------------------- ROOM
+import Room from '../models/Room.js'
+
+export const addRoom = async (req, res) => {
+  try {
+    const { cinemaID, roomName, capacity, layoutID } = req.body;
+
+    if (!cinemaID || !roomName || !capacity || !layoutID) {
+      return res.status(400).json({ message: "Thiếu thông tin cần thiết"});
+    }
+
+    const roomData = {cinemaID, roomName, capacity, layoutID}
+    const addedRoom = await Room.addRoom(roomData);
+
+    if (!addedRoom) {
+      return res.status(400).json({ message: "Không thể thêm phòng chiếu"});
+    }
+    
+    res.status(200).json(addedRoom);
+  } catch (err) {
+    if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(400).json({ 
+        message: "cinemaID không tồn tại trong bảng cinema. Vui lòng tạo cinema trước khi thêm room."
+      });
+    }
+    res.status(500).json({ message: "Lỗi khi thêm phòng chiếu", error: err});
+  }
+}
+
+export const getRoomByID = async (req, res) => {
+  try {
+    const { roomID } = req.params;
+
+    if (!roomID) {
+      return res.status(400).json({message: "Thiếu roomID"});
+    }
+
+    const room = await Room.getRoomByID(roomID);
+
+    if (!room) {
+      return res.status(400).json({message: "Không tìm được phòng chiếu"});
+    }
+
+    res.status(200).json(room);
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi tìm kiếm phòng chiếu", error: err});
+  }
+}
+
+
+// export const deleteRoom = async (req, res) => {
+//   try {
+//     const { roomID }
+//   }
+// }

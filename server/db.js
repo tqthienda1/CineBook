@@ -43,12 +43,12 @@ connection.connect(async (err) => {
     // 'actor'
     // 'cinema_room',
     // 'cinema',
-    
+    // 'showtime',
     // 'room',
     // 'seat',
     // 'layout',
 
-    // 'showtime'
+
 
   ];
 
@@ -196,13 +196,12 @@ connection.connect(async (err) => {
       name: 'room',
       sql: `
         CREATE TABLE IF NOT EXISTS room (
-          roomID INT AUTO_INCREMENT,
+          roomID INT AUTO_INCREMENT PRIMARY KEY,
           cinemaID INT NOT NULL,
           roomName VARCHAR(50) NOT NULL,
           capacity INT NOT NULL,
           layoutID INT NOT NULL,
 
-          PRIMARY KEY (roomID, cinemaID),
           FOREIGN KEY (cinemaID) REFERENCES cinema(cinemaID) ON DELETE CASCADE
         )
       `
@@ -246,7 +245,7 @@ connection.connect(async (err) => {
           endTime DATETIME NOT NULL,
 
           FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
-          FOREIGN KEY (roomID, cinemaID) REFERENCES room(roomID, cinemaID) ON DELETE CASCADE
+          FOREIGN KEY (roomID) REFERENCES room(roomID) ON DELETE CASCADE
         )
       `
     }, 
