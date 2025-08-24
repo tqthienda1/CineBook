@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './AdminDashboard.module.scss';
 import { jwtDecode } from 'jwt-decode';
 import PopUp from '../../components/PopUp';
+import ShowLayoutDetail from '../../components/ShowLayoutDetail'; // import component mới
 import clsx from 'clsx';
 
 const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout }) => {
@@ -37,6 +38,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [seatType, setSeatType] = useState('regular');
   const [cityOptions, setCityOptions] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [showLayoutDetail, setShowLayoutDetail] = useState(false);
+  const [selectedLayout, setSelectedLayout] = useState(null);
 
   const priceInputRef = useRef(null);
 
@@ -540,7 +543,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         name: 'cinema',
         label: 'Cinema',
         type: 'select',
-        options: cinemasData.map((item) => ({ value: item.cinemaName, label: item.cinemaName })),
+        options: cinemasData.map((item) => ({
+          value: item.cinemaName,
+          label: item.cinemaName,
+        })),
       },
       // {
       //   name: 'layout',
@@ -1014,47 +1020,24 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             {seatsData.map((seat) => (
               <tr key={seat.seatID}>
                 <td style={{ width: '30%' }}>{seat.seatID}</td>
-                <td style={{ width: '15%' }}>{seat.rowNum}</td>
-                <td style={{ width: '15%' }}>{seat.colNum}</td>
+                <td style={{ width: '15%' }}>{seat.numRow}</td>
+                <td style={{ width: '15%' }}>{seat.numCol}</td>
                 <td>
-                  <button
-                    key={seat.seatID}
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      margin: '2px',
-                      backgroundColor: seat.type === 'path' ? '#ccc' : '#4caf50',
-                    }}
-                    onClick={() => {
-                      {
-                        seatMatrix.map((rowArr, rowIndex) => (
-                          <div key={rowIndex} className={styles.row}>
-                            {rowArr.map((seat, colIndex) => (
-                              <button
-                                key={colIndex}
-                                className={clsx(styles.seatBtn, typeClass[seat.type], {
-                                  [styles.selected]: seat.type !== null,
-                                })}
-                                disabled // vô hiệu hóa click
-                              >
-                                {seat.type === 'path'
-                                  ? 'P'
-                                  : seat.type === 'regular'
-                                  ? 'R'
-                                  : seat.type === 'coupleLeft'
-                                  ? 'C'
-                                  : seat.type === 'coupleRight'
-                                  ? 'P'
-                                  : ''}
-                              </button>
-                            ))}
-                          </div>
-                        ));
-                      }
-                    }}
-                  >
-                    {seat.type !== 'path' ? seat.price : ''}
-                  </button>
+                  <td>
+                    <td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            console.log('Click show layout:', seat); // thử log ra để check
+                            setSelectedLayout(seat);
+                            setShowLayoutDetail(true);
+                          }}
+                        >
+                          Show Layout
+                        </button>
+                      </td>
+                    </td>
+                  </td>
                 </td>
                 <td>
                   <div className={styles.actionBtns}>
@@ -1108,8 +1091,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               <h3 className={styles.formTitle}>
                 {formType.startsWith('add') ? 'Add New ' : 'Edit '} {entityLabels[entity]}
               </h3>
-
-              {/* Step 1: form nhập rows/columns */}
               {entity !== 'seats' || seatStep === 1 ? (
                 <form className={styles.form} onSubmit={entity === 'seats' ? handleSubmitSeatStep : handleSubmit}>
                   {formConfigs[entity]?.map((field) => (
@@ -1120,7 +1101,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           className={styles.formInput}
                           name={field.name}
                           value={formData[field.name] || ''}
-                          onChange={(e) => handleChange(field, e)}
+                          onChange={(e) => {
+                            handleChange(field, e);
+                          }}
                           required
                         >
                           <option value="">-- Select --</option>
@@ -1312,6 +1295,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           </div>
         )}
       </div>
+      {/* Show layout detail (luôn được render riêng) */}
+      {showLayoutDetail && selectedLayout && (
+        <ShowLayoutDetail layout={selectedLayout} onClose={() => setShowLayoutDetail(false)} />
+      )}
       {popupOpen && <PopUp setPosition={'unset'} content={popupMessage} onClick={() => setPopupOpen(false)} />}
     </div>
   );

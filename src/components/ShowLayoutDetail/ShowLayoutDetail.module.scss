@@ -1,0 +1,86 @@
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); // nền mờ
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  max-height: 90vh; // 👈 Giới hạn chiều cao
+  overflow-y: auto; // Nếu ma trận cao quá thì scroll
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  button {
+    background: #f44336;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background: #d32f2f;
+    }
+  }
+}
+
+.seatMatrix {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.seatBtn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: default;
+
+  &.path {
+    background: #ccc;
+    color: #333;
+  }
+
+  &.regular {
+    background: #4caf50;
+    color: white;
+  }
+
+  &.coupleLeft,
+  &.coupleRight {
+    background: #f06292;
+    color: white;
+  }
+}
