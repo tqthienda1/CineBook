@@ -631,3 +631,13 @@ export const updateRoom = async (req, res) => {
     res.status(500).json({message: "Lỗi khi cập nhật phòng chiếu", error: err});
   }
 }
+
+export const getAllRoom = async (req, res) => {
+  try {
+    const rooms = await Room.getAllRoom();
+
+    res.status(200).json(rooms);
+  } catch {
+    res.status(500).json({message: "Lỗi khi lấy tất cả các phòng chiếu", error: err});
+  }
+}
