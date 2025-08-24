@@ -89,7 +89,6 @@ connection.connect(async (err) => {
           IMDBrating FLOAT,
           description TEXT,
           ageLimit INT,
-          status VARCHAR(20) DEFAULT 'active',
           posterURL NVARCHAR(250),
           backdropURL NVARCHAR(250),
           trailerURL NVARCHAR(255),

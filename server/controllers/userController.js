@@ -62,7 +62,6 @@ export const getMovieWithCities = async (req, res) => {
 
     // lấy thông tin thành phố
     const { city } = req.query;
-    console.log(city);
 
     if (city !== 'undefined') {
       const cinema = await Cinema.getCinemasByCity(city);
