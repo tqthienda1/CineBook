@@ -43,6 +43,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const priceInputRef = useRef(null);
 
+  const cinemaMap = Object.fromEntries(cinemasData.map((c) => [String(c.cinemaID), c.cinemaName]));
+
   const typeClass = {
     path: styles.pathSeat,
     regular: styles.regularSeat,
@@ -80,8 +82,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         );
         const data = await res.json();
 
-        console.log('data nè:', data);
-        const options = data.map((city) => city.name);
+        const options = data.map((city) => ({
+          label: city.name, // cái hiển thị trong dropdown
+          value: city.code, // giá trị khi chọn
+        }));
+
         console.log('options nè:', options);
 
         setCityOptions(options);
@@ -94,7 +99,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     fetchData('http://localhost:5003/admin/users', setUsersData, 'Error to fetch users data!');
     fetchData('http://localhost:5003/admin/cinemas', setCinemasData, 'Error to fetch cinemas data!');
     // fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
-    // fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
+    fetchData('http://localhost:5003/admin/rooms', setTheatersData, 'Error to fetch theaters data!');
     // fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
     fetchData('http://localhost:5003/admin/layouts', setSeatsData, 'Error to fetch layouts data!');
     fetchCities();
@@ -158,6 +163,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       handleSubmitCinema(e);
     } else if (entityLabels[entity] === 'Layout') {
       handleSubmitSeat(e);
+    } else if (entityLabels[entity] === 'Room') {
+      handleSubmitTheater(e);
     } else {
       console.log('No handler for:', entityLabels[entity]);
     }
@@ -207,13 +214,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     });
   };
 
-  const handleDeleteTheater = (theaterID) => {
+  const handleDeleteTheater = (roomID) => {
     apiRequest({
-      url: `http://localhost:5003/admin/theaters/${theaterID}`,
+      url: `http://localhost:5003/admin/rooms/${roomID}`,
       method: 'DELETE',
       onSuccess: () => {
-        setUsersData((prev) => prev.filter((t) => t.theaterID !== theaterID));
-        showPopup('Delete Theater successfully!');
+        setTheatersData((prev) => prev.filter((t) => t.roomID !== roomID));
+        showPopup('Delete Room successfully!');
       },
     });
   };
@@ -317,7 +324,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const handleSubmitCinema = async (e) => {
     e.preventDefault();
     console.log(formData);
-    console.log(cityOptions);
     if (formType === 'add') {
       apiRequest({
         url: 'http://localhost:5003/admin/cinemas',
@@ -377,10 +383,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const handleSubmitTheater = async (e) => {
     e.preventDefault();
+    console.log(formData);
 
     if (formType === 'add') {
       apiRequest({
-        url: 'http://localhost:5003/admin/theaters',
+        url: 'http://localhost:5003/admin/rooms',
         method: 'POST',
         body: formData,
         onSuccess: (newTheater) => {
@@ -391,7 +398,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       });
     } else {
       apiRequest({
-        url: `http://localhost:5003/admin/theaters/${formData.theaterID}`,
+        url: `http://localhost:5003/admin/rooms/${formData.roomID}`,
         method: 'PUT',
         body: formData,
         onSuccess: (editedTheater) => {
@@ -549,22 +556,26 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       },
     ],
     theaters: [
-      { name: 'name', label: 'Theater Name', type: 'text' },
+      { name: 'roomName', label: 'Theater Name', type: 'text' },
+      { name: 'capacity', label: 'Capacity', type: 'number' },
       {
-        name: 'cinema',
+        name: 'cinemaID',
         label: 'Cinema',
         type: 'select',
         options: cinemasData.map((item) => ({
-          value: item.cinemaName,
+          value: item.cinemaID,
           label: item.cinemaName,
         })),
       },
-      // {
-      //   name: 'layout',
-      //   label: 'Layout',
-      //   type: 'select',
-      //   options:
-      // }
+      {
+        name: 'layoutID',
+        label: 'Layout',
+        type: 'select',
+        options: seatsData.map((item) => ({
+          value: item.layoutID,
+          label: `Layout ${item.layoutID}`,
+        })),
+      },
     ],
     promotions: [
       { name: 'title', label: 'Title', type: 'text' },
@@ -592,7 +603,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     showtimes: 'Showtime',
     addusers: 'User',
     editusers: 'User',
-    theaters: 'Theater',
+    theaters: 'Room',
     promotions: 'Promotion',
     cinemas: 'Cinema',
     seats: 'Layout',
@@ -910,12 +921,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     </div>
   );
 
-  const renderTheaterSeatManagement = () => (
+  const renderTheaterManagement = () => (
     <div className={styles.sectionContent}>
       <div className={styles.sectionHeader}>
-        <h2>Theater & Seat Management</h2>
+        <h2>Room Management</h2>
         <button className={styles.primaryBtn} onClick={() => openForm('add', 'theaters')}>
-          Add New Theater
+          Add New Room
         </button>
       </div>
       <div className={styles.tableContainer}>
@@ -923,23 +934,38 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <thead>
             <tr>
               <th>Name</th>
-              <th>Seats</th>
-              <th>Location</th>
+              <th>Cinema</th>
+              <th>Capacity</th>
+              <th>Layout</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {theatersData.map((theater) => (
-              <tr key={theater.id}>
-                <td>{theater.name}</td>
-                <td>{theater.seats}</td>
-                <td>{theater.location}</td>
+            {theatersData.map((room) => (
+              <tr key={room.cinemaID}>
+                <td style={{ width: '15%' }}>{room.roomName}</td>
+                <td style={{ width: '30%' }}>{room.cinemaName}</td>
+                <td style={{ width: '15%' }}>{room.capacity}</td>
+                <td style={{ width: '15%' }}>{room.layoutID}</td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn} onClick={() => openForm('add', 'theaters', theater)}>
+                    <button
+                      className={styles.editBtn}
+                      onClick={() => {
+                        openForm('edit', 'theaters', room);
+                      }}
+                    >
                       Edit
                     </button>
-                    <button className={styles.deleteBtn}>Delete</button>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => {
+                        handleDeleteTheater(room.roomID);
+                        console.log(theatersData);
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -1115,7 +1141,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       case 'users':
         return renderUserAccountManagement();
       case 'theaters':
-        return renderTheaterSeatManagement();
+        return renderTheaterManagement();
       case 'promotions':
         return renderPromotionManagement();
       case 'cinemas':
@@ -1148,15 +1174,16 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           className={styles.formInput}
                           name={field.name}
                           value={formData[field.name] || ''}
-                          onChange={(e) => {
-                            handleChange(field, e);
-                          }}
+                          onChange={(e) => handleChange(field, e)}
                           required
                         >
                           <option value="">-- Select --</option>
-                          {field.options?.map((opt, idx) => (
-                            <option key={idx} value={opt}>
-                              {opt}
+                          {field.options?.map((opt) => (
+                            <option
+                              key={opt.value}
+                              value={field.name === 'cinemaID' || field.name === 'layoutID' ? opt.value : opt.label}
+                            >
+                              {opt.label}
                             </option>
                           ))}
                         </select>
