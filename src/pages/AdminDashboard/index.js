@@ -91,12 +91,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     fetchData('http://localhost:5003/admin/movies', setRecentFilms, 'Error to fetch movies data!');
     fetchData('http://localhost:5003/admin/users', setUsersData, 'Error to fetch users data!');
     fetchData('http://localhost:5003/admin/cinemas', setCinemasData, 'Error to fetch cinemas data!');
-    fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
-    fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
-    fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
+    // fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
+    // fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
+    // fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
     fetchData('http://localhost:5003/admin/layouts', setSeatsData, 'Error to fetch layouts data!');
-    console.log(seatsData);
-
     fetchCities();
   }, []);
 
@@ -451,9 +449,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           setSeatsData((prev) => [...prev, combinedData]);
           showPopup('Add Seat successfully!');
         } else {
-          setSeatsData((prev) =>
-            prev.map((s, index) => (String(s.seatID) === String(responseData.seatID) ? combinedData : s)),
-          );
+          setSeatsData((prev) => {
+            const newData = [...prev, combinedData];
+            console.log(newData); // in giá trị đã cập nhật
+            return newData;
+          });
           showPopup('Edit Seat successfully!');
         }
         console.log(seatsData);
@@ -678,12 +678,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               className={styles.actionBtn}
               onClick={() => {
                 setSkipResetForm(true);
-                setActiveSectionFromLayout('promotions');
-                openForm('add', 'promotions');
+                setActiveSectionFromLayout('seats');
+                console.log(seatsData);
+                openForm('add', 'seats');
               }}
             >
               <span>🎟️</span>
-              New Promotion
+              Add New Layout
             </button>
             <button
               className={styles.actionBtn}
@@ -1025,38 +1026,31 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                       backgroundColor: seat.type === 'path' ? '#ccc' : '#4caf50',
                     }}
                     onClick={() => {
-                      seatsData.map((layout, i) => (
-                        <div key={i} style={{ marginBottom: '20px' }}>
-                          <h4>Layout {i + 1}</h4>
-                          <table>
-                            <tbody>
-                              {layout.seats.map((row, rIndex) => (
-                                <tr key={rIndex}>
-                                  {row.map((seat, cIndex) => (
-                                    <td
-                                      key={cIndex}
-                                      style={{
-                                        width: '30px',
-                                        height: '30px',
-                                        textAlign: 'center',
-                                        border: '1px solid black',
-                                        backgroundColor:
-                                          seat.type === 'regular'
-                                            ? '#4caf50'
-                                            : seat.type.includes('couple')
-                                            ? '#ff9800'
-                                            : '#e0e0e0',
-                                      }}
-                                    >
-                                      {seat.type[0].toUpperCase()}
-                                    </td>
-                                  ))}
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ));
+                      {
+                        seatMatrix.map((rowArr, rowIndex) => (
+                          <div key={rowIndex} className={styles.row}>
+                            {rowArr.map((seat, colIndex) => (
+                              <button
+                                key={colIndex}
+                                className={clsx(styles.seatBtn, typeClass[seat.type], {
+                                  [styles.selected]: seat.type !== null,
+                                })}
+                                disabled // vô hiệu hóa click
+                              >
+                                {seat.type === 'path'
+                                  ? 'P'
+                                  : seat.type === 'regular'
+                                  ? 'R'
+                                  : seat.type === 'coupleLeft'
+                                  ? 'C'
+                                  : seat.type === 'coupleRight'
+                                  ? 'P'
+                                  : ''}
+                              </button>
+                            ))}
+                          </div>
+                        ));
+                      }
                     }}
                   >
                     {seat.type !== 'path' ? seat.price : ''}
