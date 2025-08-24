@@ -32,7 +32,6 @@ const Booking = () => {
   const [cinemasList, setCinemasList] = useState();
   const [cities, setCities] = useState();
   const [selectCinema, setSelectCinema] = useState();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const getFavoriteCinema = async () => {
@@ -57,7 +56,7 @@ const Booking = () => {
 
     const fetchMovieInfoAndCities = async () => {
       try {
-        const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}`, {
+        const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}&date=${pickingDate}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -69,6 +68,7 @@ const Booking = () => {
         }
 
         const data = await res.json();
+        console.log(data);
         setMovieInfo(data.movie);
         setSelectCinema(null);
         setSelectShowtime(null);
@@ -105,7 +105,6 @@ const Booking = () => {
 
   const handleSelectCity = (city) => {
     setSelectCity(city);
-    setSearchParams({ city });
   };
 
   if (movieInfo) {
