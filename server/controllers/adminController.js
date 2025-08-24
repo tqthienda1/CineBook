@@ -698,3 +698,18 @@ export const addShowtime = async (req, res) => {
     res.status(500).json({message: "Lỗi khi thêm suất chiếu", error: err})
   }
 }
+
+export const getAllShowtime = async (req, res) => {
+  try {
+    let showtimeList = await Showtime.getAllShowtime();
+
+    showtimeList = showtimeList.map(st => ({
+      ...st,
+      showDate: new Date(st.showDate).toISOString().split('T')[0] // format yyyy-mm-dd
+    }));
+
+    res.status(200).json(showtimeList);
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi lấy tất cả suất chiếu", error: err});
+  }
+}

@@ -24,7 +24,9 @@ const showtime = {
     const [rows] = await connection.promise().execute(sqlGetAllShowtime);
     
     return rows;
-  }
+  },
+
+  
 
 }
 
