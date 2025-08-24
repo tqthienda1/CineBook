@@ -589,11 +589,10 @@ export const getRoomByID = async (req, res) => {
   }
 }
 
-
 export const deleteRoom = async (req, res) => {
   try {
     const { roomID } = req.params;
-    
+
     if(!roomID) {
       return res.status(400).json({message: "Thiếu roomID"});
     }
@@ -607,5 +606,28 @@ export const deleteRoom = async (req, res) => {
     res.status(200).json({message: "Xóa thành công"});
   } catch (err) {
     res.status(500).json({message: "Lỗi khi xóa phòng chiếu", error: err});
+  }
+}
+
+export const updateRoom = async (req, res) => {
+  try {
+    const { roomID } = req.params;
+
+    if(!roomID) {
+      return res.status(400).json({message: "Thiếu roomID"});
+    }
+
+    const { cinemaID, roomName, capacity, layoutID } = req.body;
+    const roomData = { roomID, cinemaID, roomName, capacity, layoutID }
+
+    const room = await Room.updateRoom(roomData);
+
+    if (!room) {
+      return res.status(400).json({message: "Không tìm thấy phòng chiếu cần cập nhật "});
+    }
+
+    res.status(200).json(room);
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi cập nhật phòng chiếu", error: err});
   }
 }

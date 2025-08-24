@@ -37,7 +37,6 @@ const Room = {
   },
 
   async deleteRoom(roomID) {
-
     const sqlDelete = `
       DELETE
       FROM room
@@ -51,6 +50,24 @@ const Room = {
     }
 
     return roomID;
+  }, 
+
+  async updateRoom(roomData) {
+    const { roomID, cinemaID, roomName, capacity, layoutID } = roomData;
+
+    const sqlUpdate = `
+      UPDATE room
+      SET cinemaID = ?, roomName = ?, capacity = ?, layoutID = ?
+      WHERE roomID = ?
+    `;
+    
+    const [result] = await connection.promise().execute(sqlUpdate, [cinemaID, roomName, capacity, layoutID, roomID] )
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return roomData;
   }
 }
 
