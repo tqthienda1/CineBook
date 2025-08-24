@@ -6,7 +6,7 @@ POST http://localhost:5003/auth/register
 Content-Type: application/json
 
 {
-  "email": "admin@gmail.com",
+  "email": "user1@gmail.com",
   "password": "1"
 }
 
@@ -24,7 +24,7 @@ POST http://localhost:5003/auth/login
 Content-Type: application/json
 
 {
-  "email": "user@gmail.com",
+  "email": "user1@gmail.com",
   "password": "1"
 }
 
@@ -433,14 +433,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
 ### 
 PUT http://localhost:5003/user/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU1NjgwNjcyLCJleHAiOjE3NTU2ODQyNzJ9.6Dwv4fUxXCzZ1lzZ7ZeJUArR7CHwf4CuK2EsTE_ejzE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU2MDY0NDA3LCJleHAiOjE3NTYwNjgwMDd9.mC7BiqpwkxMx-1stGApe9CKpeGYPyaIlIw0lFrJuYcQ
 
 {
   "email": "thinh@gmail.com",
   "fullname": "Thinh Ngu Nhu Cho",
   "phone": "0913288527",
-  "birthday": "2000-01-01"
+  "birthday": "2000-01-01",
+  "favoriteCinema": 4
 }
+
+###
+PUT http://localhost:5003/user/favoriteCinema
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoidXNlcjFAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NTYwNjYxOTEsImV4cCI6MTc1NjA2OTc5MX0.P5MaFqBsbJLo3mcZGakRV-NZDD4NTKrQlGPogIKDdw4
+
+{
+  "favoriteCinema": 4
+}
+
 
 
 
