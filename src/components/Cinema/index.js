@@ -22,16 +22,18 @@ const showtimeInfo = [
   { time: '11:45', type: '2d' },
 ];
 
-const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionShowtime}) => {
+const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionShowtime }) => {
   const navigate = useNavigate();
   const [selectSectionFavorite, setSelectSectionFavorite] = useState();
 
   const updateFavoriteCinema = async (cinemaID) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(`http://localhost:5003/user/favoritecinema`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           favoriteCinema: cinemaID,
@@ -56,7 +58,7 @@ const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionSho
       setSelectSectionFavorite(sectionIndex);
     }
 
-    updateFavoriteCinema(cinemaID)
+    updateFavoriteCinema(cinemaID);
   };
 
   return (
