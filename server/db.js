@@ -44,10 +44,10 @@ connection.connect(async (err) => {
     // 'cinema_room',
     // 'cinema',
     
-    'room',
-    'layout',
-    'seat',
-    'showtime'
+    // 'room',
+    // 'layout',
+    // 'seat',
+    // 'showtime'
 
   ];
 
@@ -224,8 +224,8 @@ connection.connect(async (err) => {
           id INT AUTO_INCREMENT PRIMARY KEY, 
           seatID char(5),
           layoutID INT,
-          numRow INT NOT NULL,
-          numCol INT NOT NULL,
+          rowNum INT NOT NULL,
+          colNum INT NOT NULL,
           status VARCHAR(20) DEFAULT 'available',
           type VARCHAR(20) DEFAULT 'regular',
           price DECIMAL(10, 2) DEFAULT 0,
