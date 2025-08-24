@@ -411,7 +411,6 @@ export const addLayoutWithSeats = async (req, res) => {
       ...seat
     }));
 
-    console.log(seatList)
     // 3. Insert tất cả seats
     if (seatList.length > 0) {
       await Seat.addSeat(seatList);
@@ -419,7 +418,7 @@ export const addLayoutWithSeats = async (req, res) => {
 
     res.status(201).json({
       message: "Tạo layout & seats thành công",
-      layoutID: layout.insertId
+      layoutID: layout.layoutID
     });
   } catch (error) {
     console.error("Lỗi khi tạo layout:", error);

@@ -45,8 +45,9 @@ connection.connect(async (err) => {
     // 'cinema',
     
     // 'room',
-    // 'layout',
     // 'seat',
+    // 'layout',
+
     // 'showtime'
 
   ];

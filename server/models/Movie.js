@@ -17,6 +17,7 @@ const Movie = {
         m.status,
         m.posterURL,
         m.backdropURL,
+        m.trailerURL,
 
         CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(c.categoryName)), ']') AS JSON) AS category,
         CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(d.directorName)), ']') AS JSON) AS directors,
@@ -57,6 +58,7 @@ const Movie = {
         m.status,
         m.posterURL,
         m.backdropURL,
+        trailerURL,
 
         CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(c.categoryName)), ']') AS JSON) AS category,
         CAST(CONCAT('[', GROUP_CONCAT(DISTINCT JSON_QUOTE(d.directorName)), ']') AS JSON) AS directors,
@@ -109,6 +111,7 @@ const Movie = {
       status,
       posterURL,
       backdropURL,
+      trailerURL
     } = movieData;
 
     const sqlAddCategory = `
@@ -145,8 +148,8 @@ const Movie = {
 
     // Insert movie chính
     const sqlAddMovie = `
-      INSERT INTO movie (name, language, duration, releaseDay, IMDBrating, description, ageLimit, status, posterURL, backdropURL)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO movie (name, language, duration, releaseDay, IMDBrating, description, ageLimit, status, posterURL, backdropURL, trailerURL)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await connection
@@ -162,6 +165,7 @@ const Movie = {
         status,
         posterURL,
         backdropURL,
+        trailerURL,
       ]);
 
     const sqlAddMovieCategory = `
@@ -213,6 +217,7 @@ const Movie = {
       status,
       posterURL,
       backdropURL,
+      trailerURL,
     };
   },
 
@@ -235,6 +240,7 @@ const Movie = {
       status,
       posterURL,
       backdropURL,
+      trailerURL,
     } = movieData;
 
     // Thêm category, director, writer, actor mới (nếu chưa có)
@@ -270,6 +276,7 @@ const Movie = {
       status=?, 
       posterURL=?, 
       backdropURL=?
+      trailerURL = ?
     WHERE movieID=?
     `;
 
@@ -287,6 +294,7 @@ const Movie = {
         status,
         posterURL,
         backdropURL,
+        trailerURL,
         movieID,
       ]);
 
@@ -345,6 +353,7 @@ const Movie = {
       status,
       posterURL,
       backdropURL,
+      trailerURL,
     };
   },
 
