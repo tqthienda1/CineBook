@@ -9,11 +9,7 @@ const seat = {
 
     for (const seatData of seatList) {
       const { seatID, layoutID, numRow, numCol, status, type, price } = seatData;
-      console.log(seatData)
-      // // Nếu seatID chưa có thì cho NULL
-      // const safeSeatID = seatID !== undefined ? seatID : null;
-
-        await connection.promise().execute(sqlAddSeat, [
+      await connection.promise().execute(sqlAddSeat, [
         seatID,
         layoutID,
         numRow,
@@ -28,8 +24,5 @@ const seat = {
   }
 };
 
-seat.addSeat = async function (seatList) {
-  
-};
 
 export default seat;
