@@ -6,8 +6,9 @@ import { checkAdminRole } from '../middlewares/roleMiddleware.js';
 import {  getMovies, addMovie, editMovie, deleteMovie, 
           getAllUsers, createUser, updateUser, deleteUser,
           addCinema, getAllCinemas, updateCinema, deleteCinema, getCinemaById,
-          addLayoutWithSeats, getLayoutWithSeats, deleteLayoutWithSeats, getAllLayouts, updateLayoutWithSeats,
-          addRoom, getRoomByID, deleteRoom, updateRoom, getAllRoom
+          addLayoutWithSeats, getLayoutWithSeats, deleteLayoutWithSeats, getAllLayouts, updateLayoutWithSeats, getLayoutWithSeatsByRoomID,
+          addRoom, getRoomByID, deleteRoom, updateRoom, getAllRoom,
+      
         } from '../controllers/adminController.js';
 
 
@@ -32,8 +33,9 @@ router.put('/cinemas/:cinemaID', verifyToken, checkAdminRole, updateCinema);
 router.delete('/cinemas/:cinemaID', verifyToken, checkAdminRole, deleteCinema);
 
 // Các route quản lý layout
-router.get('/layouts', verifyToken, checkAdminRole, getAllLayouts)
+router.get('/layouts', verifyToken, checkAdminRole, getAllLayouts);
 router.post('/layouts', verifyToken, checkAdminRole, addLayoutWithSeats);
+router.get('/layouts/room/:roomID', verifyToken, checkAdminRole, getLayoutWithSeatsByRoomID);
 router.get('/layouts/:layoutID', verifyToken, checkAdminRole, getLayoutWithSeats);
 router.delete('/layouts/:layoutID', verifyToken, checkAdminRole, deleteLayoutWithSeats);
 router.put('/layouts/:layoutID', verifyToken, checkAdminRole, updateLayoutWithSeats);

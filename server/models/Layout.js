@@ -18,6 +18,22 @@ const layout = {
     return rows[0] || null;
   },
 
+  async getLayoutIDByRoomID(roomID) {
+    const sqlGet = `
+      SELECT layoutID
+      FROM room
+      WHERE roomID = ?
+    `
+
+    const [result] = await connection.promise().execute(sqlGet, [roomID]);
+   
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return result[0].layoutID;
+  },
+
   async addLayout(layoutData) {
     const { numRow, numCol } = layoutData;
     const sqlAddLayout = `
