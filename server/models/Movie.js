@@ -275,7 +275,7 @@ const Movie = {
       ageLimit=?, 
       status=?, 
       posterURL=?, 
-      backdropURL=?
+      backdropURL=?,
       trailerURL = ?
     WHERE movieID=?
     `;
