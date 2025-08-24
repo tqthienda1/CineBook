@@ -6,7 +6,9 @@ import { checkAdminRole } from '../middlewares/roleMiddleware.js';
 import {  getMovies, addMovie, editMovie, deleteMovie, 
           getAllUsers, createUser, updateUser, deleteUser,
           addCinema, getAllCinemas, updateCinema, deleteCinema, getCinemaById,
-          addLayoutWithSeats, getLayoutWithSeats, deleteLayoutWithSeats, getAllLayouts, updateLayoutWithSeats
+          addLayoutWithSeats, getLayoutWithSeats, deleteLayoutWithSeats, getAllLayouts, updateLayoutWithSeats,
+          addRoom,
+          getRoomByID
         } from '../controllers/adminController.js';
 
 
@@ -30,10 +32,14 @@ router.get('/cinemas/:cinemaID', verifyToken, checkAdminRole, getCinemaById);
 router.put('/cinemas/:cinemaID', verifyToken, checkAdminRole, updateCinema);
 router.delete('/cinemas/:cinemaID', verifyToken, checkAdminRole, deleteCinema);
 
-// Các rout quản lý layout
+// Các route quản lý layout
 router.get('/layouts', verifyToken, checkAdminRole, getAllLayouts)
 router.post('/layouts', verifyToken, checkAdminRole, addLayoutWithSeats);
 router.get('/layouts/:layoutID', verifyToken, checkAdminRole, getLayoutWithSeats);
 router.delete('/layouts/:layoutID', verifyToken, checkAdminRole, deleteLayoutWithSeats);
 router.put('/layouts/:layoutID', verifyToken, checkAdminRole, updateLayoutWithSeats);
+
+// Các route quản lý room
+router.post('/rooms', verifyToken, checkAdminRole, addRoom);
+router.get('/rooms/:roomID', verifyToken, checkAdminRole, getRoomByID);
 export default router;
