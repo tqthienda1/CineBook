@@ -244,7 +244,53 @@ DELETE http://localhost:5003/admin/layouts/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwMjE2NDIsImV4cCI6MTc1NjAyNTI0Mn0.MeOM6XxM1UbT3IhEWz9V_LjO2Z4LdQ7e74OHm84rXAE
 
+###
+PuT http://localhost:5003/admin/layouts/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwMzM1MTUsImV4cCI6MTc1NjAzNzExNX0.tWVDrCdhsAGR2qIUuxcKQBREfkRLFktdVlGhl-Tqc8M
 
+{
+  "numRow":5,
+  "numCol":5,
+  "seats":
+  [
+    [
+      {"rowNum":0,"colNum":0,"seatID":null,"type":"path","price":0},
+      {"rowNum":0,"colNum":1,"seatID":null,"type":"path","price":0},
+      {"rowNum":0,"colNum":2,"seatID":null,"type":"regular","price":12},
+      {"rowNum":0,"colNum":3,"seatID":null,"type":"regular","price":12},
+      {"rowNum":0,"colNum":4,"seatID":null,"type":"path","price":0}
+    ],
+    [
+      {"rowNum":1,"colNum":0,"seatID":null,"type":"path","price":0},
+      {"rowNum":1,"colNum":1,"seatID":null,"type":"path","price":0},
+      {"rowNum":1,"colNum":2,"seatID":null,"type":"path","price":0},
+      {"rowNum":1,"colNum":3,"seatID":null,"type":"path","price":0},
+      {"rowNum":1,"colNum":4,"seatID":null,"type":"path","price":0}
+    ],
+    [
+      {"rowNum":2,"colNum":0,"seatID":null,"type":"path","price":0},
+      {"rowNum":2,"colNum":1,"seatID":null,"type":"path","price":0},
+      {"rowNum":2,"colNum":2,"seatID":null,"type":"regular","price":12},
+      {"rowNum":2,"colNum":3,"seatID":null,"type":"path","price":0},
+      {"rowNum":2,"colNum":4,"seatID":null,"type":"path","price":0}
+      ],
+    [
+      {"rowNum":3,"colNum":0,"seatID":null,"type":"path","price":0},
+      {"rowNum":3,"colNum":1,"seatID":null,"type":"path","price":0},
+      {"rowNum":3,"colNum":2,"seatID":null,"type":"coupleLeft","price":12},
+      {"rowNum":3,"colNum":3,"seatID":null,"type":"coupleRight","price":12},
+      {"rowNum":3,"colNum":4,"seatID":null,"type":"path","price":0}
+    ],
+    [
+      {"rowNum":4,"colNum":0,"seatID":null,"type":"path","price":0},
+      {"rowNum":4,"colNum":1,"seatID":null,"type":"path","price":0},
+      {"rowNum":4,"colNum":2,"seatID":null,"type":"path","price":0},
+      {"rowNum":4,"colNum":3,"seatID":null,"type":"path","price":0},
+      {"rowNum":4,"colNum":4,"seatID":null,"type":"path","price":0}
+    ]
+  ]
+}
 
 ###
 

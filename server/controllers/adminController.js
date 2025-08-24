@@ -466,8 +466,6 @@ export const getLayoutWithSeats = async (req, res) => {
 
     const seats = await Seat.getSeatsByLayoutID(layoutID);
 
-    console.log(seats);
-    
     res.status(200).json({
       layout,
       seats
@@ -499,6 +497,46 @@ export const deleteLayoutWithSeats = async (req, res) => {
 
     res.status(200).json({ message: "Xóa thành công layout và ghế"})
   } catch (err) {
-    res.status(500).json({ message: "Lỗi khi xóa layout và ghế"})
+    res.status(500).json({ message: "Lỗi khi xóa layout và ghế", err})
+  }
+}
+
+export const updateLayoutWithSeats = async (req, res) => {
+  try {
+    const { layoutID } = req.params;
+    
+    if (!layoutID)
+    {
+      return res.status(400).json({ message: "Thiếu layoutID" });
+    }
+
+    const { numRow, numCol, seats} = req.body;
+
+    if (!numRow || !numCol || !seats) {
+      return res.status(400).json({ message: "Thiếu dữ liệu layout" });
+    }
+
+    const layoutData = { layoutID, numRow, numCol};
+    const updatedLayout = await Layout.updateLayout(layoutData);
+
+    if (!updatedLayout) {
+      return res.status(404).json({ message: "Không tìm thấy layout để cập nhật" });
+    }
+
+    const deleteSeat = await Seat.deleteSeatsByLayoutID(layoutID);
+
+    const seatList = generateSeatIDs(seats).map(seat => ({ 
+      layoutID: layoutID,  
+      ...seat
+    }));
+
+    // 3. Insert tất cả seats
+    if (seatList.length > 0) {
+      await Seat.addSeat(seatList);
+    }
+
+    res.status(200).json({layoutData, seatList});
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi tạo cập nhật layout và ghế", err});
   }
 }
