@@ -32,8 +32,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [cinemasData, setCinemasData] = useState([]);
   const [seatsData, setSeatsData] = useState([]);
   const [warning, setWarning] = useState('');
-  const [regularPrice, setRegularPrice] = useState('');
-  const [couplePrice, setCouplePrice] = useState('');
+  const [regularPrice, setRegularPrice] = useState(0);
+  const [couplePrice, setCouplePrice] = useState(0);
   const [seatType, setSeatType] = useState('regular');
   const [cityOptions, setCityOptions] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -118,11 +118,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     }
   }, [currentSection]);
 
-  const apiRequest = async ({ url, method = 'GET', body, onSuccess }) => {
+  const apiRequest = async ({ url, method, body, onSuccess }) => {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(url, {
-        method,
+        method: method,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -424,36 +424,40 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const handleSubmitSeat = async (e) => {
     e.preventDefault();
 
+    // Kết hợp dữ liệu form và seatMatrix
     const combinedData = {
       ...formData,
       seats: seatMatrix,
     };
 
-    console.log(combinedData);
+    console.log('Sending payload:', combinedData);
 
-    if (formType === 'add') {
-      apiRequest({
-        url: 'http://localhost:5003/admin/seats',
-        method: 'POST',
-        body: JSON.stringify(combinedData),
-        onSuccess: (newSeat) => {
-          setSeatsData((prev) => [...prev, newSeat]);
-          showPopup('Add Promotion successfully!');
-          closeForm();
-        },
-      });
-    } else {
-      apiRequest({
-        url: `http://localhost:5003/admin/seats/${formData.seatID}`,
-        method: 'PUT',
-        body: JSON.stringify(combinedData),
-        onSuccess: (editedSeat) => {
-          setSeatsData((prev) => prev.map((s) => (String(s.seatID) === String(editedSeat.seatID) ? editedSeat : s)));
+    // Xác định URL và method dựa vào formType
+    const url =
+      formType === 'add'
+        ? 'http://localhost:5003/admin/layouts'
+        : `http://localhost:5003/admin/layouts/${formData.seatID}`;
+
+    const method = formType === 'add' ? 'POST' : 'PUT';
+
+    // Gọi apiRequest
+    apiRequest({
+      url,
+      method,
+      body: combinedData, // để nguyên object, apiRequest sẽ stringify
+      onSuccess: (responseData) => {
+        if (formType === 'add') {
+          setSeatsData((prev) => [...prev, responseData]);
+          showPopup('Add Seat successfully!');
+        } else {
+          setSeatsData((prev) =>
+            prev.map((s) => (String(s.seatID) === String(responseData.seatID) ? responseData : s)),
+          );
           showPopup('Edit Seat successfully!');
-          closeForm();
-        },
-      });
-    }
+        }
+        closeForm();
+      },
+    });
   };
 
   const [seatStep, setSeatStep] = useState(1);
@@ -470,8 +474,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     }
     const matrix = Array.from({ length: rows }, (_, r) =>
       Array.from({ length: cols }, (_, c) => ({
-        row: r,
-        col: c,
+        rowNum: r,
+        colNum: c,
         seatID: null,
         type: 'path',
         price: 0,
@@ -1115,9 +1119,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                         value={seatType === 'regular' ? regularPrice : couplePrice}
                         onChange={(e) => {
                           if (seatType === 'regular') {
-                            setRegularPrice(e.target.value);
+                            setRegularPrice(Number(e.target.value));
                           } else {
-                            setCouplePrice(e.target.value);
+                            setCouplePrice(Number(e.target.value));
                           }
                           setWarning('');
                         }}
@@ -1208,8 +1212,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           }}
                           onClick={(e) => {
                             handleSubmitSeat(e);
-                            setRegularPrice('');
-                            setCouplePrice('');
+                            setRegularPrice(0);
+                            setCouplePrice(0);
                             setSeatType('regular');
                             setWarning('');
                           }}
@@ -1219,8 +1223,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                         <button
                           onClick={() => {
                             setSeatStep(1);
-                            setRegularPrice('');
-                            setCouplePrice('');
+                            setRegularPrice(0);
+                            setCouplePrice(0);
                             setSeatType('regular');
                             setWarning('');
                           }}
