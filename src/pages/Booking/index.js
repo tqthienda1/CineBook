@@ -142,7 +142,7 @@ const Booking = () => {
           </>
         )}
 
-        {selectShowtime && (
+        {selectShowtime !== null && (
           <>
             <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine} />
             <Seat
