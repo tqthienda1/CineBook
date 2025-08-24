@@ -36,6 +36,17 @@ const Room = {
     return result[0];
   },
 
+  async getAllRoom() {
+    const sqlGetAll = `
+      SELECT *
+      FROM room
+    `;
+
+    const [result] = await connection.promise().execute(sqlGetAll);
+
+    return result;
+  },
+
   async deleteRoom(roomID) {
     const sqlDelete = `
       DELETE
