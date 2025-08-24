@@ -191,7 +191,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       url: `http://localhost:5003/admin/cinemas/${cinemaID}`,
       method: 'DELETE',
       onSuccess: () => {
-        setUsersData((prev) => prev.filter((c) => c.cinemaID !== cinemaID));
+        setCinemasData((prev) => prev.filter((c) => c.cinemaID !== cinemaID));
         showPopup('Delete Cinema successfully!');
       },
     });
@@ -1026,7 +1026,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'cinemas', cinema)}>
                       Edit
                     </button>
-                    <button className={styles.deleteBtn} onClick={() => handleDeleteMovie(cinema.cinemaID)}>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => {
+                        handleDeleteCinema(cinema.cinemaID);
+                        console.log(cinemasData);
+                      }}
+                    >
                       Delete
                     </button>
                   </div>
@@ -1069,8 +1075,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                     <td>
                       <td>
                         <button
+                          className={clsx(styles.status, styles.active)}
                           onClick={() => {
-                            // thử log ra để check
                             setSelectedLayout(seat);
                             setShowLayoutDetail(true);
                           }}

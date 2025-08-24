@@ -27,7 +27,7 @@ const ShowLayoutDetail = ({ layout, onClose }) => {
                   : seat.type === 'coupleLeft'
                   ? 'C'
                   : seat.type === 'coupleRight'
-                  ? 'CP'
+                  ? 'P'
                   : 'P'}
               </button>
             ))}
