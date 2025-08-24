@@ -590,8 +590,22 @@ export const getRoomByID = async (req, res) => {
 }
 
 
-// export const deleteRoom = async (req, res) => {
-//   try {
-//     const { roomID }
-//   }
-// }
+export const deleteRoom = async (req, res) => {
+  try {
+    const { roomID } = req.params;
+    
+    if(!roomID) {
+      return res.status(400).json({message: "Thiếu roomID"});
+    }
+
+    const room = await Room.deleteRoom(roomID);
+
+    if (!room) {
+      return res.status(400).json({message: "Không tìm thấy phòng chiếu cần xóa"});
+    }
+
+    res.status(200).json({message: "Xóa thành công"});
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi xóa phòng chiếu", error: err});
+  }
+}

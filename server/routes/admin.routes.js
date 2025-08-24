@@ -7,8 +7,7 @@ import {  getMovies, addMovie, editMovie, deleteMovie,
           getAllUsers, createUser, updateUser, deleteUser,
           addCinema, getAllCinemas, updateCinema, deleteCinema, getCinemaById,
           addLayoutWithSeats, getLayoutWithSeats, deleteLayoutWithSeats, getAllLayouts, updateLayoutWithSeats,
-          addRoom,
-          getRoomByID
+          addRoom, getRoomByID, deleteRoom
         } from '../controllers/adminController.js';
 
 
@@ -42,4 +41,5 @@ router.put('/layouts/:layoutID', verifyToken, checkAdminRole, updateLayoutWithSe
 // Các route quản lý room
 router.post('/rooms', verifyToken, checkAdminRole, addRoom);
 router.get('/rooms/:roomID', verifyToken, checkAdminRole, getRoomByID);
+router.delete('/rooms/:roomID', verifyToken, checkAdminRole, deleteRoom);
 export default router;
