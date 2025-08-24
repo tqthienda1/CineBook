@@ -80,10 +80,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         );
         const data = await res.json();
 
-        const options = data.map((city) => ({
-          label: city.name,
-          value: city.code,
-        }));
+        console.log('data nè:', data);
+        const options = data.map((city) => city.name);
+        console.log('options nè:', options);
 
         setCityOptions(options);
       } catch (error) {
@@ -318,7 +317,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const handleSubmitCinema = async (e) => {
     e.preventDefault();
     console.log(formData);
-
+    console.log(cityOptions);
     if (formType === 'add') {
       apiRequest({
         url: 'http://localhost:5003/admin/cinemas',
@@ -451,7 +450,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     const url =
       formType === 'add'
         ? 'http://localhost:5003/admin/layouts'
-        : `http://localhost:5003/admin/layouts/${formData.seatID}`;
+        : `http://localhost:5003/admin/layouts/${formData.layoutID}`;
 
     const method = formType === 'add' ? 'POST' : 'PUT';
     // Gọi apiRequest
@@ -1020,7 +1019,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 <td style={{ width: '30%' }}>{cinema.cinemaName}</td>
                 <td style={{ width: '15%' }}>{cinema.address}</td>
                 <td style={{ width: '15%' }}>{cinema.phone}</td>
-                <td style={{ width: '15%' }}>{cinemasData.length}</td>
+                <td style={{ width: '15%' }}>{theatersData.length}</td>
                 <td>
                   <div className={styles.actionBtns}>
                     <button className={styles.editBtn} onClick={() => openForm('edit', 'cinemas', cinema)}>
@@ -1155,9 +1154,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           required
                         >
                           <option value="">-- Select --</option>
-                          {field.options?.map((opt) => (
-                            <option key={opt.value} value={opt.value}>
-                              {opt.label}
+                          {field.options?.map((opt, idx) => (
+                            <option key={idx} value={opt}>
+                              {opt}
                             </option>
                           ))}
                         </select>
