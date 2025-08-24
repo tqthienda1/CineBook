@@ -9,6 +9,17 @@ import Seat from '../../components/Seat';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 
+function prioritizeFavoriteCinema(cinemaList, favoriteCinemaID) {
+  const index = cinemaList.findIndex((cinema) => cinema.cinemaID === favoriteCinemaID);
+
+  if (index > -1) {
+    const [favoriteCinema] = cinemaList.splice(index, 1);
+    cinemaList.unshift(favoriteCinema);
+  }
+
+  return cinemaList;
+}
+
 const Booking = () => {
   const { movieID } = useParams();
   const [movieInfo, setMovieInfo] = useState(null);
@@ -24,6 +35,26 @@ const Booking = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
+    const getFavoriteCinema = async () => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        try {
+          const res = await fetch('http://localhost:5003/user/favoritecinema', {
+            method: 'GET',
+            header: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const data = await res.json();
+          return data;
+        } catch (error) {
+          console.log('Fetch favorite cinema error: ', error);
+        }
+      }
+    };
+
     const fetchMovieInfoAndCities = async () => {
       try {
         const res = await fetch(`http://localhost:5003/user/movies/${movieID}?city=${selectCity}`, {
@@ -45,6 +76,12 @@ const Booking = () => {
           setCities(data.cities);
         }
         if (data.cinema) {
+          const favoriteCinema = getFavoriteCinema();
+
+          if (favoriteCinema) {
+            prioritizeFavoriteCinema(data.cinema, favoriteCinema);
+          }
+
           setCinemasList(data.cinema);
         }
         console.log(data);
