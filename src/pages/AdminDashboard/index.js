@@ -221,7 +221,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       url: `http://localhost:5003/admin/showtimes/${showtimeID}`,
       method: 'DELETE',
       onSuccess: () => {
-        setUsersData((prev) => prev.filter((s) => s.showtimeID !== showtimeID));
+        setShowtimesData((prev) => prev.filter((s) => s.showtimeID !== showtimeID));
         showPopup('Delete Showtime successfully!');
       },
     });
@@ -1017,10 +1017,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                 <td>{showtime.endTime}</td>
                 <td>
                   <div className={styles.actionBtns}>
-                    <button className={styles.editBtn} onClick={() => openForm('edit', 'showtimes', showtime)}>
+                    {/* <button className={styles.editBtn} onClick={() => openForm('edit', 'showtimes', showtime)}>
                       Edit
+                    </button> */}
+                    <button className={styles.deleteBtn} onClick={() => handleDeleteShowtime(showtime.showtimeID)}>
+                      Delete
                     </button>
-                    <button className={styles.deleteBtn}>Delete</button>
                   </div>
                 </td>
               </tr>
