@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './AdminDashboard.module.scss';
 import { jwtDecode } from 'jwt-decode';
 import PopUp from '../../components/PopUp';
+import ShowLayoutDetail from '../../components/ShowLayoutDetail'; // import component mới
 import clsx from 'clsx';
 
 const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout }) => {
@@ -37,6 +38,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
   const [seatType, setSeatType] = useState('regular');
   const [cityOptions, setCityOptions] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [showLayoutDetail, setShowLayoutDetail] = useState(false);
+  const [selectedLayout, setSelectedLayout] = useState(null);
 
   const priceInputRef = useRef(null);
 
@@ -91,12 +94,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
     fetchData('http://localhost:5003/admin/movies', setRecentFilms, 'Error to fetch movies data!');
     fetchData('http://localhost:5003/admin/users', setUsersData, 'Error to fetch users data!');
     fetchData('http://localhost:5003/admin/cinemas', setCinemasData, 'Error to fetch cinemas data!');
-    fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
-    fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
-    fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
+    // fetchData('http://localhost:5003/admin/showtimes', setShowtimesData, 'Error to fetch showtimes data!');
+    // fetchData('http://localhost:5003/admin/theaters', setTheatersData, 'Error to fetch theaters data!');
+    // fetchData('http://localhost:5003/admin/promotions', setPromotionsData, 'Error to fetch promotions data!');
     fetchData('http://localhost:5003/admin/layouts', setSeatsData, 'Error to fetch layouts data!');
-    console.log(seatsData);
-
     fetchCities();
   }, []);
 
@@ -451,9 +452,11 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           setSeatsData((prev) => [...prev, combinedData]);
           showPopup('Add Seat successfully!');
         } else {
-          setSeatsData((prev) =>
-            prev.map((s, index) => (String(s.seatID) === String(responseData.seatID) ? combinedData : s)),
-          );
+          setSeatsData((prev) => {
+            const newData = [...prev, combinedData];
+            console.log(newData); // in giá trị đã cập nhật
+            return newData;
+          });
           showPopup('Edit Seat successfully!');
         }
         console.log(seatsData);
@@ -540,7 +543,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
         name: 'cinema',
         label: 'Cinema',
         type: 'select',
-        options: cinemasData.map((item) => ({ value: item.cinemaName, label: item.cinemaName })),
+        options: cinemasData.map((item) => ({
+          value: item.cinemaName,
+          label: item.cinemaName,
+        })),
       },
       // {
       //   name: 'layout',
@@ -678,12 +684,13 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               className={styles.actionBtn}
               onClick={() => {
                 setSkipResetForm(true);
-                setActiveSectionFromLayout('promotions');
-                openForm('add', 'promotions');
+                setActiveSectionFromLayout('seats');
+                console.log(seatsData);
+                openForm('add', 'seats');
               }}
             >
               <span>🎟️</span>
-              New Promotion
+              Add New Layout
             </button>
             <button
               className={styles.actionBtn}
@@ -1013,54 +1020,24 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
             {seatsData.map((seat) => (
               <tr key={seat.seatID}>
                 <td style={{ width: '30%' }}>{seat.seatID}</td>
-                <td style={{ width: '15%' }}>{seat.rowNum}</td>
-                <td style={{ width: '15%' }}>{seat.colNum}</td>
+                <td style={{ width: '15%' }}>{seat.numRow}</td>
+                <td style={{ width: '15%' }}>{seat.numCol}</td>
                 <td>
-                  <button
-                    key={seat.seatID}
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      margin: '2px',
-                      backgroundColor: seat.type === 'path' ? '#ccc' : '#4caf50',
-                    }}
-                    onClick={() => {
-                      seatsData.map((layout, i) => (
-                        <div key={i} style={{ marginBottom: '20px' }}>
-                          <h4>Layout {i + 1}</h4>
-                          <table>
-                            <tbody>
-                              {layout.seats.map((row, rIndex) => (
-                                <tr key={rIndex}>
-                                  {row.map((seat, cIndex) => (
-                                    <td
-                                      key={cIndex}
-                                      style={{
-                                        width: '30px',
-                                        height: '30px',
-                                        textAlign: 'center',
-                                        border: '1px solid black',
-                                        backgroundColor:
-                                          seat.type === 'regular'
-                                            ? '#4caf50'
-                                            : seat.type.includes('couple')
-                                            ? '#ff9800'
-                                            : '#e0e0e0',
-                                      }}
-                                    >
-                                      {seat.type[0].toUpperCase()}
-                                    </td>
-                                  ))}
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ));
-                    }}
-                  >
-                    {seat.type !== 'path' ? seat.price : ''}
-                  </button>
+                  <td>
+                    <td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            console.log('Click show layout:', seat); // thử log ra để check
+                            setSelectedLayout(seat);
+                            setShowLayoutDetail(true);
+                          }}
+                        >
+                          Show Layout
+                        </button>
+                      </td>
+                    </td>
+                  </td>
                 </td>
                 <td>
                   <div className={styles.actionBtns}>
@@ -1114,8 +1091,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               <h3 className={styles.formTitle}>
                 {formType.startsWith('add') ? 'Add New ' : 'Edit '} {entityLabels[entity]}
               </h3>
-
-              {/* Step 1: form nhập rows/columns */}
               {entity !== 'seats' || seatStep === 1 ? (
                 <form className={styles.form} onSubmit={entity === 'seats' ? handleSubmitSeatStep : handleSubmit}>
                   {formConfigs[entity]?.map((field) => (
@@ -1126,7 +1101,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           className={styles.formInput}
                           name={field.name}
                           value={formData[field.name] || ''}
-                          onChange={(e) => handleChange(field, e)}
+                          onChange={(e) => {
+                            handleChange(field, e);
+                          }}
                           required
                         >
                           <option value="">-- Select --</option>
@@ -1318,6 +1295,10 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           </div>
         )}
       </div>
+      {/* Show layout detail (luôn được render riêng) */}
+      {showLayoutDetail && selectedLayout && (
+        <ShowLayoutDetail layout={selectedLayout} onClose={() => setShowLayoutDetail(false)} />
+      )}
       {popupOpen && <PopUp setPosition={'unset'} content={popupMessage} onClick={() => setPopupOpen(false)} />}
     </div>
   );

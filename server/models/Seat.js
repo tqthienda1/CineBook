@@ -1,4 +1,3 @@
-import { deleteLayoutWithSeats } from '../controllers/adminController.js';
 import connection from '../db.js';
 
 const seat = {

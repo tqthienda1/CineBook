@@ -291,6 +291,53 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   ]
 }
 
+
+
+----------------------------------------- ROOM 
+### 
+POST http://localhost:5003/admin/rooms
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNDg2ODQsImV4cCI6MTc1NjA1MjI4NH0.x__YI5gtgArg8mKZTMvL3IJLOOYQNXtxc-i4EhHN1t4
+
+{
+  "cinemaID": 3,
+  "roomName": "P05",
+  "capacity": 70,
+  "layoutID": 2
+}
+
+### 
+GET http://localhost:5003/admin/rooms/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNDg2ODQsImV4cCI6MTc1NjA1MjI4NH0.x__YI5gtgArg8mKZTMvL3IJLOOYQNXtxc-i4EhHN1t4
+
+###
+GET http://localhost:5003/admin/rooms
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNDg2ODQsImV4cCI6MTc1NjA1MjI4NH0.x__YI5gtgArg8mKZTMvL3IJLOOYQNXtxc-i4EhHN1t4
+
+
+###
+DELETE http://localhost:5003/admin/rooms/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNDg2ODQsImV4cCI6MTc1NjA1MjI4NH0.x__YI5gtgArg8mKZTMvL3IJLOOYQNXtxc-i4EhHN1t4
+
+
+###
+PUT http://localhost:5003/admin/rooms/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwNDg2ODQsImV4cCI6MTc1NjA1MjI4NH0.x__YI5gtgArg8mKZTMvL3IJLOOYQNXtxc-i4EhHN1t4
+
+{
+  "cinemaID": 2,
+  "roomName": "PC02",
+  "capacity": 80,
+  "layoutID": 7
+}
+
+
+
+
 ###
 
                                                                   USER
@@ -326,3 +373,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiO
   "phone": "0913288527",
   "birthday": "2000-01-01"
 }
+
+
+

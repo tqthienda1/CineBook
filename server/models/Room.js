@@ -1,0 +1,85 @@
+import { RiZoomInFill } from 'react-icons/ri';
+import connection from '../db.js'
+
+const Room = {
+  async addRoom(roomData) {
+    const { cinemaID, roomName, capacity, layoutID } = roomData;
+
+    const sqlAddRoom = `
+      INSERT INTO room(cinemaID, roomName, capacity, layoutID)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    const [result] = await connection.promise().execute(sqlAddRoom, [cinemaID, roomName, capacity, layoutID]);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+    
+    return {roomID: result.insertId, ...roomData};
+  }, 
+
+  async getRoomByID(roomID) {
+    const sqlGetRoom = `
+      SELECT *
+      FROM room
+      WHERE roomID = ?
+      `
+    ;
+
+    const [result] = await connection.promise().execute(sqlGetRoom, [roomID]);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return result[0];
+  },
+
+  async getAllRoom() {
+    const sqlGetAll = `
+      SELECT *
+      FROM room
+    `;
+
+    const [result] = await connection.promise().execute(sqlGetAll);
+
+    return result;
+  },
+
+  async deleteRoom(roomID) {
+    const sqlDelete = `
+      DELETE
+      FROM room
+      WHERE roomID = ?
+    `;
+
+    const [result] = await connection.promise().execute(sqlDelete, [roomID]);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return roomID;
+  }, 
+
+  async updateRoom(roomData) {
+    const { roomID, cinemaID, roomName, capacity, layoutID } = roomData;
+
+    const sqlUpdate = `
+      UPDATE room
+      SET cinemaID = ?, roomName = ?, capacity = ?, layoutID = ?
+      WHERE roomID = ?
+    `;
+    
+    const [result] = await connection.promise().execute(sqlUpdate, [cinemaID, roomName, capacity, layoutID, roomID] )
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return roomData;
+  }
+}
+
+export default Room;
