@@ -241,11 +241,13 @@ connection.connect(async (err) => {
           movieID INT NOT NULL,
           roomID INT NOT NULL,
           cinemaID INT NOT NULL,
-          startTime DATETIME NOT NULL,
-          endTime DATETIME NOT NULL,
+          showDate DATE NOT NULL,
+          startTime TIME NOT NULL,
+          endTime TIME NOT NULL,
 
           FOREIGN KEY (movieID) REFERENCES movie(movieID) ON DELETE CASCADE,
-          FOREIGN KEY (roomID) REFERENCES room(roomID) ON DELETE CASCADE
+          FOREIGN KEY (roomID) REFERENCES room(roomID) ON DELETE CASCADE,
+          FOREIGN KEY (cinemaID) REFERENCES cinema(cinemaID) ON DELETE CASCADE
         )
       `
     }, 

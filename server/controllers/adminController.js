@@ -480,7 +480,7 @@ export const getLayoutWithSeatsByRoomID = async (req, res) => {
     }
 
     const layoutID = await Layout.getLayoutIDByRoomID(roomID);
-    console.log(layoutID);
+  
     if (!layoutID) {
       return res.status(400).json({ message: "Không tìm thấy layout" });
     }
@@ -530,7 +530,7 @@ export const deleteLayoutWithSeats = async (req, res) => {
 export const updateLayoutWithSeats = async (req, res) => {
   try {
     const { layoutID } = req.params;
-    
+
     if (!layoutID)
     {
       return res.status(400).json({ message: "Thiếu layoutID" });
@@ -669,5 +669,32 @@ export const getAllRoom = async (req, res) => {
     res.status(200).json(rooms);
   } catch {
     res.status(500).json({message: "Lỗi khi lấy tất cả các phòng chiếu", error: err});
+  }
+}
+
+
+
+// ---------------------------SHOWTIME
+import Showtime from '../models/Showtime.js'
+
+export const addShowtime = async (req, res) => {
+  try {
+    const { movieID, roomID, cinemaID, showDate, startTime, endTime } = req.body;
+
+    if (!movieID || !roomID || !cinemaID || !showDate || !startTime || !endTime) {
+      return res.status(400).json({message: "Chưa điền đủ thông tin bắt buộc"});
+    }
+
+    const showtimeData = {movieID, roomID, cinemaID, showDate, startTime, endTime};
+
+    const showtime = await Showtime.addShowtime(showtimeData);
+
+    if (!showtime) {
+      return res.status(400).json({ message: "Không thể thêm suất chiếu" });
+    }
+
+    res.status(200).json(showtime);
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi thêm suất chiếu", error: err})
   }
 }
