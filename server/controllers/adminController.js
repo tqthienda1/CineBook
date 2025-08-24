@@ -181,7 +181,7 @@ export const getAllUsers = async (req, res) => {
   try {
     const users = await User.getAllUsers();
     res.json(users);
-    console.log('Lấy tất cả người dùng thành công:', users);
+    
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
@@ -276,7 +276,7 @@ export const getAllCinemas = async (req, res) => {
   try {
     const cinemas = await Cinema.getAllcinemas();
     res.json(cinemas);
-    console.log('Lấy tất cả rạp chiếu thành công:', cinemas);
+
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
   }
@@ -376,8 +376,8 @@ function generateSeatIDs(seats) {
       }
       seatList.push({
         seatID,              // null nếu là path
-        numRow: seat.numRow,
-        numCol: seat.numCol,
+        rowNum: seat.rowNum,
+        colNum: seat.colNum,
         type: seat.type,
         status: 'available',
         price: seat.price,
@@ -411,6 +411,7 @@ export const addLayoutWithSeats = async (req, res) => {
       ...seat
     }));
 
+    console.log(seatList)
     // 3. Insert tất cả seats
     if (seatList.length > 0) {
       await Seat.addSeat(seatList);
@@ -418,11 +419,10 @@ export const addLayoutWithSeats = async (req, res) => {
 
     res.status(201).json({
       message: "Tạo layout & seats thành công",
-      layoutID: layout.insertId,
-      seatCount: seatList.length,
+      layoutID: layout.insertId
     });
   } catch (error) {
-    console.error("❌ Lỗi khi tạo layout:", error);
+    console.error("Lỗi khi tạo layout:", error);
     res.status(500).json({ message: "Lỗi server khi tạo layout" });
   }
 };
