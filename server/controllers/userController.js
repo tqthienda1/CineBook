@@ -116,3 +116,29 @@ export const getMovieByName = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error });
   }
 }
+
+
+// ------------------------------------------ SHOWTIME
+import Showtime from '../models/Showtime.js'
+
+export const getShowtimeForUser = async (req, res) => {
+  try {
+    const { movieID, cinemaID, showDate } = req.body;
+    
+    if(!movieID || !cinemaID || !showDate) {
+      return res.status(400).json({message: "Thiếu thông tin bắt buộc"});
+    }
+
+    const showtimeData = { movieID, cinemaID, showDate };
+    let showtime = await Showtime.getShowtimeForUser(showtimeData);
+   
+    showtime = showtime.map(st => ({
+      ...st,
+      showDate: new Date(st.showDate).toISOString().split('T')[0]
+    }));
+
+    res.status(200).json(showtime)
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi tìm kiếm suất chiếu", error: err});
+  }
+}

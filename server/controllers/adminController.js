@@ -713,3 +713,4 @@ export const getAllShowtime = async (req, res) => {
     res.status(500).json({message: "Lỗi khi lấy tất cả suất chiếu", error: err});
   }
 }
+
