@@ -6,7 +6,7 @@ import { checkAdminRole } from '../middlewares/roleMiddleware.js';
 import {  getMovies, addMovie, editMovie, deleteMovie, 
           getAllUsers, createUser, updateUser, deleteUser,
           addCinema, getAllCinemas, updateCinema, deleteCinema, getCinemaById,
-          addLayoutWithSeats
+          addLayoutWithSeats, getLayoutWithSeats
         } from '../controllers/adminController.js';
 
 
@@ -32,6 +32,7 @@ router.delete('/cinemas/:cinemaID', verifyToken, checkAdminRole, deleteCinema);
 
 // Các rout quản lý layout
 router.post('/layouts', verifyToken, checkAdminRole, addLayoutWithSeats);
+router.get('/layouts/:layoutID', verifyToken, checkAdminRole, getLayoutWithSeats)
 
 
 export default router;
