@@ -471,6 +471,36 @@ export const getLayoutWithSeats = async (req, res) => {
   }
 };
 
+export const getLayoutWithSeatsByRoomID = async (req, res) => {
+  try {
+    const { roomID } = req.params;
+
+    if (!roomID) {
+      return res.status(400).json({message: "Thiếu roomID"});
+    }
+
+    const layoutID = await Layout.getLayoutIDByRoomID(roomID);
+    console.log(layoutID);
+    if (!layoutID) {
+      return res.status(400).json({ message: "Không tìm thấy layout" });
+    }
+
+    const layout = await Layout.getLayoutById(layoutID);
+    if (!layout) {
+      return res.status(404).json({ message: "Không tìm thấy layout" });
+    }
+
+    const seats = await Seat.getSeatsByLayoutID(layoutID);
+
+    res.status(200).json({
+      layout,
+      seats
+    });
+  } catch (err) {
+    res.status(500).json({message: "Lỗi khi tìm kiếm layout bằng roomID", error: err});
+  }
+}
+
 export const deleteLayoutWithSeats = async (req, res) => {
   try {
     const { layoutID } = req.params;
