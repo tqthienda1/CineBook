@@ -1320,170 +1320,185 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               </h3>
               {entity !== 'seats' || seatStep === 1 ? (
                 <form className={styles.form} onSubmit={entity === 'seats' ? handleSubmitSeatStep : handleSubmit}>
-                  {formConfigs[entity]?.map((field) => (
-                    <label key={field.name} className={styles.formGroup}>
-                      <span className={styles.formLabel}>{field.label}:</span>
+                  {formConfigs[entity]?.map((field) => {
+                    // Ẩn/hiện field theo dateMode (chỉ áp dụng cho showtimes)
+                    if (entity === 'showtimes') {
+                      if (
+                        formData.dateMode === 'specific' &&
+                        (field.name === 'startDate' || field.name === 'endDate')
+                      ) {
+                        return null;
+                      }
+                      if (formData.dateMode === 'weekly' && field.name === 'specificDates') {
+                        return null;
+                      }
+                    }
 
-                      {field.type === 'select' ? (
-                        <select
-                          className={styles.formInput}
-                          name={field.name}
-                          value={formData[field.name] || ''}
-                          onChange={(e) => handleChange(field, e)}
-                          required
-                        >
-                          <option value="">-- Select --</option>
+                    // Chuẩn bị options động (lọc conflict cho timeSlots)
+                    const options =
+                      field.name === 'timeSlots'
+                        ? getAvailableTimeOptions({
+                            formData,
+                            baseSlots: baseTimeSlots,
+                            recentFilms, // 👈 truyền đúng vào đây
+                            showtimesData,
+                            defaultBuffer: 30,
+                          })
+                        : field.options;
+                    return (
+                      <label key={field.name} className={styles.formGroup}>
+                        <span className={styles.formLabel}>{field.label}:</span>
 
-                          {field.name === 'room'
-                            ? theatersData
-                                .filter((r) => String(r.cinemaID) === String(formData.cinema))
-                                .map((r) => (
-                                  <option key={r.roomID} value={r.roomID}>
-                                    {`${r.roomName} (${r.capacity} seats)`}
+                        {field.type === 'select' ? (
+                          <select
+                            className={styles.formInput}
+                            name={field.name}
+                            value={formData[field.name] || ''}
+                            onChange={(e) => handleChange(field, e)}
+                            required
+                          >
+                            <option value="">-- Select --</option>
+
+                            {field.name === 'room'
+                              ? theatersData
+                                  .filter((r) => String(r.cinemaID) === String(formData.cinema))
+                                  .map((r) => (
+                                    <option key={r.roomID} value={r.roomID}>
+                                      {`${r.roomName} (${r.capacity} seats)`}
+                                    </option>
+                                  ))
+                              : options?.map((opt) => (
+                                  <option key={opt.value} value={opt.value}>
+                                    {opt.label}
                                   </option>
-                                ))
-                            : field.name === 'time'
-                            ? getAvailableTimeOptions({
-                                formData,
-                                baseSlots: baseTimeSlots,
-                                showtimesData,
-                                defaultBuffer: 30,
-                              }).map((opt) => (
-                                <option key={opt.value} value={opt.value}>
+                                ))}
+                          </select>
+                        ) : field.type === 'radio' ? (
+                          <>
+                            <div className={styles.radioGroup}>
+                              {field.options?.map((opt) => (
+                                <label key={opt.value} className={styles.radioOption}>
+                                  <input
+                                    type="radio"
+                                    name={field.name}
+                                    value={opt.value}
+                                    checked={formData[field.name] === opt.value}
+                                    onChange={(e) => handleChange(field, e)}
+                                  />
                                   {opt.label}
-                                </option>
-                              ))
-                            : field.options?.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                  {opt.label}
-                                </option>
+                                </label>
                               ))}
-                        </select>
-                      ) : field.type === 'radio' ? (
-                        <>
-                          <div className={styles.radioGroup}>
-                            {field.options?.map((opt) => (
-                              <label key={opt.value} className={styles.radioOption}>
+                            </div>
+
+                            {/* 👇 nếu chọn Weekly Pattern → hiện checkbox thứ trong tuần */}
+                            {formData[field.name] === 'weekly' && (
+                              <div className={styles.checkboxGroup}>
+                                {[
+                                  { value: 'monday', label: 'Monday' },
+                                  { value: 'tuesday', label: 'Tuesday' },
+                                  { value: 'wednesday', label: 'Wednesday' },
+                                  { value: 'thursday', label: 'Thursday' },
+                                  { value: 'friday', label: 'Friday' },
+                                  { value: 'saturday', label: 'Saturday' },
+                                  { value: 'sunday', label: 'Sunday' },
+                                ].map((opt) => (
+                                  <label key={opt.value} className={styles.checkboxOption}>
+                                    <input
+                                      type="checkbox"
+                                      name="daysOfWeek"
+                                      value={opt.value}
+                                      checked={formData.daysOfWeek?.includes(opt.value)}
+                                      onChange={(e) => handleChange({ name: 'daysOfWeek', type: 'checkbox-group' }, e)}
+                                    />
+                                    {opt.label}
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* 👇 nếu chọn Specific Dates → hiện input chọn nhiều ngày */}
+                            {formData[field.name] === 'specific' && (
+                              <div className={styles.specificDates}>
                                 <input
-                                  type="radio"
+                                  type="date"
+                                  className={styles.formInput}
+                                  onChange={(e) => {
+                                    const newDate = e.target.value;
+                                    if (newDate && !formData.specificDates?.includes(newDate)) {
+                                      handleChange(
+                                        { name: 'specificDates', type: 'multi-select' },
+                                        {
+                                          target: {
+                                            value: newDate,
+                                            checked: true,
+                                            name: 'specificDates',
+                                          },
+                                        },
+                                      );
+                                    }
+                                  }}
+                                />
+                                <div className={styles.selectedDates}>
+                                  {formData.specificDates?.map((d) => (
+                                    <span key={d} className={styles.dateTag}>
+                                      {d}
+                                      <button
+                                        type="button"
+                                        className={styles.removeDateBtn}
+                                        onClick={() =>
+                                          handleChange(
+                                            { name: 'specificDates', type: 'multi-select' },
+                                            {
+                                              target: {
+                                                value: d,
+                                                checked: false,
+                                                name: 'specificDates',
+                                              },
+                                            },
+                                          )
+                                        }
+                                      >
+                                        ×
+                                      </button>
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ) : field.type === 'multi-select' ? (
+                          <div className={styles.multiSelectGrid}>
+                            {options?.map((opt) => (
+                              <label
+                                key={opt.value}
+                                className={`${styles.multiSelectOption} ${
+                                  formData[field.name]?.includes(opt.value) ? styles.selected : ''
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
                                   name={field.name}
                                   value={opt.value}
-                                  checked={formData[field.name] === opt.value}
+                                  checked={formData[field.name]?.includes(opt.value)}
                                   onChange={(e) => handleChange(field, e)}
                                 />
                                 {opt.label}
                               </label>
                             ))}
                           </div>
-
-                          {/* 👇 nếu chọn Weekly Pattern → hiện checkbox thứ trong tuần */}
-                          {formData[field.name] === 'weekly' && (
-                            <div className={styles.checkboxGroup}>
-                              {[
-                                { value: 'monday', label: 'Monday' },
-                                { value: 'tuesday', label: 'Tuesday' },
-                                { value: 'wednesday', label: 'Wednesday' },
-                                { value: 'thursday', label: 'Thursday' },
-                                { value: 'friday', label: 'Friday' },
-                                { value: 'saturday', label: 'Saturday' },
-                                { value: 'sunday', label: 'Sunday' },
-                              ].map((opt) => (
-                                <label key={opt.value} className={styles.checkboxOption}>
-                                  <input
-                                    type="checkbox"
-                                    name="daysOfWeek"
-                                    value={opt.value}
-                                    checked={formData.daysOfWeek?.includes(opt.value)}
-                                    onChange={(e) => handleChange({ name: 'daysOfWeek', type: 'checkbox-group' }, e)}
-                                  />
-                                  {opt.label}
-                                </label>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* 👇 nếu chọn Specific Dates → hiện input chọn nhiều ngày */}
-                          {formData[field.name] === 'specific' && (
-                            <div className={styles.specificDates}>
-                              <input
-                                type="date"
-                                className={styles.formInput}
-                                onChange={(e) => {
-                                  const newDate = e.target.value;
-                                  if (newDate && !formData.specificDates?.includes(newDate)) {
-                                    handleChange(
-                                      { name: 'specificDates', type: 'multi-select' },
-                                      {
-                                        target: {
-                                          value: newDate,
-                                          checked: true,
-                                          name: 'specificDates',
-                                        },
-                                      },
-                                    );
-                                  }
-                                }}
-                              />
-                              <div className={styles.selectedDates}>
-                                {formData.specificDates?.map((d) => (
-                                  <span key={d} className={styles.dateTag}>
-                                    {d}
-                                    <button
-                                      type="button"
-                                      className={styles.removeDateBtn}
-                                      onClick={() =>
-                                        handleChange(
-                                          { name: 'specificDates', type: 'multi-select' },
-                                          {
-                                            target: {
-                                              value: d,
-                                              checked: false,
-                                              name: 'specificDates',
-                                            },
-                                          },
-                                        )
-                                      }
-                                    >
-                                      ×
-                                    </button>
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : field.type === 'multi-select' ? (
-                        <div className={styles.multiSelectGrid}>
-                          {field.options?.map((opt) => (
-                            <label
-                              key={opt.value}
-                              className={`${styles.multiSelectOption} ${
-                                formData[field.name]?.includes(opt.value) ? styles.selected : ''
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                name={field.name}
-                                value={opt.value}
-                                checked={formData[field.name]?.includes(opt.value)}
-                                onChange={(e) => handleChange(field, e)}
-                              />
-                              {opt.label}
-                            </label>
-                          ))}
-                        </div>
-                      ) : (
-                        <input
-                          className={styles.formInput}
-                          type={field.type}
-                          name={field.name}
-                          value={formData[field.name] || ''}
-                          onChange={(e) => handleChange(field, e)}
-                          required
-                        />
-                      )}
-                    </label>
-                  ))}
+                        ) : (
+                          <input
+                            className={styles.formInput}
+                            type={field.type}
+                            name={field.name}
+                            value={formData[field.name] || ''}
+                            onChange={(e) => handleChange(field, e)}
+                            required
+                          />
+                        )}
+                      </label>
+                    );
+                  })}
                   <div className={styles.formActions}>
                     <button className={styles.submitBtn} type="submit">
                       {entity === 'seats' ? 'Next' : formType === 'edit' ? 'Edit' : 'Add'}
