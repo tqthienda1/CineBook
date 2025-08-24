@@ -339,10 +339,13 @@ export const deleteCinema = async (req, res) => {
 }
 
 
+
+
 // Quản lý layout
 
 import Layout from "../models/Layout.js";
 import Seat from "../models/Seat.js";
+import layout from '../models/Layout.js';
 
 function generateSeatIDs(seats) {
   const seatList = [];
@@ -451,3 +454,29 @@ export const getLayoutWithSeats = async (req, res) => {
     res.status(500).json({ message: "Lỗi server khi lấy layout và seats", error });
   }
 };
+
+export const deleteLayoutWithSeats = async (req, res) => {
+  try {
+    const { layoutID } = req.params;
+
+    if(!layoutID) {
+      return res.status(400).json({message: "Thiếu layoutID"});
+    }
+
+    const seats = await Seat.deleteSeatsByLayoutID(layoutID);
+
+    if(!seats) {
+      return res.status(404).json({ message: "Không tìm thấy ghế để xóa" });
+    }
+
+    const layout = await Layout.deleteLayout(layoutID);
+
+    if(!layout) {
+      return res.status(404).json({ message: "Không tìm thấy layout để xóa" });
+    }
+
+    res.status(200).json({ message: "Xóa thành công layout và ghế"})
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi khi xóa layout và ghế"})
+  }
+}

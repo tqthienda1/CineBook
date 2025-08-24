@@ -1,3 +1,4 @@
+import { deleteLayoutWithSeats } from '../controllers/adminController.js';
 import connection from '../db.js';
 
 const seat = {
@@ -13,22 +14,34 @@ const seat = {
     const sqlAddSeat = `
     INSERT INTO seat (seatID, layoutID, rowNum, colNum, status, type, price)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-  `;
+    `;
 
-  for (const seatData of seatList) {
-    const { seatID, layoutID, rowNum, colNum, status, type, price } = seatData;
-    await connection.promise().execute(sqlAddSeat, [
-      seatID,
-      layoutID,
-      rowNum,
-      colNum,
-      status,
-      type,
-      price,
-    ]);
-  }
+    for (const seatData of seatList) {
+      const { seatID, layoutID, rowNum, colNum, status, type, price } = seatData;
+      await connection.promise().execute(sqlAddSeat, [
+        seatID,
+        layoutID,
+        rowNum,
+        colNum,
+        status,
+        type,
+        price,
+      ]);
+    }
 
-  return { seatList };
+    return { seatList };
+  },
+
+  async deleteSeatsByLayoutID(layoutID) {
+    const sqlDeleteSeat = `DELETE FROM seat WHERE layoutID = ? `
+
+    const [rows] = await connection.promise().execute(sqlDeleteSeat, [layoutID]);
+
+    if (rows.affectedRows === 0) {
+      return null;
+    }
+
+    return true;
   }
 };
 

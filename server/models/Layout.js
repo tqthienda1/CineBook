@@ -23,6 +23,18 @@ const layout = {
       return null; // Không thêm được layout
     }
     return { layoutID: result.insertId, ...layoutData }; // Trả về thông tin layout mới
+  }, 
+
+  async deleteLayout(layoutID) {
+    const sqlDeleteLayout = 'DELETE FROM layout WHERE layoutID = ?';
+
+    const [result] = await connection.promise().execute(sqlDeleteLayout, [layoutID]);
+
+    if(result.affectedRows === 0) {
+      return null;
+    }
+
+    return layoutID;
   }
 } 
 
