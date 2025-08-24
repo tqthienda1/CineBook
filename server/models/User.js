@@ -1,3 +1,4 @@
+import { addFavoriteCinema } from '../controllers/userController.js';
 import connection from '../db.js';
 import bcrypt from 'bcryptjs';
 
@@ -59,12 +60,12 @@ const User = {
   },
 
   // Cập nhật thông tin người dùng
-  async userUpdateUser(userID, fullname, phone, birthday) {
+  async userUpdateUser(userID, fullname, phone, birthday, favoriteCinema) {
     const sql = ` UPDATE user
-                  SET fullname = ?, phone = ?, birthday = ?
+                  SET fullname = ?, phone = ?, birthday = ?, favoriteCinema = ?
                   WHERE userID = ?
                 `;
-    const [result] = await connection.promise().execute(sql, [fullname, phone, birthday, userID]);
+    const [result] = await connection.promise().execute(sql, [fullname, phone, birthday, favoriteCinema, userID]);
     if (result.affectedRows === 0) {
       return null; // Không tìm thấy người dùng để cập nhật
     }
@@ -79,6 +80,22 @@ const User = {
     const sql = 'DELETE FROM user WHERE userID = ?';
     const [result] = await connection.promise().execute(sql, [userID]);
     return result; // Trả về kết quả xóa
+  },
+
+  async addFavoriteCinema(userID, favoriteCinema) {
+    const sqlAddFav = `
+      UPDATE user
+      SET favoriteCinema = ?
+      WHERE userID = ?  
+    `
+
+    const [result] = await connection.promise().execute(sqlAddFav, [favoriteCinema, userID]);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return result;
   }
 
 };

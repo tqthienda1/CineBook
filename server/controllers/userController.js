@@ -21,14 +21,14 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const { email, fullname, phone, birthday } = req.body;
+    const { email, fullname, phone, birthday, favoriteCinema } = req.body;
     const userId = req.user.id; // req.user lấy từ middleware auth
 
-    if (!email && !fullname && !phone && !birthday) {
+    if (!email && !fullname && !phone && !birthday && !favoriteCinema) {
       return res.status(400).json({ message: 'Không có thông tin nào để cập nhật' });
     }
 
-    const updatedUser = await User.userUpdateUser(userId, fullname, phone, birthday);
+    const updatedUser = await User.userUpdateUser(userId, fullname, phone, birthday, favoriteCinema);
 
     if (updatedUser.birthday) {
       updatedUser.birthday = new Date(updatedUser.birthday).toISOString().split('T')[0];
@@ -38,12 +38,51 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy user để cập nhật hoặc thông tin không có thay đổi' });
     }
 
-    res.json({ message: 'Cập nhật thành công', user: updatedUser });
+    res.status(200).json({ message: 'Cập nhật thành công', user: updatedUser });
   } catch (error) {
+    if (error.code === "ER_NO_REFERENCED_ROW_2") {
+      return res.status(400).json({
+        message: "roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu",
+        error: error.sqlMessage,
+      });
+    }
     res.status(500).json({ message: 'Lỗi server', error });
   }
 };
 
+export const addFavoriteCinema = async (req, res) => {
+  try {
+    const userID = req.user.id;
+    const { favoriteCinema } = req.body
+    console.log(userID, favoriteCinema)
+    if (!favoriteCinema) {
+      return res.status(400).json({message: "Không có thông tin rạp yêu thích"});
+    }
+
+
+    const updatedUser = await User.addFavoriteCinema(userID, favoriteCinema);
+
+    if (updatedUser.birthday) {
+      updatedUser.birthday = new Date(updatedUser.birthday).toISOString().split('T')[0];
+    }
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'Không tìm thấy user để cập nhật hoặc thông tin không có thay đổi' });
+    }
+
+    res.status(200).json({ message: 'Cập nhật thành công rạp yêu thích'});
+  } catch (error) {
+    if (error.code === "ER_NO_REFERENCED_ROW_2") {
+      return res.status(400).json({
+        message: "roomID hoặc movieID hoặc cinemaID không tồn tại trong cơ sở dữ liệu",
+        error: error.sqlMessage,
+      });
+    }
+    res.status(500).json({ message: 'Lỗi server', error });
+  }
+}
+
+// ---------------------- MOVIE
 export const getMovieWithCities = async (req, res) => {
   try {
     const movieID = req.params.id;

@@ -73,7 +73,8 @@ connection.connect(async (err) => {
           fullname VARCHAR(255),
           phone VARCHAR(20),
           birthday DATE,
-          role VARCHAR(10)
+          role VARCHAR(10), 
+          favoriteCinema INT NULL
         )
       `
     },
@@ -251,7 +252,6 @@ connection.connect(async (err) => {
         )
       `
     }, 
-
   ];
 
 
