@@ -345,7 +345,29 @@ export const deleteCinema = async (req, res) => {
 
 import Layout from "../models/Layout.js";
 import Seat from "../models/Seat.js";
-import layout from '../models/Layout.js';
+
+export const getAllLayouts = async (req, res) => {
+  try {
+    const layouts = await Layout.getAllLayout();
+
+   const layoutsWithSeats = await Promise.all(
+      layouts.map(async (l) => {
+        const seats = await Seat.getSeatsByLayoutID(l.layoutID);
+        return {
+          ...l,
+          seats: seats
+        };
+      })
+    );
+ 
+    
+    res.json(layoutsWithSeats);
+  } catch (err) {
+    console.error("Lỗi khi lấy tất cả layout:", err);
+    res.status(500).json({ message: "Lỗi khi lấy tất cả layout" });
+
+  }
+}
 
 function generateSeatIDs(seats) {
   const seatList = [];

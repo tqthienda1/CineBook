@@ -1,8 +1,16 @@
 import connection from '../db.js';
 
 const layout = {
+
+  async getAllLayout() {
+    const sqlGetAllLayout = `SELECT * FROM layout`;
+
+    const [rows] = await connection.promise().execute(sqlGetAllLayout);
+
+    return rows;
+  },
+
   async getLayoutById(layoutID) {
-  
     const sqlGetLayoutById = `SELECT * FROM layout WHERE layoutID = ?`
     
     const [rows] = await connection.promise().execute(sqlGetLayoutById, [layoutID]);
