@@ -38,11 +38,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 ### 
 POST http://localhost:5003/admin/movies
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwMTk3MjIsImV4cCI6MTc1NjAyMzMyMn0._COv0uhtEkH4MPrShvk5Sp8CcKLnBW2XJLfyKxE7xp8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTYwMzYxMDMsImV4cCI6MTc1NjAzOTcwM30.wzHbjH-dwAJrKEx8Tmzm7EwXkBTr3n3AOIeamOQmnx8
 
 {
-  "name":"f1",
-  "category":["Tinh cam", "Hanh dong"],
+  "name":"Smurfs",
+  "category":["Animation", "Family", "Fantasy"],
   "language":"Tieng Viet",
   "duration":"120",
   "releaseDay":"2025-08-18",
@@ -52,9 +52,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   "writers":["Trần Quốc Thiện"],
   "actors":["Ngô Bảo Long"],
   "ageLimit":"18",
-  "status":"active",
   "posterURL":"posterURL",
-  "backdropURL":"posterURL"
+  "backdropURL":"posterURL",
+  "trailerURL": "trailerURL"
 }
 
 
@@ -74,7 +74,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
   "writers":["Trần Quốc Thiện"],
   "actors":["Ngô Bảo Long"],
   "ageLimit":"18",
-  "status":"active",
   "posterURL":"posterURL",
   "backdropURL":"posterURL"
 }
