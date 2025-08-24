@@ -717,15 +717,19 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <tbody>
             {recentFilms.map((film) => (
               <tr key={film.movieID}>
-                <td style={{ width: '40%' }}>{film.name}</td>
+                <td style={{ width: '35%' }}>{film.name}</td>
                 <td style={{ width: '15%' }}>
                   {Array.isArray(film.category) ? film.category.join(', ') : film.category ?? ''}
                 </td>
                 <td style={{ width: '10%' }}>{film.duration} mins</td>
                 <td style={{ width: '10%' }}>{film.releaseDay}</td>
                 <td style={{ width: '10%' }}>
-                  <span className={`${styles.status} ${film.status === 'Showing' ? styles.active : styles.inactive}`}>
-                    {film.status}
+                  <span
+                    className={`${styles.status} ${
+                      new Date(film.releaseDay) <= new Date() ? styles.active : styles.inactive
+                    }`}
+                  >
+                    {new Date(film.releaseDay) > new Date() ? 'Up Coming' : 'Showing'}
                   </span>
                 </td>
                 <td>
@@ -996,26 +1000,6 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
               <th>Actions</th>
             </tr>
           </thead>
-          {/* <tbody>
-            {cinemasData.map((cinema) => (
-              <tr key={cinema.cinemaID}>
-                <td style={{ width: '30%' }}>{cinema.cinemaName}</td>
-                <td style={{ width: '15%' }}>{cinema.address}</td>
-                <td style={{ width: '15%' }}>{cinema.phone}</td>
-                <td style={{ width: '15%' }}>{cinemasData.length}</td>
-                <td>
-                  <div className={styles.actionBtns}>
-                    <button className={styles.editBtn} onClick={() => openForm('edit', 'cinemas', cinema)}>
-                      Edit
-                    </button>
-                    <button className={styles.deleteBtn} onClick={() => handleDeleteMovie(cinema.cinemaID)}>
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody> */}
         </table>
       </div>
     </div>
@@ -1179,15 +1163,15 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                                   const rightSeat = newMatrix[rowIndex][colIndex + 1];
 
                                   if (seat.type === 'coupleLeft' && rightSeat?.type === 'coupleRight') {
-                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
-                                    newMatrix[rowIndex][colIndex + 1] = { ...rightSeat, type: 'path', price: '' };
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: 0 };
+                                    newMatrix[rowIndex][colIndex + 1] = { ...rightSeat, type: 'path', price: 0 };
                                   } else if (
                                     seat.type === 'coupleRight' &&
                                     newMatrix[rowIndex][colIndex - 1]?.type === 'coupleLeft'
                                   ) {
                                     const leftSeat = newMatrix[rowIndex][colIndex - 1];
-                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
-                                    newMatrix[rowIndex][colIndex - 1] = { ...leftSeat, type: 'path', price: '' };
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: 0 };
+                                    newMatrix[rowIndex][colIndex - 1] = { ...leftSeat, type: 'path', price: 0 };
                                   } else if (rightSeat && rightSeat.type === 'path') {
                                     // Thêm ghế couple
                                     newMatrix[rowIndex][colIndex] = { ...seat, type: 'coupleLeft', price: couplePrice };
@@ -1200,7 +1184,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                                 } else if (seatType === 'regular') {
                                   // Logic ghế thường
                                   if (seat.type === 'regular') {
-                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: '' };
+                                    newMatrix[rowIndex][colIndex] = { ...seat, type: 'path', price: 0 };
                                   } else {
                                     newMatrix[rowIndex][colIndex] = { ...seat, type: 'regular', price: regularPrice };
                                   }
@@ -1230,8 +1214,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                           }}
                           onClick={(e) => {
                             handleSubmitSeat(e);
-                            setRegularPrice(0);
-                            setCouplePrice(0);
+                            setRegularPrice('');
+                            setCouplePrice('');
                             setSeatType('regular');
                             setWarning('');
                           }}
@@ -1241,8 +1225,8 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                         <button
                           onClick={() => {
                             setSeatStep(1);
-                            setRegularPrice(0);
-                            setCouplePrice(0);
+                            setRegularPrice('');
+                            setCouplePrice('');
                             setSeatType('regular');
                             setWarning('');
                           }}
