@@ -359,11 +359,10 @@ function generateSeatIDs(seats) {
   const seatList = [];
   let emptyRow = 0; // đếm số hàng trống
   seats.forEach((rowSeats, rowIndex) => {
-    let colCount = 1;
-    let couple = 0;
-
-    const rowLetter = String.fromCharCode(65 + rowIndex - emptyRow); // 65 = 'A'
-
+    let colCount = 1; 
+  
+    const rowLetter = String.fromCharCode(65 + rowIndex - emptyRow); // 65 = 'A' 
+    
     rowSeats.forEach((seat) => {
       let seatID = null;
 
@@ -372,15 +371,14 @@ function generateSeatIDs(seats) {
           seatID = `${rowLetter}${colCount}`;
           colCount++;
         }
-        if (seat.type == 'couple') {
-          seatID = `${rowLetter}${colCount}`;
 
-          if (couple === 0) {
-            couple = 1;
-          } else {
-            colCount++;
-            couple = 0;
-          }
+        if (seat.type == "coupleLeft") {
+          seatID = `${rowLetter}${colCount}`;
+        }
+        if (seat.type == "coupleRight") {
+          seatID = `${rowLetter}${colCount}`;
+          colCount++;
+
         }
       } else {
         seatID = null;
