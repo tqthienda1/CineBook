@@ -21,7 +21,13 @@ const showtime = {
   },
 
   async getAllShowtime() {
-    const sqlGetAllShowtime = `SELECT * FROM showtime`;
+    const sqlGetAllShowtime = `
+      SELECT st.showtimeID, st.movieID, st.roomID, st.cinemaID, st.cinemaID, st.showDate, st.startTime, st.endTime, c.cinemaName, m.name, r.roomName
+      FROM showtime st
+      JOIN cinema c ON c.cinemaID = st.cinemaID
+      JOIN movie m ON m.movieID = st.movieID
+      JOIN room r ON r.roomID = st.roomID
+      `;
 
     const [rows] = await connection.promise().execute(sqlGetAllShowtime);
 
