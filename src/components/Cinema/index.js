@@ -22,7 +22,7 @@ const showtimeInfo = [
   { time: '11:45', type: '2d' },
 ];
 
-const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionShowtime, movieID, pickingDate }) => {
+const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionShowtime, movieID, pickingDate, selectCity }) => {
   const navigate = useNavigate();
   const [selectSectionFavorite, setSelectSectionFavorite] = useState();
 
@@ -79,6 +79,7 @@ const Cinema = ({ cinemaList, onSelectShowtime, selectShowtime, selectSectionSho
             cinemaID={item.cinemaID}
             movieID={movieID}
             pickingDate={pickingDate}
+            selectCity={selectCity}
           />
         </li>
       ))}

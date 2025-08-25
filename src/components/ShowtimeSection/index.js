@@ -18,27 +18,31 @@ const ShowtimeSection = ({
   cinemaID,
   pickingDate,
   movieID,
+  selectCity,
 }) => {
-  const [showtimesList, setShowtimesList] = useState();
+  const [showtimesList, setShowtimesList] = useState([]);
 
   useEffect(() => {
     const getShowtimesList = async () => {
       try {
-        const formattedPickingDate = pickingDate
-          .toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })
-          .replace(/\//g, '-');
+        setShowtimesList([]);
+        const yyyy = pickingDate.getFullYear();
+        const mm = String(pickingDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(pickingDate.getDate()).padStart(2, '0');
+
+        const formattedPickingDate = `${yyyy}-${mm}-${dd}`;
 
         const res = await fetch(
           `http://localhost:5003/user/showtimes?movieID=${movieID}&cinemaID=${cinemaID}&showDate=${formattedPickingDate}`,
         );
 
-        const data = await res.json();
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy phim');
+        }
 
+        const data = await res.json();
         console.log(data);
+        setShowtimesList(data);
       } catch (error) {
         console.log('Fetch showtimes list error: ', error);
       }
@@ -61,7 +65,7 @@ const ShowtimeSection = ({
           </div>
         </div>
       </div>
-      {showtimesList && (
+      {showtimesList !== undefined && (
         <ul className={styles.showtimesList}>
           {showtimesList.map((item, index) => (
             <li key={index}>
@@ -71,9 +75,11 @@ const ShowtimeSection = ({
                     ? styles.selectedShowtime
                     : ''
                 }
-                onClick={() => handleSelectShowtime(index, sectionShowtimeIndex, item.time, cinemaName)}
-                time={item.time}
-                type={item.type}
+                onClick={() =>
+                  handleSelectShowtime(index, sectionShowtimeIndex, item.startTime.slice(0, -3), cinemaName)
+                }
+                time={item.startTime.slice(0, -3)}
+                type={'2d'}
               />
             </li>
           ))}
