@@ -140,6 +140,7 @@ const Booking = () => {
               selectShowtime={selectShowtime}
               pickingDate={pickingDate}
               movieID={movieInfo.movieID}
+              selectCity={selectCity}
             />
           </>
         )}

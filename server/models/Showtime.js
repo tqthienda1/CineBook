@@ -9,35 +9,37 @@ const showtime = {
       VALUES (?, ?, ?, ?, ?, ?)
     `;
 
-    const [result] = await connection.promise().execute(sqlAdd, [movieID, roomID, cinemaID, showDate, startTime, endTime]);
+    const [result] = await connection
+      .promise()
+      .execute(sqlAdd, [movieID, roomID, cinemaID, showDate, startTime, endTime]);
 
     if (!result.affectedRows === 0) {
       return null;
     }
 
-    return {showtimeID: result.insertId, ...showtimeData};
+    return { showtimeID: result.insertId, ...showtimeData };
   },
 
   async getAllShowtime() {
     const sqlGetAllShowtime = `SELECT * FROM showtime`;
 
     const [rows] = await connection.promise().execute(sqlGetAllShowtime);
-    
+
     return rows;
   },
 
   async getShowtimeForUser(showtimeData) {
-    const { cinemaID, movieID, showDate } = showtimeData
+    const { cinemaID, movieID, showDate } = showtimeData;
 
     const sqlGetShowtime = `
       SELECT * 
       FROM showtime
       WHERE cinemaID = ? AND movieID = ? AND DATE(showDate) = ?  
     `;
-
+    
     const [result] = await connection.promise().execute(sqlGetShowtime, [cinemaID, movieID, showDate]);
-
-    return result.length > 0 ? result : null
+    console.log(result)
+    return result.length > 0 ? result : null;
   },
 
   async getShowtimeByRoomID(roomID) {
@@ -46,13 +48,13 @@ const showtime = {
       FROM showtime
       WHERE roomID = ?
     `;
- 
+
     const [result] = await connection.promise().execute(sql, [roomID]);
     console.log(result);
 
     return result;
   },
-  
+
   async deleteShowtime(showtimeID) {
     const sqlDelete = `
       DELETE 
@@ -83,14 +85,16 @@ const showtime = {
       WHERE showtimeID = ?
     `;
 
-    const [result] = await connection.promise().execute(sqlUpdate, [movieID, roomID, cinemaID, showDate, startTime, endTime, showtimeID]);
-    
+    const [result] = await connection
+      .promise()
+      .execute(sqlUpdate, [movieID, roomID, cinemaID, showDate, startTime, endTime, showtimeID]);
+
     if (result.affectedRows === 0) {
       return null;
     }
 
     return showtimeData;
-  }
-}
+  },
+};
 
 export default showtime;
