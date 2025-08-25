@@ -54,14 +54,14 @@ const SeatMap = ({ onSelectSeat, onRemoveSeat, selectedSeats, seatLayout }) => {
             <div className={styles.row} key={rowIndex}>
               {row.map((col, colIndex) => {
                 return (
-                  col.type !== 'couple2' && (
+                  col.type !== 'coupleLeft' && (
                     <div
                       key={colIndex}
                       className={clsx(
                         col.type === 'regular' ? styles.regularSeat : '',
                         col.type === 'path' ? styles.path : '',
                         col.status === 'taken' ? styles.takenSeat : '',
-                        col.type === 'couple1' ? styles.coupleSeat : '',
+                        col.type === 'coupleRight' ? styles.coupleSeat : '',
                         selectedSeats.includes(col) ? styles.selectedSeat : '',
                         styles.seat,
                       )}

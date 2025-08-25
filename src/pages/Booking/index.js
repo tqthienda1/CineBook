@@ -9,6 +9,7 @@ import Seat from '../../components/Seat';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 import PopUp from '../../components/PopUp';
+import { useNavigate } from 'react-router-dom';
 
 function prioritizeFavoriteCinema(cinemaList, favoriteCinemaID) {
   const index = cinemaList.findIndex((cinema) => cinema.cinemaID === favoriteCinemaID);
@@ -35,6 +36,7 @@ const Booking = () => {
   const [selectCinema, setSelectCinema] = useState();
   const [seatLayout, setSeatLayout] = useState();
   const [showPopUp, setShowPopUp] = useState(false);
+  const [popUpContent, setPopUpContent] = useState('');
 
   useEffect(() => {
     const getFavoriteCinema = async () => {
@@ -129,7 +131,13 @@ const Booking = () => {
     setSelectCity(city);
   };
 
-  const handleSubmitBuy = () => {
+  const handleSubmitBuy = (selectedSeats) => {
+    if (selectedSeats.length > 0) {
+      setPopUpContent('Buying tickets successfully');
+    } else {
+      setPopUpContent('Please select seat');
+    }
+
     setShowPopUp(true);
   };
 
@@ -178,6 +186,7 @@ const Booking = () => {
         {selectShowtime !== null && (
           <>
             <SeparateLine text="SEAT" lineColor={'#fb2b2b'} className={styles.separateLine} />
+            {showPopUp && <PopUp content={popUpContent} onClick={handleOKClick} />}
             <Seat
               movieName={movieInfo.name}
               date={pickingDate.toLocaleDateString('vi-VN')}
@@ -188,7 +197,6 @@ const Booking = () => {
             />
           </>
         )}
-        {showPopUp && <PopUp content={'Buying tickets successfully'} onClick={handleOKClick} />}
       </div>
     );
   }
