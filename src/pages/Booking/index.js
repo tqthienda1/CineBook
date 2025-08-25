@@ -8,6 +8,7 @@ import Cinema from '../../components/Cinema';
 import Seat from '../../components/Seat';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
+import PopUp from '../../components/PopUp';
 
 function prioritizeFavoriteCinema(cinemaList, favoriteCinemaID) {
   const index = cinemaList.findIndex((cinema) => cinema.cinemaID === favoriteCinemaID);
@@ -32,6 +33,8 @@ const Booking = () => {
   const [cinemasList, setCinemasList] = useState();
   const [cities, setCities] = useState();
   const [selectCinema, setSelectCinema] = useState();
+  const [seatLayout, setSeatLayout] = useState();
+  const [showPopUp, setShowPopUp] = useState(false);
 
   useEffect(() => {
     const getFavoriteCinema = async () => {
@@ -92,7 +95,26 @@ const Booking = () => {
     fetchMovieInfoAndCities();
   }, [movieID, selectCity]);
 
-  const handleSelectShowtime = (showtimeIndex, sectionIndex, time, cinemaName) => {
+  const handleSelectShowtime = async (showtimeIndex, sectionIndex, time, cinemaName, roomID) => {
+    try {
+      const res = await fetch(`http://localhost:5003/user/layouts/room/${roomID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error('Lỗi khi lấy layout');
+      }
+
+      const data = await res.json();
+      console.log(data);
+      setSeatLayout(data);
+    } catch (err) {
+      console.error('Fetch layout error:', err);
+    }
+
     setSelectShowtime(showtimeIndex);
     setSelectSectionShowtime(sectionIndex);
     setSelectTime(time);
@@ -105,6 +127,14 @@ const Booking = () => {
 
   const handleSelectCity = (city) => {
     setSelectCity(city);
+  };
+
+  const handleSubmitBuy = () => {
+    setShowPopUp(true);
+  };
+
+  const handleOKClick = () => {
+    setShowPopUp(false);
   };
 
   if (movieInfo) {
@@ -153,9 +183,12 @@ const Booking = () => {
               date={pickingDate.toLocaleDateString('vi-VN')}
               cinemaName={selectCinema}
               time={selectTime}
+              seatLayout={seatLayout}
+              handleSubmitBuy={handleSubmitBuy}
             />
           </>
         )}
+        {showPopUp && <PopUp content={'Buying tickets successfully'} onClick={handleOKClick} />}
       </div>
     );
   }

@@ -76,7 +76,13 @@ const ShowtimeSection = ({
                     : ''
                 }
                 onClick={() =>
-                  handleSelectShowtime(index, sectionShowtimeIndex, item.startTime.slice(0, -3), cinemaName)
+                  handleSelectShowtime(
+                    index,
+                    sectionShowtimeIndex,
+                    item.startTime.slice(0, -3),
+                    cinemaName,
+                    item.roomID,
+                  )
                 }
                 time={item.startTime.slice(0, -3)}
                 type={'2d'}
