@@ -3,7 +3,7 @@ import {  getUserById, updateUser,
           getMovieWithCities, getMovieByName,
           getShowtimeForUser, 
           addFavoriteCinema} from '../controllers/userController.js';
-import { getMovies } from '../controllers/adminController.js';
+import { getMovies, getLayoutWithSeatsByRoomID } from '../controllers/adminController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -18,6 +18,7 @@ router.get('/movies/search', getMovieByName);
 router.get('/movies/:id', getMovieWithCities);
 
 router.get('/showtimes', getShowtimeForUser);
+router.get('/layouts/room/:roomID', verifyToken, getLayoutWithSeatsByRoomID)
 
 
 

@@ -161,9 +161,6 @@ import Showtime from '../models/Showtime.js';
 export const getShowtimeForUser = async (req, res) => {
   try {
     const { movieID, cinemaID, showDate } = req.query;
-    console.log('movieid', movieID);
-    console.log('cinemaid', cinemaID);
-    console.log('date', showDate);
 
     if (!movieID || !cinemaID || !showDate) {
       return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
@@ -171,7 +168,7 @@ export const getShowtimeForUser = async (req, res) => {
 
     const showtimeData = { movieID, cinemaID, showDate };
     let showtime = await Showtime.getShowtimeForUser(showtimeData);
-
+ 
     showtime = showtime.map((st) => ({
       ...st,
       showDate: new Date(st.showDate).toISOString().split('T')[0],
