@@ -34,9 +34,11 @@ const alphabet = [
 const PriceBox = ({ selectedSeats, handleSubmitBuy }) => {
   const regularSeats = selectedSeats.filter((seat) => seat.type === 'regular');
   const totalRegularSeatsCost = regularSeats.reduce((sum, item) => sum + parseFloat(item.price), 0);
-  const coupleSeats = selectedSeats.filter((seat) => seat.type === 'couple1');
+  const coupleSeats = selectedSeats.filter((seat) => seat.type === 'coupleRight');
   const totalCoupleSeatsCost = coupleSeats.reduce((sum, item) => sum + parseFloat(item.price), 0);
   const totalSeatsCost = selectedSeats.reduce((sum, item) => sum + parseFloat(item.price), 0);
+
+  console.log(selectedSeats);
 
   return (
     <div className={styles.priceBox}>
@@ -61,7 +63,7 @@ const PriceBox = ({ selectedSeats, handleSubmitBuy }) => {
             <div>{`$${totalCoupleSeatsCost}`}</div>
             <ul className={clsx(styles.row, styles.seats)}>
               {coupleSeats.map((item, index) => (
-                <li key={index}>{alphabet[item.row] + `${item.col}` + (index < coupleSeats.length - 1 ? ', ' : '')}</li>
+                <li key={index}>{`${item.seatID}` + (index < coupleSeats.length - 1 ? ', ' : '')}</li>
               ))}
             </ul>
           </div>
@@ -73,7 +75,9 @@ const PriceBox = ({ selectedSeats, handleSubmitBuy }) => {
         <div>{`$${totalSeatsCost}`}</div>
       </div>
 
-      <div onClick={handleSubmitBuy} className={styles.buyButton}>BUY</div>
+      <div onClick={() => handleSubmitBuy(selectedSeats)} className={styles.buyButton}>
+        BUY
+      </div>
     </div>
   );
 };
