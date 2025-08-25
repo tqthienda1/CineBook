@@ -44,16 +44,16 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const priceInputRef = useRef(null);
 
-  const hasConflict = (newStart, runtime, buffer, existingShowtimes) => {
-    const newEnd = newStart + runtime + buffer;
+  // const hasConflict = (newStart, runtime, buffer, existingShowtimes) => {
+  //   const newEnd = newStart + runtime + buffer;
 
-    return existingShowtimes.some((show) => {
-      const showStart = show.startTime; // phút (VD: 17:30 => 1050)
-      const showEnd = show.startTime + show.runtime + show.buffer;
+  //   return existingShowtimes.some((show) => {
+  //     const showStart = show.startTime; // phút (VD: 17:30 => 1050)
+  //     const showEnd = show.startTime + show.runtime + show.buffer;
 
-      return !(newEnd <= showStart || newStart >= showEnd); // overlap
-    });
-  };
+  //     return !(newEnd <= showStart || newStart >= showEnd); // overlap
+  //   });
+  // };
 
   const baseTimeSlots = useMemo(() => generateTimeSlots({ start: '09:00', end: '23:30', step: 30, format: '12' }), []);
 
@@ -1009,9 +1009,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <tbody>
             {showtimesData.map((showtime) => (
               <tr key={showtime.showtimeID}>
-                <td>{showtime.movieID}</td>
-                <td>{showtime.cinemaID}</td>
-                <td>{showtime.roomID}</td>
+                <td>{showtime.movieName}</td>
+                <td>{showtime.cinemaName}</td>
+                <td>{showtime.roomName}</td>
                 <td>{showtime.showDate}</td>
                 <td>{showtime.startTime}</td>
                 <td>{showtime.endTime}</td>
