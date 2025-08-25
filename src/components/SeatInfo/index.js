@@ -41,7 +41,7 @@ const SeatInfo = ({ selectedSeats, movieName, date, time, cinemaName }) => {
         <ul className={clsx(styles.row, styles.selectedSeats)}>
           {selectedSeats.map((item, index) => (
             <li className={styles.seat} key={index}>
-              {alphabet[item.row] + `${item.col + 1}`}
+              {item.seatID}
             </li>
           ))}
         </ul>

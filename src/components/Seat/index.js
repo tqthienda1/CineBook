@@ -2,10 +2,14 @@ import styles from './Seat.module.scss';
 import SeatInfo from '../SeatInfo';
 import PriceBox from '../PriceBox';
 import SeatMap from '../SeatMap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const Seat = ({ movieName, date, time, cinemaName }) => {
+const Seat = ({ movieName, date, time, cinemaName, seatLayout, handleSubmitBuy }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
+
+  useEffect(() => {
+    setSelectedSeats([]);
+  }, seatLayout);
 
   const handleSelectSeat = (seat) => {
     setSelectedSeats((prev) => [...prev, seat]);
@@ -26,9 +30,14 @@ const Seat = ({ movieName, date, time, cinemaName }) => {
             time={time}
             cinemaName={cinemaName}
           />
-          <PriceBox selectedSeats={selectedSeats} />
+          <PriceBox selectedSeats={selectedSeats} handleSubmitBuy={handleSubmitBuy} />
         </div>
-        <SeatMap onSelectSeat={handleSelectSeat} onRemoveSeat={handleRemoveSeat} selectedSeats={selectedSeats} />
+        <SeatMap
+          onSelectSeat={handleSelectSeat}
+          onRemoveSeat={handleRemoveSeat}
+          selectedSeats={selectedSeats}
+          seatLayout={seatLayout}
+        />
       </div>
     </div>
   );

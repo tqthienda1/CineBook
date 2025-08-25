@@ -1,6 +1,6 @@
 import styles from './SeatMap.module.scss';
 import screen from '../../assets/screen.png';
-import seatLayout from '../../MockData/seatLayout';
+// import seatLayout from '../../MockData/seatLayout';
 import clsx from 'clsx';
 
 const alphabet = [
@@ -32,13 +32,14 @@ const alphabet = [
   'Z',
 ];
 
-const SeatMap = ({ onSelectSeat, onRemoveSeat, selectedSeats }) => {
-  const seatMatrix = Array.from({ length: seatLayout.numRow }, (_, r) =>
+const SeatMap = ({ onSelectSeat, onRemoveSeat, selectedSeats, seatLayout }) => {
+  const seatMatrix = Array.from({ length: seatLayout.layout.numRow }, (_, r) =>
     Array.from(
-      { length: seatLayout.numCol },
-      (_, c) => seatLayout.seats.find((seat) => seat.row === r && seat.col === c) || null,
+      { length: seatLayout.layout.numCol },
+      (_, c) => seatLayout.seats.find((seat) => seat.rowNum === r && seat.colNum === c) || null,
     ),
   );
+  console.log('matrix', seatMatrix);
 
   return (
     <div className={styles.seatMap}>
@@ -74,7 +75,7 @@ const SeatMap = ({ onSelectSeat, onRemoveSeat, selectedSeats }) => {
                         }
                       }}
                     >
-                      {col.type !== 'path' && `${alphabet[col.row]}${col.col + 1}`}
+                      {col.type !== 'path' && `${col.seatID}`}
                     </div>
                   )
                 );
