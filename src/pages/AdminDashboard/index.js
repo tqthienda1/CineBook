@@ -44,6 +44,12 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
 
   const priceInputRef = useRef(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10; // số dòng mỗi trang, bạn chỉnh được
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+  const pagedShowtimes = showtimesData.slice(start, end);
+
   // const hasConflict = (newStart, runtime, buffer, existingShowtimes) => {
   //   const newEnd = newStart + runtime + buffer;
 
@@ -134,6 +140,9 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
       setFormType('');
       setFormData({});
     }
+
+    // 👇 thêm dòng này
+    setCurrentPage(1);
   }, [currentSection]);
 
   const apiRequest = async ({ url, method, body, onSuccess }) => {
@@ -1009,7 +1018,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
           <tbody>
             {showtimesData.map((showtime) => (
               <tr key={showtime.showtimeID}>
-                <td>{showtime.movieName}</td>
+                <td>{showtime.name}</td>
                 <td>{showtime.cinemaName}</td>
                 <td>{showtime.roomName}</td>
                 <td>{showtime.showDate}</td>
@@ -1342,7 +1351,7 @@ const AdminDashboard = ({ activeSectionFromLayout, setActiveSectionFromLayout })
                         ? getAvailableTimeOptions({
                             formData,
                             baseSlots: baseTimeSlots,
-                            recentFilms, // 👈 truyền đúng vào đây
+                            recentFilms,
                             showtimesData,
                             defaultBuffer: 30,
                           })
